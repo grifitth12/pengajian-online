@@ -1,7 +1,7 @@
 <script>
     let id_kelas = window.location.href.split("/").at(-1)
     async function fetch_data() {
-        return (await axios.get("/api/kelas/select?w=id_kelas&eq=" + id_kelas)).data.data[0]
+        return JSON.parse(document.querySelector("script[data-upi]").textContent).result.data[0]
     }
 
     async function update(params, id_kelas) {
