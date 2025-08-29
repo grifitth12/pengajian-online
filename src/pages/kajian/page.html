@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}} - Kajian Islami</title>
-    <meta name="description" content="{{description}}">
+    <title>{{judul}} - Kajian Islami</title>
+    <meta name="description" content="{{deskripsi}}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>        
@@ -49,7 +49,6 @@
                         Kajian Islami
                     </span>
                     <h1 x-text="(await kajian).data.judul" class="text-4xl md:text-5xl lg:text-6xl font-bold text-emerald-900 leading-tight mb-4">
-                        Kira kira.. Indonesia Merdeka Tahun Berapa?
                     </h1>
                     <p x-text="(await kajian).data.deskripsi + `. Kajian bersama ${(await kajian).data.pemateri } di ${(await kajian).data.lokasi }`" class="text-lg text-gray-700 mb-8 max-w-lg"></p>
                     <div class="flex flex-wrap gap-4">
@@ -65,14 +64,14 @@
                     <div class="relative w-full max-w-md">
                         <div class="absolute -inset-4 bg-emerald-200 rounded-2xl opacity-50 blur-lg"></div>
                         <div class="relative bg-white rounded-xl shadow-2xl overflow-hidden">
-                            <img src="http://localhost/src/assets/images/banner.png" alt="Thumbnail Kajian" class="w-full h-64 object-cover">
+                            <img src="{{thumbnail_url}}" alt="Thumbnail Kajian" class="w-full h-64 object-cover">
                             <div class="p-6">
                                 <div class="flex items-center mb-4">
                                     <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mr-4">
                                         <i class="fas fa-user text-emerald-600 text-xl"></i>
                                     </div>
                                     <div>
-                                        <h3 class="font-bold text-gray-800">Ustad Rijal</h3>
+                                        <h3 x-text="(await kajian).data.pemateri" class="font-bold text-gray-800"></h3>
                                         <p class="text-sm text-gray-600">Pemateri</p>
                                     </div>
                                 </div>
@@ -114,7 +113,7 @@
                     <h3 class="text-xl font-bold text-emerald-800 mb-6 flex items-center">
                         <i class="fas fa-info-circle mr-3 text-emerald-600"></i> Deskripsi Kajian
                     </h3>
-                    <p class="text-gray-700 leading-relaxed" x-text="(await kajian).data.deskripsi_lengkap"></p>
+                    <p class="text-gray-700 leading-relaxed" x-text="(await kajian).data.deskripsi_lengkap">{{deskripsi_lengkap}}</p>
                 </div>
                 
                 <div class="grid md:grid-cols-2 gap-8 mb-10">

@@ -8,10 +8,12 @@ import
 proc kajianIndex*(ctx: Context) {.async.} =
     await ctx.staticFileResponse("index.html", "src/pages/kajian")
 
-proc kelasPage*(ctx: Context) {.async.} =
+proc kajianPage*(ctx: Context) {.async.} =
     proc myRenderProc(
-        title: string,
-        description: string): string =
+        judul: string,
+        deskripsi: string,
+        thumbnail_url: string,
+        deskripsi_lengkap: string): string =
         compileTemplateFile("../../src/pages/kajian/page.html", baseDir = getScriptDir())    
     
     var
@@ -23,6 +25,9 @@ proc kelasPage*(ctx: Context) {.async.} =
     if sukamto["data"].len > 0:
         resp myRenderProc(
             getStr sukamto["data"]["judul"],
-            getStr sukamto["data"]["deskripsi"])        
+            getStr sukamto["data"]["deskripsi"],
+            getStr sukamto["data"]["thumbnail_url"],
+            getStr sukamto["data"]["deskripsi_lengkap"],
+        )        
     else :
         resp "<h1>404 Not Found</h1>"
