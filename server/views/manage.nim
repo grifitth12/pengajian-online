@@ -7,7 +7,7 @@ import
 
 proc loadFromTemplate(
     html: string,
-    data: JsonNode
+    data: auto = ""
 ) : string =
     let
         templ = readAll newFileStream("src/pages/admin/template.upi", fmRead)
