@@ -3,8 +3,7 @@ import
   views/dash,
   views/kelas,
   views/admin,
-  views/manage,
-  views/kajian
+  views/manage
 
 let
   indexPatterns* = @[
@@ -13,10 +12,7 @@ let
   ]
   kelasPatterns* = @[
     pattern("/", kelasIndex, @[HttpGet]),
-    pattern("/{slug}", kelasPage, @[HttpGet]),
-  ]
-  kajianPatterns* = @[
-    pattern("/", kajianIndex, @[HttpGet])
+    pattern("/{slug}", kelasPage, @[HttpGet])
   ]
   adminPatterns* = @[
     pattern("/manage/kajian", adminManageKajian, @[HttpGet]),
@@ -26,10 +22,5 @@ let
     pattern("/", adminIndex, @[HttpGet])
   ]
   managePatterns* = @[
-    pattern("/kelas/{id_kelas}", manageKelas, @[HttpGet]),
-    pattern("/sedekah/{slug}", manageSedekah, @[HttpGet]),
-    pattern("/mentor/{slug}", manageMentor, @[HttpGet])
-  ]
-  createPatterns* = @[
-    pattern("/donasi", createDonasi, @[HttpGet]),
+    pattern("/kelas/{slug}", manageKelas, @[HttpGet])
   ]

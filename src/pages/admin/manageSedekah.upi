@@ -1,49 +1,10 @@
-<script>
-    async function get_data_donasi(query) {
-        return (
-            await axios.get(
-            query?
-            "/api/donasi/cari?q=" + query:
-            "/api/donasi/carisemua", {
-                withCredentials:true
-            }
-        )
-    ).data  
-}
-
-    async function accept(id_donasi) {
-        let rijal
-        if (id_donasi[1] == "false") {
-            rijal = await axios.put(
-                "/api/donasi/accept/" + id_donasi[0],
-                { withCredentials : true }
-            )            
-        } else {
-            rijal = await axios.put(
-                "/api/donasi/update/" + id_donasi[0],
-                { is_accepted: false }
-            )
-        }
-
-        if (rijal.status == 204) {
-            location.reload() }
-        
-    }   
-
-</script>
-<div id="upi-1" upi-title="Manage Sedekah" x-data="{query : '', data_donasi : false}">
-    <div class="data-table" x-data="{dataDonasi : get_data_donasi(query)}">
+<div id="upi-1" upi-title="Manage Sedekah">
+    <div class="data-table">
         <div class="table-header" id="biarapa"> 
             <div class="action-buttons">
-                <button
-                class="btn"
-                    :class="data_donasi.split(',')[1] == 'true' ? 'bg-red-300' : 'bg-green-300'"
-                    x-text="data_donasi.split(',')[1] == 'true' ? 'Reject' : 'Accept'"
-                    @click="accept(data_donasi.split(','))"
-                    x-show="data_donasi">
-                </button>
-                <button><a href="/create/donasi">Tambah Donasi</a></button>
-                <input type="text" @keyup.enter="data_donasi = get_data_donasi(query)" x-model="query" class="p-1" name="query" id="q" placeholder="cari berdasarkan judul" autocomplete="off">
+                <button class="btn btn-success" @click="openModal('add-sedekah')">+ Tambah Sedekah</button>
+                <button class="btn btn-warning" @click="editSelected('kelas')">Edit</button>
+                <button class="btn btn-danger" @click="deleteSelected('kelas')">Hapus</button>
             </div>
         </div>
         <table>
@@ -51,25 +12,23 @@
                 <tr>
                     <th></th>
                     <th>Program</th>
-                    <th>Slug</th>
-                    <th>Id</th>
-                    <th>Deskripsi</th>
+                    <th>Target</th>
+                    <th>Terkumpul</th>
+                    <th>Donatur</th>
                     <th>Status</th>
-                    <th>Accepted</th>
                 </tr>
             </thead>
             <tbody :class="{'loading': loading}">
-                <template x-for="sedekah in (await dataDonasi).data">
+                <template x-for="sedekah in sedekahList">
                     <tr>
-                        <td><input type="radio" x-model="data_donasi" :value="[sedekah.id_program_donasi, sedekah.is_accepted]"></td>
-                        <td><a :href="'/manage/sedekah/' + sedekah.id_program_donasi" x-text="sedekah.nama_program"></a></td>
-                        <td x-text="sedekah.slug"></td>
-                        <td x-text="sedekah.id_program_donasi"></span></td>
-                        <td x-text="sedekah.deskripsi"></td>
+                        <td><input type="checkbox" x-model="selected.kelas" :value="kelas"></td>
+                        <td x-text="sedekah.program"></td>
+                        <td>Rp <span x-text="sedekah.target.toLocaleString()"></span></td>
+                        <td>Rp <span x-text="sedekah.terkumpul.toLocaleString()"></span></td>
+                        <td x-text="sedekah.donatur"></td>
                         <td>
                             <span class="status-badge status-ongoing" x-text="sedekah.status"></span>
                         </td>
-                        <td x-text="sedekah.is_accepted"></td>  ":l,kmn "
                     </tr>
                 </template>
             </tbody>

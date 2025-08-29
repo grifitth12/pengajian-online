@@ -14,6 +14,7 @@
     async function accept(id_kelas) {
         let rijal
         if (id_kelas[1] == "false") {
+            console.log("kontol")
             rijal = await axios.put(
                 "/api/kelas/" + id_kelas[0] + "/accept",
                 { withCredentials : true }
@@ -44,7 +45,7 @@
                 <input type="text" @keyup.enter="kelasData = get_data_kelas(query)" x-model="query" class="p-1" name="query" id="q" placeholder="cari berdasarkan judul" autocomplete="off">
             </div>
         </div>
-        <table> 
+        <table>
             <thead>
                 <tr>
                     <th></th>

@@ -17,11 +17,18 @@
 </head>
 <body>
 
-  <!-- header & navbar -->
-  <div x-data="{ html:'' }"
-    x-init="fetch('/src/assets/assets-pages/navbar-ngaji.html').then(r=>r.text()).then(t=>html=t)"
-    x-html="html">
-  </div>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="navbar-container">
+      <img src="/src/assets/images/logo.png" alt="Logo" class="logo">
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Kelas</a>
+        <a href="#">Donate</a>
+        <img src="/src/assets/images/logo.png" alt="Profile" class="profile-pic">
+      </nav>
+    </div>
+  </header>
 
   <!-- Hero -->
   <section class="bg-green-400 text-white py-12 md:py-20">
@@ -73,10 +80,28 @@
   </section>
 
   <!-- Footer -->
-    <div x-data="{ html:'' }"
-      x-init="fetch('/src/assets/assets-pages/footer-ngaji.html').then(r=>r.text()).then(t=>html=t)"
-      x-html="html">
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-info">
+        <div class="footer-logo">
+          <img src="/src/assets/images/image.png" alt="Logo" class="logo">
+          <h4>PENGAJIAN ONLINE</h4>
+        </div>
+        <p>PengajianOnline.id adalah platform resmi pengajian daring Masjid Darussalam Kota Wisata,
+          untuk memudahkan jamaah mengikuti kajian Islam secara rutin, mudah, dan terpercaya.
+        </p>
+      </div>
+      <div class="footer-actions">
+        <div class="socials">
+          <a href=""><i class="fa-brands fa-facebook"></i></a>
+          <a href=""><i class="fa-brands fa-instagram"></i></a>
+          <a href=""><i class="fa-brands fa-tiktok"></i></a>
+          <a href=""><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+        <button class="contact-btn">HUBUNGI KAMI</button>
+      </div>
     </div>
+  </footer>
 
 </body>
 </html>

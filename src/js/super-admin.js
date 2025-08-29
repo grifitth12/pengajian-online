@@ -1,3 +1,17 @@
+function cetak_tenggal(tanggal) {
+    const d = new Date(tanggal);
+
+    const fmt = new Intl.DateTimeFormat('id-ID', {
+        timeZone: 'Asia/Jakarta',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour12: false
+    });
+
+    return fmt.format(d); 
+}
+ 
  function adminSystem() {
             return {
                 // State Management

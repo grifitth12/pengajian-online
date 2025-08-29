@@ -4,7 +4,7 @@
             <!-- Kelas -->
             <div class="stat-card">
                 <div class="stat-icon blue">
-                    <img src="/src/assets/icons/kelas.png" alt="Kelas">
+                    <img src="../assets/icons/kelas.png" alt="Kelas">
                 </div>
                 <div class="stat-info">
                     <p>Kelas</p>
@@ -15,7 +15,7 @@
             <!-- Kajian -->
             <div class="stat-card">
                 <div class="stat-icon green">
-                    <img src="/src/assets/icons/donasi.png" alt="donasi">
+                    <img src="../assets/icons/donasi.png" alt="donasi">
                 </div>
                 <div class="stat-info">
                     <p>Donasi</p>
@@ -28,7 +28,7 @@
             <!-- Donasi -->
             <div class="stat-card">
                 <div class="stat-icon yellow">
-                    <img src="/src/assets/icons/kajian.png" alt="kajian">
+                    <img src="../assets/icons/kajian.png" alt="kajian">
                 </div>
                 <div class="stat-info">
                     <p>Kajian</p>
@@ -39,7 +39,7 @@
             <!-- Pengguna -->
             <div class="stat-card">
                 <div class="stat-icon purple">
-                    <img src="/src/assets/icons/pengguna.png" alt="Pengguna">
+                    <img src="../assets/icons/pengguna.png" alt="Pengguna">
                 </div>
                 <div class="stat-info">
                     <p>Pengguna</p>

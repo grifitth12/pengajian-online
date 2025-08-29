@@ -1,7 +1,6 @@
 async function fetch_get_data() {
-    // let slug = window.location.href.split("/").at(-1)
-    let slug = "sejarah-peradaban-islam"
-    let url = "http://localhost:8081/api/kelas/index/" + slug
+    let slug = window.location.href.split("/").at(-1)
+    let url = "/api/kelas/index/" + slug
     try {
         const response = await axios.get(url);
         document.querySelector("#loading").classList.add("hidden")
