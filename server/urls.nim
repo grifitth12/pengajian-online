@@ -3,7 +3,8 @@ import
   views/dash,
   views/kelas,
   views/admin,
-  views/manage
+  views/manage,
+  views/kajian
 
 let
   indexPatterns* = @[
@@ -13,6 +14,9 @@ let
   kelasPatterns* = @[
     pattern("/", kelasIndex, @[HttpGet]),
     pattern("/{slug}", kelasPage, @[HttpGet]),
+  ]
+  kajianPatterns* = @[
+    pattern("/", kajianIndex, @[HttpGet])
   ]
   adminPatterns* = @[
     pattern("/manage/kajian", adminManageKajian, @[HttpGet]),

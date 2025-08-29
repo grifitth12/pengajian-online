@@ -1,3 +1,0 @@
-nyalain FE
-nim c -d:release --outdir:build -r server/app
-./build/app
