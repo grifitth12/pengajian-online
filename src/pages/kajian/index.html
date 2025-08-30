@@ -76,7 +76,7 @@
                 <template x-for="kajian in (await kajianData).data">
                     <article class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden card-hover">
                         <div class="relative">
-                            <img alt="Ustadz giving a lecture in mosque with attendees listening attentively" class="w-full h-64 object-cover" src="https://storage.googleapis.com/a1aa/image/90a26ba2-a0b5-49a4-e0c5-04a15c0de3f7.jpg"/>
+                            <img alt="Ustadz giving a lecture in mosque with attendees listening attentively" class="w-full h-64 object-cover" :src="kajian.thumbnail_url"/>
                             <div class="absolute top-4 left-4">
                                 <span class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold">Tafsir</span>
                             </div>
@@ -90,8 +90,6 @@
                                     <div class="flex items-center mb-1">
                                         <i class="far fa-calendar-alt mr-2 text-green-600"></i>
                                         <span x-text="cetak_tenggal(kajian.waktu_mulai)"></span>
-                                        <span>&nbsp;</span>    
-                                        <span x-text="cetak_jam(kajian.waktu_mulai)"></span>
                                     </div>
                                 </div>
                                 <div class="text-xs text-gray-500 text-right">
@@ -108,7 +106,7 @@
                                 </div>
                             </div>
                             <button @click="window.location.href = '/kajian/' + kajian.slug" class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg px-6 py-2 text-sm transition-colors duration-200">
-                                Daftar
+                                Selengkapnya
                             </button>
                         </div>
                     </article>
