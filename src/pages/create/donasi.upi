@@ -1,15 +1,48 @@
 <script>
     let id_donasi = window.location.href.split("/").at(-1)
+    let now = new Date()
+    let temp_id =
+        now.getFullYear().toString() +
+        String(now.getMonth() + 1).padStart(2, "0") +
+        String(now.getDate()).padStart(2, "0") +
+        String(now.getHours()).padStart(2, "0") +
+        String(now.getMinutes()).padStart(2, "0") +
+        String(now.getSeconds()).padStart(2, "0") +
+        String(now.getMilliseconds()).padStart(3, "0")
 
-    async function fetch_data() {
-        let data = (await axios.get("/api/donasi/select?w=id_program_donasi&eq=" + id_donasi)).data.data[0]
-        if (data && data.gambar) {
-            // prepend /static/
-            data.gambar = "/static/" + data.gambar
+    // CREATE DONASI
+    async function create(params) {
+        try {
+            // 1. Insert donation
+            let response = await axios.post("/api/donasi/insert", params)
+            let row = response.data.data[0]
+            let id_program_donasi = row?.id_program_donasi
+            console.log(response.data)
+            console.log(row)
+            if (!id_program_donasi) {
+                alert("Failed to create donasi, backend didn’t return ID!")
+                return
+            }
+
+            // 2. If thumbnail was uploaded, commit it
+            if (window.tempThumbnail) {
+                let finalFilename = await commitTemp(window.tempThumbnail, id_program_donasi)
+
+                // 3. Update donasi record with committed filename
+                await axios.put(`/api/donasi/update/` + id_program_donasi, {
+                    id_program_donasi,
+                    gambar: finalFilename
+                })
+            }
+
+            alert("Donasi created successfully!")
+        } catch (err) {
+            console.error(err)
+            alert("Error creating donasi")
         }
-        return data
     }
 
+    // UPLOAD TEMP
     async function selectPhoto(previewId, target) {
         let input = document.createElement("input")
         input.type = "file"
@@ -27,44 +60,25 @@
             // upload temp
             let fd = new FormData()
             fd.append("file", file)
-            fd.append("InternalId", id_donasi)
-            let res = await axios.post("/api/file/temp-thumbnail-upload", fd, {headers:{"Content-Type":"multipart/form-data"}})
-            window[target] = res.data.filename 
+            fd.append("InternalId", temp_id)
+            let res = await axios.post("/api/file/temp-thumbnail-upload", fd, {
+                headers: { "Content-Type": "multipart/form-data" }
+            })
+            window[target] = res.data.filename // store temp filename
             document.getElementById(previewId).src = "/static/" + res.data.filename
         }
 
         input.click()
     }
 
-    async function commitTemp(tempName) {
+    // COMMIT TEMP
+    async function commitTemp(tempName, realId) {
         if (!tempName) return null
-        let res = await axios.post("/api/file/commit-temp-thumbnail", { filename: tempName, InternalId: id_donasi})
+        let res = await axios.post("/api/file/commit-temp-thumbnail", {
+            filename: tempName,
+            InternalId: realId
+        })
         return res.data.filename
-    }
-
-    async function update(params, id_donasi) {
-        // If a temp thumbnail exists, commit it first
-        if (window.tempThumbnail) {
-            let committedFile = await commitTemp(window.tempThumbnail)
-            if (committedFile) {
-                params.gambar = committedFile
-            }
-        }
-
-        let response = await axios.put("/api/donasi/update/" + id_donasi, params)
-        alert(response.status)
-    }
-
-    async function create(params) {
-        let response = await axios.put("/api/donasi/insert/", params)
-        alert(response.status)
-    }
-    async function tambah_kelas(id_donasi) {
-        let popup = document.getElementById("popup-child")
-        document.getElementById("popup").classList.remove("hidden")
-        
-        popup.setAttribute("dapdap", "rijal")
-        popup.setAttribute("x-init", "fetch('/src/pages/popup/tambahPertemuan.dap').then(r=>r.text()).then(t=>html=t)")
     }
 
     async function close_popup() {
@@ -72,14 +86,14 @@
     }
 </script>
 <!-- Main Content -->
-<div id="upi-1" id="upi-1" upi-title="Edit Donasi" class="content flex-1 overflow-auto">
+<div id="upi-1" upi-title="Create Donasi" class="content flex-1 overflow-auto">
     <!-- Main Content Area -->
-    <main class="p-6" x-data="{donasi : fetch_data(), DonasiForm : {}}">
+    <main class="p-6" x-data="{DonasiForm : {}}">
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
             <div class="p-6 border-b">
                 <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-semibold text-gray-800">Edit Donasi</h2>
-                    <button @click="update(DonasiForm, (await donasi).id_program_donasi)" @click="create(DonasiForm, (await donasi))" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center">
+                    <h2 class="text-xl font-semibold text-gray-800">Create Donasi</h2>
+                    <button @click="create(DonasiForm)" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center">
                         <i class="fas fa-save mr-2"></i> Save Changes
                     </button>
                 </div>
@@ -88,16 +102,16 @@
             <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Left Column -->
                 <div class="md:col-span-2 space-y-6">
-                    <!-- Judul Kelas -->
+                    <!-- Judul Donasi -->
                     <div>
                         <label for="judul" class="block text-sm font-medium text-gray-700 mb-1">Judul donasi</label>
-                        <input type="text" x-model="DonasiForm.nama_program" id="judul" :value="(await donasi).nama_program" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
+                        <input type="text" x-model="DonasiForm.nama_program" id="judul" :value="DonasiForm.nama_program" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
                     </div>
                     <!-- Deskripsi -->
                     <div>
                         <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-                        <textarea id="deskripsi" x-model="donasi.deskripsi" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" x-text="(await donasi).deskripsi"></textarea>
-                    </div>              
+                        <textarea id="deskripsi" x-model="DonasiForm.deskripsi" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" x-text="DonasiForm.deskripsi"></textarea>
+                    </div>    
                     <!-- target-donasi -->
                     <div>
                         <label for="target-donasi" class="block text-sm font-medium text-gray-700 mb-1">Target Donasi</label>
@@ -113,8 +127,9 @@
                                 <option value="selesai">Selesai</option>
                             </select>
                         </div>
-                    </div>       
+                    </div>          
                 </div>
+
 
                 <!-- Right Column -->
                 <div class="space-y-6">
@@ -122,8 +137,8 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Thumbnail</label>
                         <div class="mt-1 flex flex-col items-center">
-                            <img id="thumbnailPreview" :src="(await donasi).gambar || ''"  alt="Thumbnail Preview" class="thumbnail-preview w-full mb-2 rounded-lg border border-gray-300">
-                            <div x-model="DonasiForm.gambar" class="flex space-x-2">
+                            <img id="thumbnailPreview" src="http://127.0.0.1:8080/src/assets/images/banner.png" alt="Thumbnail Preview" class="thumbnail-preview w-full mb-2 rounded-lg border border-gray-300">
+                            <div x-model="DonasiForm.thumbnail_url" class="flex space-x-2">
                                 <input type="file" id="thumbnailUpload" class="hidden" accept="image/*">
                                 <button onclick="selectPhoto('thumbnailPreview','tempThumbnail')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
                                     <i class="fas fa-upload mr-1"></i> Upload
@@ -146,36 +161,6 @@
                                     <i class="fas fa-upload mr-1"></i> Upload
                                 </button>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Metadata -->
-                    <div class="border border-gray-200 rounded-lg p-4">
-                        <h3 class="text-sm font-medium text-gray-700 mb-3">Metadata</h3>
-                        <div class="space-y-2">
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-500">Is Accepted:</span>
-                                <span class="font-medium" :class="(await donasi).is_accepted ? 'text-green-500' : 'text-red-500'">
-                                    <i class="fas mr-1" :class="(await donasi).is_accepted ? 'fa-check-circle' : 'fa-times-circle mr-1'"></i>
-                                    <span x-text="(await donasi).is_accepted ? 'Yes' : 'No'">-</span>
-                                </span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-500">target donasi:</span>
-                                <span class="text-gray-700" x-text="(await donasi).target_donasi"></span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-500">Created At:</span>
-                                <span class="text-gray-700" x-text="(await donasi).created_at"></span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-500">ID:</span>
-                                <span class="text-gray-700" x-text="(await donasi).id_program_donasi"></span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-500">URL:</span>
-                                <span class="text-gray-700"><a class="text-blue-600" :href="'/donasi/' + (await donasi).slug">Go To Page</a></span>
-                            </div>                            
                         </div>
                     </div>
                 </div>

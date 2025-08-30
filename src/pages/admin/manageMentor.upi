@@ -1,34 +1,63 @@
-<div id="upi-1" upi-title="Manage Mentor">
-    <div class="data-table">
-        <div class="table-header" id="biarapa"> 
+<script>
+    async function get_data_mentor(query) {
+        return (
+            await axios.get(
+            "/api/pengguna/select?w=role&eq=mentor" , {
+                withCredentials:true
+            }
+        )
+    ).data  
+}
+
+    async function accept(id_donasi) {
+        let rijal
+        if (id_donasi[1] == "false") {
+            rijal = await axios.put(
+                "/api/donasi/accept/" + id_donasi[0],
+                { withCredentials : true }
+            )            
+        } else {
+            rijal = await axios.put(
+                "/api/donasi/update/" + id_donasi[0],
+                { is_accepted: false }
+            )
+        }
+
+        if (rijal.status == 204) {
+            location.reload() }
+        
+    }   
+</script>
+
+<div id="upi-1" upi-title="Manage Mentor" x-data="{query : '', data_mentor : false}">
+    <div class="data-table" x-data="{mentorData : get_data_mentor(query)}">
+        <div class="table-header"  id="biarapa">
             <div class="action-buttons">
-                <button class="btn btn-success" @click="openModal('add-mentor')">+ Tambah Mentor</button>
-                <button class="btn btn-warning" @click="editSelected('kelas')">Edit</button>
-                <button class="btn btn-danger" @click="deleteSelected('kelas')">Hapus</button>
+                <input type="text" @keyup.enter="mentorData = get_data_mentor(query)" x-model="query" class="p-1" name="query" id="q" placeholder="cari berdasarkan judul" autocomplete="off">
             </div>
         </div>
-        <table>
+        <table> 
             <thead>
                 <tr>
                     <th></th>
-                    <th>Nama</th>
-                    <th>Spesialis</th>
-                    <th>Email</th>
-                    <th>Nomor Telepon</th>
-                    <th>Status</th>
+                    <th>Nama Mentor</th>
+                    <th>Role</th>
+                    <th>jenis kelamin</th>
+                    <th>email</th>
+                    <th>afiliasi</th>
+                    <th>kontak</th>
                 </tr>
-            </thead>
+            </thead>  
             <tbody :class="{'loading': loading}">
-                <template x-for="mentor in mentorList">
+                <template x-for="mentor in (await mentorData).data">
                     <tr>
-                        <td><input type="checkbox" x-model="selected.kelas" :value="kelas"></td>
-                        <td x-text="mentor.nama"></td>
-                        <td x-text="mentor.spesialis"></td>
-                        <td x-text="mentor.email"></td>
-                        <td x-text="mentor.nomor_telepon"></td>
-                        <td>
-                            <span class="status-badge status-active" x-text="mentor.status"></span>
-                        </td>
+                        <td><input type="radio" x-model="data_mentor" :value="[mentor.id_pengguna]"></td>
+                        <td><a :href="'/manage/mentor/' + mentor.id_pengguna" x-text="mentor.nama_lengkap"></a></td>  
+                        <td x-text="mentor.role"></td>
+                        <td x-text="mentor.jenis_kelamin">-</td>
+                        <td x-text="mentor.email"></td>      
+                        <td x-text="mentor.afiliasi"></td>                 
+                        <td x-text="mentor.kontak"></td> 
                     </tr>
                 </template>
             </tbody>

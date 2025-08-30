@@ -42,6 +42,7 @@
                     @click="accept(data_donasi.split(','))"
                     x-show="data_donasi">
                 </button>
+                <button><a href="/create/donasi">Tambah Donasi</a></button>
                 <input type="text" @keyup.enter="data_donasi = get_data_donasi(query)" x-model="query" class="p-1" name="query" id="q" placeholder="cari berdasarkan judul" autocomplete="off">
             </div>
         </div>
