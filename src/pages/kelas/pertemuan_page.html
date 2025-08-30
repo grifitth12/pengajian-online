@@ -1,48 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sejarah Peradaban Islam - Jika saya tidak pernah merasa? Mengapa demikian??</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="/src/js/auth.js"></script>
-    <script src="/src/js/kelasPage.js"></script>
-    <script src="/src/js/global.js"></script>    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #4ade80;
-            border-radius: 3px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #22c55e;
-        }
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-    </style>
-</head>
-<body class="bg-gray-50 font-sans" x-data="{pertemuan : fetch_pertemuan_index(''), list_pertemuan : {}}">
-    <div id="loading" class="flex" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; align-items: center; justify-content: center; z-index: 9999;"><div style="border: 4px solid #f3f3f3; border-top: 4px solid #2e8b57; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;"></div><style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style></div>
-    <!-- Header -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/src/js/auth.js"></script>
+<script src="/src/js/kelasPage.js"></script>
+<script src="/src/js/global.js"></script>    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #4ade80;
+        border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #22c55e;
+    }
+    .video-container {
+        position: relative;
+        padding-bottom: 56.25%;
+        height: 0;
+        overflow: hidden;
+    }
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<main x-data="{pertemuan : fetch_pertemuan_index(''), list_pertemuan : {}}" class="mb-12">
     <header class="bg-white shadow-sm">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-2">
@@ -58,12 +49,10 @@
             </div>
         </div>
     </header>
-
-    <!-- Main Content -->
-    <div class="container mx-auto px-4 py-6 flex flex-col lg:flex-row">
+    <div class="container mx-auto px-4 py-6 mt-6 flex flex-col lg:flex-row">
         <!-- Left Content -->
         <main class="w-full lg:w-3/4 lg:pr-6">
-            <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="bg-white rounded-lg shadow-sm mb-6">
                 <a class="text-2xl font-bold text-gray-800 mb-2" x-text="(await pertemuan).data.judul"></a>
                 <div class="flex items-center text-sm text-gray-500 mb-4">
                     <span class="mr-3"><i class="fas fa-calendar-alt mr-1"></i> <span x-text="cetak_tenggal((await pertemuan).data.created_at)"></span></span>
@@ -92,7 +81,7 @@
                     <p class="text-gray-700 italic">"ku alamibahagia dan deritasaling silih berganti,berganti datang pergi dan pergi lagi"</p>
                 </div>
 
-                <div class="border-t border-gray-200 pt-4" x-show="(await pertemuan).data.rangkuman">
+                <div class="border-t text-black border-gray-200 pt-4" x-show="(await pertemuan).data.rangkuman">
                     <h3 class="text-lg font-semibold text-gray-800 mb-3">Rangkuman</h3>
                     <div class="space-y-4">
                         <p x-text="(await pertemuan).data.rangkuman"></p>
@@ -120,7 +109,27 @@
                     </template>
                 </div>
             </div>
-            
+
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                    <i class="fas fa-chalkboard-user text-green-500 mr-2"></i> Mentor Kelas
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3">
+                        <img :src="(await pertemuan).data.kelas.pengguna.foto_url" alt="Mentor" class="w-10 h-10 bg-blue-800 rounded-full">
+                        <div>
+                            <p class="text-sm font-medium text-gray-900" x-text="(await pertemuan).data.kelas.pengguna.nama_lengkap"></p>
+                            <p class="text-xs text-gray-500" x-text="(await pertemuan).data.kelas.id_mentor"></p>
+                        </div>
+                    </div>
+                    <div class="mt-12">
+                        <button class="w-full bg-gray-100 gap-2 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm flex items-center justify-center">
+                            <i class="fa-brands fa-whatsapp"></i> Hubungi Mentor
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
                 <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
                     <i class="fas fa-info-circle text-green-500 mr-2"></i> Informasi Kelas
@@ -136,48 +145,10 @@
                     </div>
                 </div>
             </div>
+
         </aside>
-    </div>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200 mt-8">
-        <div class="container mx-auto px-4 py-6">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-4 md:mb-0">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                            <i class="fas fa-book text-white text-sm"></i>
-                        </div>
-                        <span class="text-lg font-bold text-gray-800">E-Learning</span>
-                    </div>
-                    <p class="text-sm text-gray-500 mt-2">Belajar dengan mudah dan menyenangkan</p>
-                </div>
-                <div class="flex space-x-6">
-                    <a href="#" class="text-gray-500 hover:text-green-600">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" class="text-gray-500 hover:text-green-600">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" class="text-gray-500 hover:text-green-600">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="#" class="text-gray-500 hover:text-green-600">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="border-t border-gray-200 mt-6 pt-6 text-center text-sm text-gray-500">
-                <p>© 2025 E-Learning. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        // You can add JavaScript functionality here if needed
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Page loaded successfully');
-        });
-    </script>
+    </div>        
+</main>
+<div id="loading" class="flex" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; align-items: center; justify-content: center; z-index: 9999;"><div style="border: 4px solid #f3f3f3; border-top: 4px solid #2e8b57; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;"></div><style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style></div>
 </body>
 </html>

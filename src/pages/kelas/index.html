@@ -1,29 +1,12 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Program Kelas Mengaji</title>
-  <link rel="stylesheet" href="/src/css/kelasmengaji.css">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script>
-    async function get_kelas() {
-      let data = await axios.get("/api/kelas/discover", { withCredentials: true })
-      return data.data
-    }
-  </script>
-</head>
-<body>
-
-  <!-- header & navbar -->
-  <div x-data="{ html:'' }"
-    x-init="fetch('/src/assets/assets-pages/navbar-ngaji.html').then(r=>r.text()).then(t=>html=t)"
-    x-html="html">
-  </div>
-
   <!-- Hero -->
+<link rel="stylesheet" href="/src/css/kelasmengaji.css">
+<script>
+  async function get_kelas() {
+    let data = await axios.get("/api/kelas/discover", { withCredentials: true })
+    return data.data
+  }
+</script>
+
   <section class="bg-green-400 text-white py-12 md:py-20">
     <div class="container mx-auto px-4">
       <div class="max-w-3xl mx-auto text-center">
@@ -71,12 +54,3 @@
         </div>
       </div>
   </section>
-
-  <!-- Footer -->
-    <div x-data="{ html:'' }"
-      x-init="fetch('/src/assets/assets-pages/footer-ngaji.html').then(r=>r.text()).then(t=>html=t)"
-      x-html="html">
-    </div>
-
-</body>
-</html>
