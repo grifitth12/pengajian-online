@@ -20,14 +20,13 @@
     async function close_popup() {
         document.getElementById("popup").classList.add("hidden")
     }
-4rg3ik,t
+
     async function create_pertemuan_kelas(pertemuanForm) {
         const response = await axios.post("/api/kelas/pertemuan/insert/" + id_kelas, pertemuanForm)
         if (response.status == 201) {
             document.getElementById("popup").classList.add("hidden")
         }
     }
-
 </script>
 <!-- Main Content -->
 <div id="upi-1" id="upi-1" upi-title="Edit Kelas" class="content flex-1 overflow-auto">

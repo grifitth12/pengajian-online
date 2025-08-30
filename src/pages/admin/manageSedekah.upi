@@ -31,7 +31,7 @@
     }   
 
 </script>
-<div id="upi-1" upi-title="Manage Sedekah" x-data="{query : '', data_donasi : false}">
+<div id="upi-1" upi-title="Manage Donasi" x-data="{query : '', data_donasi : false}">
     <div class="data-table" x-data="{dataDonasi : get_data_donasi(query)}">
         <div class="table-header" id="biarapa"> 
             <div class="action-buttons">
