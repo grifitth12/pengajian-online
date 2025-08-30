@@ -10,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/src/js/auth.js"></script>
     <script src="/src/js/kelasPage.js"></script>
+    <script src="/src/js/global.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -94,16 +95,16 @@
         <div class="container mx-auto px-4">
             <div class="text-center mb-12">
                 <h2 class="text-3xl md:text-4xl font-bold text-green-800 mb-4 islamic-border inline-block pb-2">Ayo bersedekah</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">Bantu sesama dengan sedekah seikhlasnya</p>
+                <p class="text-gray-600 max-w-2xl mx-auto">"Barangsiapa yang memberi pinjaman kepada Allah dengan pinjaman yang baik, maka Allah akan melipatgandakan balasan pinjaman itu untuknya dan dia akan memperoleh pahala yang mulia." (QS. Al-Hadid: 11)</p>
             </div>
             
             <!-- Course Card -->
-            <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden mb-12 course-card transition duration-300">
+            <div x-data="{donasi : fetch_donasi(), sukam : {}}" class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden mb-12 course-card transition duration-300">
                 <div class="md:flex">
                     <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" x-bind:src="(await mdata).data.thumbnail_url" alt="Quran Course">
+                        <img class="h-full w-full object-cover" x-bind:src="(await donasi).data.gambar" alt="Quran Course">
                     </div>
-                    <div x-data="{donasi : fetch_donasi()}" class="p-8 md:w-2/3">
+                    <div class="p-8 md:w-2/3" x-init="sukam = fetch_donasi_inspect((await donasi).data.id_program_donasi)">
                         <div class="flex justify-between items-start mb-4">
                             <div>
                                 <div class="uppercase tracking-wide text-sm text-green-600 font-semibold">Palestina</div>
@@ -112,11 +113,19 @@
                         </div>
                         
                         <p class="mt-2 text-gray-600" x-text="(await donasi).data.deskripsi">A comprehensive course covering proper Quran recitation rules (Tajweed) and memorization techniques with practical exercises.</p>
-                        
+                        <div class="mt-6">
+                            <div class="w-full flex justify-between">
+                                <h1 class="text-black" x-text="cetak_rupiah((await sukam).data.terkumpul)"></h1>
+                                <h1 class="text-black" x-text="cetak_rupiah((await donasi).data.target_donasi)"></h1>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                <div class="bg-green-600 h-2.5 rounded-full" x-bind:style="'width:' + hitung_persen((await sukam).data.terkumpul, (await donasi).data.target_donasi) + '%;'"></div>
+                            </div>                
+                        </div>
                         <!-- <div class="mt-6 flex flex-wrap justify-between items-center">
                             <div class="flex items-center text-sm text-gray-500">
                                 <i class="fas fa-users mr-1"></i>
-                                <span>120 Students</span>
+                                <span x-text="(await sukam).data.terkumpul"></span>
                             </div>
                             <div class="flex items-center text-sm text-gray-500">
                                 <i class="fas fa-clock mr-1"></i>
@@ -173,7 +182,7 @@
                                     <h4 class="font-bold text-gray-900" x-text="pertemuan.judul"></h4>
                                     <p class="text-gray-600 text-sm" x-text="pertemuan.deskripsi"></p>
                                 </div>
-                                <button class="ml-4 bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded-lg text-sm font-medium transition duration-300">
+                                <button @click="window.location.href = '/p/' + pertemuan.id_pertemuan_kelas" class="ml-4 bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded-lg text-sm font-medium transition duration-300">
                                     Join
                                 </button>
                             </div>

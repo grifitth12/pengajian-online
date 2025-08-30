@@ -9,7 +9,9 @@ import
 let
   indexPatterns* = @[
     pattern("/", dash.index, @[HttpGet], name = "index"),
-    pattern("/profile", profile, @[HttpGet], name = "profile")
+    pattern("/profile", profile, @[HttpGet], name = "profile"),
+    pattern("/p/{id_pertemuan_kelas}", kelasPertemuanPage, @[HttpGet]),
+    pattern("/k/{slug}", kelasPage, @[HttpGet])
   ]
   kelasPatterns* = @[
     pattern("/", kelasIndex, @[HttpGet]),
@@ -17,7 +19,7 @@ let
   ]
   kajianPatterns* = @[
     pattern("/", kajianIndex, @[HttpGet]),
-    pattern("/{slug}", kajianPage, @[HttpGet])
+    pattern("/{slug}", kajianPage, @[HttpGet]),
   ]
   adminPatterns* = @[
     pattern("/manage/kajian", adminManageKajian, @[HttpGet]),

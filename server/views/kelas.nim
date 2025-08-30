@@ -5,9 +5,10 @@ import puppy
 import json
 import strformat
 import strutils
+import withTemplate
 
 proc kelasIndex*(ctx: Context) {.async.} =
-    await ctx.staticFileResponse("index.html", "src/pages/kelas")
+    resp generalTemplate "src/pages/kelas/index.html"
 
 proc kelasPage*(ctx: Context) {.async.} =
     proc myRenderProc(
@@ -31,3 +32,6 @@ proc kelasPage*(ctx: Context) {.async.} =
 
 proc kelasDaftar*(ctx: Context) {.async.} =
     resp "Ini Rijal"
+
+proc kelasPertemuanPage*(ctx: Context) {.async.} =
+    resp generalTemplate "src/pages/kelas/pertemuan_page.html"
