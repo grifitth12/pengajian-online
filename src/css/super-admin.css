@@ -282,11 +282,20 @@
     background: #6c757d;
     margin-right: 10px;
     }
+    
+    .admin-avatar img{
+        border-radius: 100%;
+    }
 
     .admin-details p {
     font-size: 14px;
     color: #666;
     margin: 0;
+    }
+
+    .admin-details .role{
+        text-transform: capitalize;
+        font-weight: bolder;
     }
 
     .alert {
