@@ -28,8 +28,10 @@ let
   managePatterns* = @[
     pattern("/kelas/{id_kelas}", manageKelas, @[HttpGet]),
     pattern("/sedekah/{slug}", manageSedekah, @[HttpGet]),
-    pattern("/mentor/{slug}", manageMentor, @[HttpGet])
+    pattern("/mentor/{slug}", manageMentor, @[HttpGet]),
+    pattern("/kajian/{slug}", manageKajian, @[HttpGet])
   ]
   createPatterns* = @[
     pattern("/donasi", createDonasi, @[HttpGet]),
+    pattern("/kajian", createKajian, @[HttpGet]),
   ]
