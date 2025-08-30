@@ -60,7 +60,7 @@
             // upload temp
             let fd = new FormData()
             fd.append("file", file)
-            fd.append("InternalDonasiId", temp_id)
+            fd.append("InternalId", temp_id)
             let res = await axios.post("/api/file/temp-thumbnail-upload", fd, {
                 headers: { "Content-Type": "multipart/form-data" }
             })
@@ -76,7 +76,7 @@
         if (!tempName) return null
         let res = await axios.post("/api/file/commit-temp-thumbnail", {
             filename: tempName,
-            InternalDonasiId: realId
+            InternalId: realId
         })
         return res.data.filename
     }

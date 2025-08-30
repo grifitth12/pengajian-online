@@ -27,7 +27,7 @@
             // upload temp
             let fd = new FormData()
             fd.append("file", file)
-            fd.append("InternalDonasiId", id_donasi)
+            fd.append("InternalId", id_donasi)
             let res = await axios.post("/api/file/temp-thumbnail-upload", fd, {headers:{"Content-Type":"multipart/form-data"}})
             window[target] = res.data.filename 
             document.getElementById(previewId).src = "/static/" + res.data.filename
@@ -38,7 +38,7 @@
 
     async function commitTemp(tempName) {
         if (!tempName) return null
-        let res = await axios.post("/api/file/commit-temp-thumbnail", { filename: tempName, InternalDonasiId: id_donasi})
+        let res = await axios.post("/api/file/commit-temp-thumbnail", { filename: tempName, InternalId: id_donasi})
         return res.data.filename
     }
 
