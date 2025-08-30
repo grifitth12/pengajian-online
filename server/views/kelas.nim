@@ -31,3 +31,6 @@ proc kelasPage*(ctx: Context) {.async.} =
 
 proc kelasDaftar*(ctx: Context) {.async.} =
     resp "Ini Rijal"
+
+proc kelasPertemuanPage*(ctx: Context) {.async.} =
+    await ctx.staticFileResponse("/pertemuan_page.html", "src/pages/kelas")

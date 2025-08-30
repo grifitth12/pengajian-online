@@ -44,5 +44,11 @@ proc manageSedekah*(ctx: Context) {.async.} =
 proc manageMentor*(ctx: Context) {.async.} = 
     resp strip loadFromTemplate readAll newFileStream("src/pages/manage/mentor.upi", fmRead)
 
+proc manageKajian*(ctx: Context) {.async.} = 
+    resp strip loadFromTemplate readAll newFileStream("src/pages/manage/kajian.upi", fmRead)
+
 proc createDonasi*(ctx: Context) {.async.} = 
     resp strip loadFromTemplate readAll newFileStream("src/pages/create/donasi.upi", fmRead)
+
+proc createKajian*(ctx: Context) {.async.} = 
+    resp strip loadFromTemplate readAll newFileStream("src/pages/create/kajian.upi", fmRead)
