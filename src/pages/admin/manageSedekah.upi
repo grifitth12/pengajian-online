@@ -10,7 +10,6 @@
         )
     ).data  
 }
-
     async function accept(id_donasi) {
         let rijal
         if (id_donasi[1] == "false") {
@@ -27,7 +26,6 @@
 
         if (rijal.status == 204) {
             location.reload() }
-        
     }   
 
 </script>

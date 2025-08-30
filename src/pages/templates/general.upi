@@ -63,7 +63,6 @@ aria-expanded="false"
 </header>
 
 $generalContent
-
 <footer class="footer">
 <div class="footer-container">
 <div class="footer-content">
@@ -76,6 +75,7 @@ $generalContent
 <div class="footer-subtitle">ONLINE</div>
 </div>
 </div>
+
 <p class="footer-description">
 PengajianOnline.id adalah platform resmi 
 pengajian daring Masjid Darussalam Kota Wisata, 
@@ -83,6 +83,7 @@ untuk memudahkan jamaah mengikuti kajian
 Islam secara rutin, mudah, dan tepercaya.
 </p>
 </div>
+
 <div class="footer-right">
 <div class="social-links">
 <div class="social-link" title="Facebook">
@@ -98,12 +99,17 @@ Islam secara rutin, mudah, dan tepercaya.
 <img src="/src/assets/icons/whatsup.png" alt="icons">
 </div>
 </div>
+
 <button class="footer-cta">
 HUBUNGI KAMI
 </button>
 </div>
 </div>
 </footer>
+<div class="tambahan">
+
+</div>
+</body>
 <script>
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms))
