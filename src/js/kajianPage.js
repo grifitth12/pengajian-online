@@ -1,7 +1,6 @@
 async function fetch_get_data() {
-    // let slug = window.location.href.split("/").at(-1)
+    let slug = window.location.href.split("/").at(-1)
     console.log("RIJAL")
-    let slug = "indonesia-merdeka-tahun-berapa"
     let url = " /api/kajian/index/" + slug
     try {
         const response = await axios.get(url);
