@@ -8,13 +8,13 @@ import strutils
 import withTemplate
 
 proc kelasIndex*(ctx: Context) {.async.} =
-    resp generalTemplate "src/pages/kelas/index.html"
+    resp generalTemplate "src/pages/kelas/index.upi"
 
 proc kelasPage*(ctx: Context) {.async.} =
     proc myRenderProc(
         title: string,
         description: string): string =
-        compileTemplateFile("../../src/pages/kelas/page.html", baseDir = getScriptDir())    
+        compileTemplateFile("../../src/pages/kelas/page.upi", baseDir = getScriptDir())    
     
     var
         slug = ctx.getPathParams("slug")
@@ -34,4 +34,4 @@ proc kelasDaftar*(ctx: Context) {.async.} =
     resp "Ini Rijal"
 
 proc kelasPertemuanPage*(ctx: Context) {.async.} =
-    resp generalTemplate "src/pages/kelas/pertemuan_page.html"
+    resp generalTemplate "src/pages/kelas/pertemuan_page.upi"
