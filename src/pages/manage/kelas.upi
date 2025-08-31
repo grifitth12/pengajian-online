@@ -5,37 +5,11 @@
     async function fetch_data() {
         return JSON.parse(document.querySelector("script[data-upi]").textContent).result.data[0]
     }
-
-    async function update(params, id_kelas) {
-        try {
-            let response = await axios.put("/api/kelas/" + id_kelas + "/update", params)
-            supami("wow", "Kelas berhasil diupdate.", "")
-        } catch (error) { supami("error", "Gagal Menambahkan Pertemuan", "Anda bukan pemiliki dari kelas ini dan tidak memiliki izin untuk melakuka update.") }
-    }
-
-    async function tambah_kelas() {
-        let popup = document.getElementById("popup-child")
-        document.getElementById("popup").classList.remove("hidden")
-        
-        popup.setAttribute("dapdap", "rijal")
-        popup.setAttribute("x-init", "fetch('/src/pages/popup/tambahPertemuan.dap').then(r=>r.text()).then(t=>html=t)")
-    }
-
-    async function create_pertemuan_kelas(pertemuanForm) {
-        try {
-            const response = await axios.post("/api/kelas/pertemuan/insert/" + id_kelas, pertemuanForm)
-            supami("rijal", "data berhasil ditambahkan", "")
-        } catch (error) {
-            if (error.response.status == 403) {
-                supami("error", "Gagal Menambahkan Pertemuan", "Anda bukan pemiliki dari kelas ini dan tidak memiliki izin untuk menambahkan pertemuan baru.")
-            }
-        }
-    }
 </script>
 <!-- Main Content -->
 <div id="upi-1" id="upi-1" upi-title="Edit Kelas" class="content flex-1 overflow-auto">
     <!-- Main Content Area -->
-    <main class="p-6" x-data="{kelas : fetch_data(), kelasForm : {}}">
+    <main class="p-6" x-data="{kelas : fetch_data(), kelasForm : {}, pertemuan_i : {}}">
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
             <div class="p-6 border-b">
                 <div class="flex justify-between items-center">
@@ -97,9 +71,13 @@
                             <div class="border-gray-300 border p-3 rounded-lg">
                                 <h1 x-text="pertemuan.judul" class="text-1xl font-bold mb-2"></h1>
                                 <p x-text="pertemuan.deskripsi"></p>
-                                <div class="flex mt-3 gap-4">
-                                    <h2 x-text="pertemuan.tipe_pertemuan">rijal</h2>
-                                    <h2 x-text="cetak_tenggal(pertemuan.created_at)">rijal</h2>
+                                <div class="flex gap-4 mt-3 gap-4">
+                                    <h2 x-text="cetak_tenggal(pertemuan.created_at)"></h2>
+                                    <h2 x-text="pertemuan.tipe_pertemuan"></h2>
+                                    <div class="flex gap-4">
+                                        <i @click="fetch_pertemuan_for_update(pertemuan.id_pertemuan_kelas)" class="fa-solid fa-pen" style="color: #0081a1;"></i>
+                                        <i @click="delete_pertemuan_kelas(pertemuan.id_kelas, pertemuan.id_pertemuan_kelas)" class="fa-solid fa-trash" style="color: #fa0000;"></i>
+                                    </div>
                                 </div>
                             </div>
                         </template>
