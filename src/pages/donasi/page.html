@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donasi di Heni - Bantu Warga Padang</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/src/js/donasiPage.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .progress-bar {
@@ -37,24 +38,6 @@
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
-    <!-- Header -->
-    <header class="bg-white shadow-sm">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center">
-                <i class="fas fa-hands-helping text-3xl text-emerald-600 mr-3"></i>
-                <h1 class="text-2xl font-bold text-gray-800">DonasiKita</h1>
-            </div>
-            <nav class="hidden md:flex space-x-8">
-                <a href="#" class="text-gray-600 hover:text-emerald-600 font-medium">Beranda</a>
-                <a href="#" class="text-gray-600 hover:text-emerald-600 font-medium">Program</a>
-                <a href="#" class="text-gray-600 hover:text-emerald-600 font-medium">Tentang Kami</a>
-                <a href="#" class="text-gray-600 hover:text-emerald-600 font-medium">Kontak</a>
-            </nav>
-            <button class="md:hidden text-gray-600">
-                <i class="fas fa-bars text-2xl"></i>
-            </button>
-        </div>
-    </header>
 
     <!-- Hero Section -->
     <section class="relative bg-white overflow-hidden">
@@ -207,24 +190,6 @@
                         Anda bisa melakukan donasi dengan mengklik tombol "Donasi Sekarang" di atas dan memilih nominal donasi yang tersedia atau memasukkan nominal sendiri. Setelah itu, Anda akan diarahkan ke halaman pembayaran.
                     </div>
                 </div>
-                <div class="border border-gray-200 rounded-lg overflow-hidden">
-                    <button class="faq-question w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 text-left">
-                        <span class="font-medium text-gray-800">Apakah donasi bisa dikurangkan dari pajak?</span>
-                        <i class="fas fa-chevron-down text-emerald-600 transition-transform"></i>
-                    </button>
-                    <div class="faq-answer hidden p-4 border-t border-gray-200 bg-gray-50 text-gray-600">
-                        Ya, donasi melalui platform kami bisa dijadikan pengurang pajak. Anda akan menerima bukti donasi yang bisa digunakan untuk keperluan pengurangan pajak.
-                    </div>
-                </div>
-                <div class="border border-gray-200 rounded-lg overflow-hidden">
-                    <button class="faq-question w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 text-left">
-                        <span class="font-medium text-gray-800">Bagaimana transparansi penggunaan dana?</span>
-                        <i class="fas fa-chevron-down text-emerald-600 transition-transform"></i>
-                    </button>
-                    <div class="faq-answer hidden p-4 border-t border-gray-200 bg-gray-50 text-gray-600">
-                        Kami menyediakan laporan berkala tentang penggunaan dana donasi yang mencakup rincian penerima manfaat, bukti pembelian, dan dokumentasi kegiatan. Laporan ini bisa diakses melalui halaman program atau akan dikirimkan via email kepada donatur.
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -239,64 +204,6 @@
             </button>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8">
-        <div class="container mx-auto px-4">
-            <div class="grid md:grid-cols-4 gap-8">
-                <div>
-                    <div class="flex items-center mb-4">
-                        <i class="fas fa-hands-helping text-2xl text-emerald-400 mr-3"></i>
-                        <h3 class="text-xl font-bold">DonasiKita</h3>
-                    </div>
-                    <p class="text-gray-400">Platform donasi online untuk membantu sesama dengan transparansi dan akuntabilitas.</p>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Tautan Cepat</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white">Beranda</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Program Donasi</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Cara Berdonasi</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Tentang Kami</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Kontak</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li class="flex items-center">
-                            <i class="fas fa-envelope mr-2"></i> info@donasikita.id
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-phone mr-2"></i> (021) 1234-5678
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-map-marker-alt mr-2"></i> Jakarta, Indonesia
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Ikuti Kami</h4>
-                    <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-emerald-600">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-emerald-600">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-emerald-600">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-emerald-600">
-                            <i class="fab fa-youtube"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
-                <p>&copy; 2025 DonasiKita. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
 
     <script>
         // FAQ toggle functionality
