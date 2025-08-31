@@ -42,3 +42,19 @@ function cetak_rupiah(amount, { symbol = true, decimals = 0 } = {}) {
   const sign = n < 0 ? '-' : '';
   return `${sign}${symbol ? 'Rp ' : ''}${formatted}`;
 }
+
+async function close_popup() {
+    document.getElementById("popup").classList.add("hidden")
+}
+
+function supami(level, headline, message) {
+    close_popup().then(() => {
+        let file_nov = level == 'error' ? 'notificationError' : 'notificationSuccess'
+    
+        document.getElementById("popup").classList.remove("hidden")
+        document.getElementById("popup-child").setAttribute("upi-message-headline", headline)
+        document.getElementById("popup-child").setAttribute("upi-message", message)
+        document.getElementById("popup-child").setAttribute("x-init", `fetch('/src/pages/popup/${file_nov}.dap').then(r=>r.text()).then(t=>{html=t})`)
+    })
+        
+}

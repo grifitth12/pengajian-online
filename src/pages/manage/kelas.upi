@@ -1,3 +1,5 @@
+<script src="/src/js/global.js"></script>
+<script src="/src/js/kelasPage.js"></script>
 <script>
     let id_kelas = window.location.href.split("/").at(-1)
     async function fetch_data() {
@@ -5,11 +7,13 @@
     }
 
     async function update(params, id_kelas) {
-        let response = await axios.put("/api/kelas/" + id_kelas + "/update", params)
-        alert(response.status)
+        try {
+            let response = await axios.put("/api/kelas/" + id_kelas + "/update", params)
+            supami("wow", "Kelas berhasil diupdate.", "")
+        } catch (error) { supami("error", "Gagal Menambahkan Pertemuan", "Anda bukan pemiliki dari kelas ini dan tidak memiliki izin untuk melakuka update.") }
     }
 
-    async function tambah_kelas(id_kelas) {
+    async function tambah_kelas() {
         let popup = document.getElementById("popup-child")
         document.getElementById("popup").classList.remove("hidden")
         
@@ -17,14 +21,14 @@
         popup.setAttribute("x-init", "fetch('/src/pages/popup/tambahPertemuan.dap').then(r=>r.text()).then(t=>html=t)")
     }
 
-    async function close_popup() {
-        document.getElementById("popup").classList.add("hidden")
-    }
-
     async function create_pertemuan_kelas(pertemuanForm) {
-        const response = await axios.post("/api/kelas/pertemuan/insert/" + id_kelas, pertemuanForm)
-        if (response.status == 201) {
-            document.getElementById("popup").classList.add("hidden")
+        try {
+            const response = await axios.post("/api/kelas/pertemuan/insert/" + id_kelas, pertemuanForm)
+            supami("rijal", "data berhasil ditambahkan", "")
+        } catch (error) {
+            if (error.response.status == 403) {
+                supami("error", "Gagal Menambahkan Pertemuan", "Anda bukan pemiliki dari kelas ini dan tidak memiliki izin untuk menambahkan pertemuan baru.")
+            }
         }
     }
 </script>
@@ -89,14 +93,13 @@
                         <div @click="tambah_kelas((await kelas).id_kelas)" class="border-green-500 flex justify-center items-center border p-3 rounded-lg">
                             <h1 class="text-green-500 text-2xl">Tambah</h1>
                         </div>                        
-                        <template x-for="data in ['','']">
+                        <template x-for="pertemuan in (await fetch_pertemuan()).data">
                             <div class="border-gray-300 border p-3 rounded-lg">
-                                <h1 class="text-1xl font-bold mb-2">Sekuat Rijal</h1>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro consectetur voluptatum minus quia.</p>
+                                <h1 x-text="pertemuan.judul" class="text-1xl font-bold mb-2"></h1>
+                                <p x-text="pertemuan.deskripsi"></p>
                                 <div class="flex mt-3 gap-4">
-                                    <h2>rijal</h2>
-                                    <h2>rijal</h2>
-                                    <h2>rijal</h2>
+                                    <h2 x-text="pertemuan.tipe_pertemuan">rijal</h2>
+                                    <h2 x-text="cetak_tenggal(pertemuan.created_at)">rijal</h2>
                                 </div>
                             </div>
                         </template>

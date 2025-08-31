@@ -27,6 +27,7 @@ async function fetch_pertemuan(id_kelas) {
 }
 
 async function fetch_pertemuan(id_kelas) {
+    id_kelas = id_kelas || window.location.href.split("/").at(-1)
     let url = "/api/kelas/" + id_kelas + "/pertemuan"
     const response = await axios.get(url)
     return response.data
