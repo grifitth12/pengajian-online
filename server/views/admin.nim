@@ -1,28 +1,20 @@
 import 
     prologue,
     strutils,
-    streams
-
-proc loadFromTemplate(
-    html: string
-) : string =
-    let
-        templ = readAll newFileStream("src/pages/admin/template.upi", fmRead)
-        page = templ.replace("\n", "") % ["adminContent", html]
-
-    return page
+    streams,
+    withTemplate
 
 proc adminManageKajian*(ctx: Context) {.async.} =
-    resp strip loadFromTemplate readAll newFileStream("src/pages/admin/manageKajian.upi", fmRead)
+    resp strip loadFromTemplate "src/pages/admin/manageKajian.upi"
 
 proc adminManageKelas*(ctx: Context) {.async.} =
-    resp strip loadFromTemplate readAll newFileStream("src/pages/admin/manageKelas.upi", fmRead)
+    resp strip loadFromTemplate "src/pages/admin/manageKelas.upi"
 
 proc adminManageMentor*(ctx: Context) {.async.} =
-    resp strip loadFromTemplate readAll newFileStream("src/pages/admin/manageMentor.upi", fmRead)
+    resp strip loadFromTemplate "src/pages/admin/manageMentor.upi"
 
 proc adminManageSedekah*(ctx: Context) {.async.} =
-    resp strip loadFromTemplate readAll newFileStream("src/pages/admin/manageSedekah.upi", fmRead)
+    resp strip loadFromTemplate "src/pages/admin/manageSedekah.upi"
 
 proc adminIndex*(ctx: Context) {.async.} =
-    resp strip loadFromTemplate readAll newFileStream("src/pages/admin/dashboard.upi", fmRead)
+    resp strip loadFromTemplate "src/pages/admin/dashboard.upi"

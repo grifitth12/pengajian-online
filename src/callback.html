@@ -10,10 +10,13 @@ function getCookiesFromHash() {
 }
 
 const cookies = getCookiesFromHash();
+const continue_to = window.localStorage.getItem("continue_to")
 if (!cookies["access_token"]) {
     window.location.replace = `/`
 } else{
     document.cookie = `access_token=${cookies["access_token"]}; path=/; domain=localhost; SameSite=Lax; max-age=${7 * 24 * 60 * 60}`; /* secure;*/
-    window.location.replace("/"); // redirect to your desired page
+    redirect = continue_to ? continue_to : "/"
+    window.localStorage.removeItem("continue_to")
+    window.location.href = redirect
 }
 </script>

@@ -3,18 +3,8 @@ import
     strutils,
     streams,
     puppy,
-    json
-
-proc loadFromTemplate(
-    html: string,
-    data: auto = ""
-) : string =
-    let
-        templ = readAll newFileStream("src/pages/admin/template.upi", fmRead)
-        dataa = %*{"result" : data}
-        page = templ % ["adminContent", html] % ["dataUpi", $dataa]
-
-    return page
+    json,
+    withTemplate
 
 proc manageKelas*(ctx: Context) {.async.} =
     var
@@ -27,8 +17,7 @@ proc manageKelas*(ctx: Context) {.async.} =
     if dapda.code == 200 :
         let
             jsonn = parseJson(dapda.body)
-            file = newFileStream("src/pages/manage/kelas.upi", fmRead)
-            page = loadFromTemplate( readAll file, jsonn )
+            page = loadFromTemplate( "src/pages/manage/kelas.upi", jsonn )
 
         resp strip page
 
@@ -39,16 +28,16 @@ proc manageKelas*(ctx: Context) {.async.} =
         resp $dapda.code   
 
 proc manageSedekah*(ctx: Context) {.async.} = 
-    resp strip loadFromTemplate readAll newFileStream("src/pages/manage/sedekah.upi", fmRead)
+    resp loadFromTemplate "src/pages/manage/sedekah.upi"
 
 proc manageMentor*(ctx: Context) {.async.} = 
-    resp strip loadFromTemplate readAll newFileStream("src/pages/manage/mentor.upi", fmRead)
+    resp loadFromTemplate "src/pages/manage/mentor.upi"
 
 proc manageKajian*(ctx: Context) {.async.} = 
-    resp strip loadFromTemplate readAll newFileStream("src/pages/manage/kajian.upi", fmRead)
+    resp loadFromTemplate "src/pages/manage/mentor.upi"
 
 proc createDonasi*(ctx: Context) {.async.} = 
-    resp strip loadFromTemplate readAll newFileStream("src/pages/create/donasi.upi", fmRead)
+    resp loadFromTemplate "src/pages/create/donasi.upi"
 
 proc createKajian*(ctx: Context) {.async.} = 
-    resp strip loadFromTemplate readAll newFileStream("src/pages/create/kajian.upi", fmRead)
+    resp loadFromTemplate "src/pages/create/kajian.upi"

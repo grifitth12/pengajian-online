@@ -86,7 +86,7 @@
     }
 </script>
 <!-- Main Content -->
-<div id="upi-1" upi-title="Create Donasi" class="content flex-1 overflow-auto">
+<div id="upi-1" id="upi-1" upi-title="Create Donasi" class="content flex-1 overflow-auto">
     <!-- Main Content Area -->
     <main class="p-6" x-data="{DonasiForm : {}}">
         <div class="bg-white rounded-lg shadow-md overflow-hidden">

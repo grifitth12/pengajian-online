@@ -3,10 +3,11 @@ import
     os,
     nimja,
     puppy,
-    strformat
+    strformat,
+    withTemplate
 
 proc kajianIndex*(ctx: Context) {.async.} =
-    await ctx.staticFileResponse("index.html", "src/pages/kajian")
+    resp generalTemplate "src/pages/kajian/index.upi"
 
 proc kajianPage*(ctx: Context) {.async.} =
     proc myRenderProc(
@@ -14,7 +15,7 @@ proc kajianPage*(ctx: Context) {.async.} =
         deskripsi: string,
         thumbnail_url: string,
         deskripsi_lengkap: string): string =
-        compileTemplateFile("../../src/pages/kajian/page.html", baseDir = getScriptDir())    
+        compileTemplateFile("../../src/pages/kajian/page.upi", baseDir = getScriptDir())    
     
     var
         slug = ctx.getPathParams("slug")

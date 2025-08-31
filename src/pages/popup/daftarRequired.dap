@@ -1,4 +1,22 @@
-Anda belum terdaftar. Daftar ke kelas?
-<button @click="daftar_kelas('ID_KELAS_JAPFU')" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-    Daftar
-</button>
+<div class="flex w-screen h-screen items-center">
+    <div class="mb-8 max-w-md mx-auto bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+        <div class="text-center space-y-4">
+            <div class="bg-green-50 rounded-lg p-4">
+                <svg class="w-12 h-12 text-green-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+                <p class="text-gray-700 font-medium">Anda belum terdaftar</p>
+                <p class="text-sm text-gray-500 mt-1">Bergabung dengan kelas untuk mulai belajar</p>
+            </div>
+            <button onclick="daftar_kelas('ID_KELAS_JAPFU')" type="button" 
+                    class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform focus:outline-none focus:ring-4 focus:ring-green-300 shadow-lg hover:shadow-xl">
+                <span class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <span>Daftar Sekarang</span>
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
