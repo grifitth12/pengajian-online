@@ -34,7 +34,7 @@ proc manageMentor*(ctx: Context) {.async.} =
     resp loadFromTemplate "src/pages/manage/mentor.upi"
 
 proc manageKajian*(ctx: Context) {.async.} = 
-    resp loadFromTemplate "src/pages/manage/mentor.upi"
+    resp loadFromTemplate "src/pages/manage/kajian.upi"
 
 proc createDonasi*(ctx: Context) {.async.} = 
     resp loadFromTemplate "src/pages/create/donasi.upi"
