@@ -33,7 +33,8 @@
         height: 100%;
     }
 </style>
-<main x-data="{pertemuan : fetch_pertemuan_index(''), list_pertemuan : {}}" class="mb-12">
+<div id="loading" class="flex" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; align-items: center; justify-content: center; z-index: 9999;"><div style="border: 4px solid #f3f3f3; border-top: 4px solid #2e8b57; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;"></div><style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style></div>
+<main x-data="{pertemuan : fetch_pertemuan_index(), list_pertemuan : {}}" class="mb-12">
     <header class="bg-white shadow-sm">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-2">
@@ -64,7 +65,7 @@
                 </div>
 
                 <div id="Blog" class="hidden rounded-lg overflow-hidden p-6 mb-6 shadow">
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe, atque. Architecto facere adipisci iusto excepturi. Voluptatum nostrum aut incidunt! Doloribus, officia quasi. Ab eveniet soluta vel suscipit voluptate itaque non eligendi dolor eius similique praesentium reprehenderit repellat illum ipsam commodi accusantium impedit temporibus molestiae qui numquam, inventore consequuntur optio dolorem.</p>
+                    <p class="text-black" x-text="(await pertemuan).data.blog_text"></p>
                 </div>
                 
                 <div id="External" class="hidden prose max-w-none mb-6">
@@ -75,10 +76,6 @@
                             </button>
                         </div>
                     </div>
-                </div>
-
-                <div id="Blog" class="prose hidden max-w-none mb-6">
-                    <p class="text-gray-700 italic">"ku alamibahagia dan deritasaling silih berganti,berganti datang pergi dan pergi lagi"</p>
                 </div>
 
                 <div class="border-t text-black border-gray-200 pt-4" x-show="(await pertemuan).data.rangkuman">
@@ -149,6 +146,5 @@
         </aside>
     </div>        
 </main>
-<div id="loading" class="flex" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; align-items: center; justify-content: center; z-index: 9999;"><div style="border: 4px solid #f3f3f3; border-top: 4px solid #2e8b57; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;"></div><style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style></div>
 </body>
 </html>

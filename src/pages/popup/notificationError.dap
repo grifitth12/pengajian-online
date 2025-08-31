@@ -1,0 +1,19 @@
+<div class="mb-8">
+    <div class="bg-white max-w-md mx-auto rounded-xl shadow-lg border border-red-100 overflow-hidden">
+        <div class="bg-gradient-to-r from-red-500 to-red-600 h-2"></div>
+        <div class="p-8 text-center space-y-6">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <div class="space-y-3">
+                <h1 id="notify_headline_message" class="text-2xl font-bold text-gray-800" x-text="$refs.popup.getAttribute('upi-message-headline')"></h1>
+                <p id="notify_message" class="text-gray-600 leading-relaxed" x-text="$refs.popup.getAttribute('upi-message')"></p>
+            </div>
+            <button @click="close_popup()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2.5 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                Batal
+            </button>
+        </div>
+    </div>
+</div>
