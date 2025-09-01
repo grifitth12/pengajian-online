@@ -1,4 +1,4 @@
-:80
+:5501
 reverse_proxy /api/* :8081
 reverse_proxy /* :8080
 reverse_proxy /static/* :8081

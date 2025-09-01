@@ -7,6 +7,69 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/src/js/donasiPage.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.js" defer></script>
+     <script>
+    
+    async function rijal(id_donasi) {
+        let url = "/api/donasi/" + id_donasi + "/inspect"
+            try {
+                const response = await axios.get(url);
+                return response.data
+            } catch (error) {
+        if (error.response) {
+            const status = error.response.status;
+            document.querySelector("body").innerHTML = "<h1>404</h1>"
+        }
+    }          
+}
+    async function fetch_donasi() {
+    let slug = window.location.href.split("/").at(-1)
+    let url = "/api/donasi/" + slug
+    try {
+        const response = await axios.get(url);
+        return response.data
+    } catch (error) {
+        if (error.response) {
+            const status = error.response.status;
+            document.querySelector("body").innerHTML = "<h1>404</h1>"
+        }
+    }    
+}
+        // FAQ toggle functionality
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('i');
+                
+                answer.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            });
+        });
+
+        // Simple donation amount selection
+        document.querySelectorAll('.donation-card').forEach(card => {
+            card.addEventListener('click', () => {
+                // Remove active class from all cards
+                document.querySelectorAll('.donation-card').forEach(c => {
+                    c.classList.remove('border-emerald-500', 'bg-emerald-50');
+                });
+                
+                // Add active class to clicked card
+                card.classList.add('border-emerald-500', 'bg-emerald-50');
+            });
+        });
+
+        // Simulate donation progress animation
+        window.addEventListener('load', () => {
+            const progressFill = document.querySelector('.progress-fill');
+            progressFill.style.width = '0%';
+            
+            setTimeout(() => {
+                progressFill.style.width = '64%';
+            }, 300);
+        });
+    </script>
     <style>
         .progress-bar {
             height: 12px;
@@ -38,13 +101,13 @@
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
-
+    <main x-data="{donasi:fetch_donasi()}">
     <!-- Hero Section -->
     <section class="relative bg-white overflow-hidden">
         <div class="container mx-auto px-4 py-12 md:py-20 flex flex-col md:flex-row items-center">
             <div class="md:w-1/2 mb-10 md:mb-0">
-                <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6 leading-tight">Donasi di Heni</h1>
-                <p class="text-lg text-gray-600 mb-8">Kami membantu warga Padang yang sedang kesusahan. Jika saatnya sudah tiba. Yaudah lah ya. Awokawokwok.</p>
+                <h1 x-text="(await donasi).data.nama_program" class="text-4xl md:text-5xl font-bold text-gray-800 mb-6 leading-tight"></h1>
+                <p x-text="(await donasi).data.deskripsi" class="text-lg text-gray-600 mb-8"></p>
                 <div class="flex space-x-4">
                     <button class="donate-btn text-white px-8 py-3 rounded-full font-semibold">
                         Donasi Sekarang
@@ -55,7 +118,7 @@
                 </div>
             </div>
             <div class="md:w-1/2">
-                <img src="https://images.unsplash.com/photo-1564121211835-e88c852648ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                <img x-bind:src="(await donasi).data.gambar"
                      alt="Donasi di Heni" 
                      class="w-full h-auto rounded-xl shadow-lg object-cover">
             </div>
@@ -63,7 +126,7 @@
     </section>
 
     <!-- Donation Progress -->
-    <section class="bg-emerald-50 py-12">
+    <section x-init=""class="bg-emerald-50 py-12">
         <div class="container mx-auto px-4">
             <div class="bg-white rounded-xl shadow-sm p-6 md:p-8 max-w-4xl mx-auto">
                 <div class="flex justify-between items-center mb-4">
@@ -204,41 +267,6 @@
             </button>
         </div>
     </section>
-
-    <script>
-        // FAQ toggle functionality
-        document.querySelectorAll('.faq-question').forEach(button => {
-            button.addEventListener('click', () => {
-                const answer = button.nextElementSibling;
-                const icon = button.querySelector('i');
-                
-                answer.classList.toggle('hidden');
-                icon.classList.toggle('rotate-180');
-            });
-        });
-
-        // Simple donation amount selection
-        document.querySelectorAll('.donation-card').forEach(card => {
-            card.addEventListener('click', () => {
-                // Remove active class from all cards
-                document.querySelectorAll('.donation-card').forEach(c => {
-                    c.classList.remove('border-emerald-500', 'bg-emerald-50');
-                });
-                
-                // Add active class to clicked card
-                card.classList.add('border-emerald-500', 'bg-emerald-50');
-            });
-        });
-
-        // Simulate donation progress animation
-        window.addEventListener('load', () => {
-            const progressFill = document.querySelector('.progress-fill');
-            progressFill.style.width = '0%';
-            
-            setTimeout(() => {
-                progressFill.style.width = '64%';
-            }, 300);
-        });
-    </script>
+    </main>
 </body>
 </html>
