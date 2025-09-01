@@ -27,7 +27,7 @@
   
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
     
-    <template x-for="(item, index) in donasi" :key="item.id_program_donasi">
+    <template x-for="(item, index) in donasi" :key="item.id_donasi">
       <div class="card-hover glass-effect rounded-3xl overflow-hidden border border-white/20 animate-fade-in-up opacity-0"
             :class="'card-' + ((index % 6) + 1)"
             x-intersect="$el.classList.add('opacity-100')">
