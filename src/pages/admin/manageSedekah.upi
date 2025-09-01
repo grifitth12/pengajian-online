@@ -59,10 +59,10 @@
             <tbody :class="{'loading': loading}">
                 <template x-for="sedekah in (await dataDonasi).data">
                     <tr>
-                        <td><input type="radio" x-model="data_donasi" :value="[sedekah.id_donasi, sedekah.is_accepted]"></td>
-                        <td><a :href="'/manage/sedekah/' + sedekah.id_donasi" x-text="sedekah.nama_program"></a></td>
+                        <td><input type="radio" x-model="data_donasi" :value="[sedekah.id_program_donasi, sedekah.is_accepted]"></td>
+                        <td><a :href="'/manage/sedekah/' + sedekah.id_program_donasi" x-text="sedekah.nama_program"></a></td>
                         <td x-text="sedekah.slug"></td>
-                        <td x-text="sedekah.id_donasi"></span></td>
+                        <td x-text="sedekah.id_program_donasi"></span></td>
                         <td x-text="sedekah.deskripsi"></td>
                         <td>
                             <span class="status-badge status-ongoing" x-text="sedekah.status"></span>
