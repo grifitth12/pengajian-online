@@ -7,6 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/src/js/global.js"></script>
     <link rel="stylesheet" href="/src/css/super-admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -28,31 +29,15 @@
         </div>
         <ul class="sidebar-menu">
             <li><a href="/admin">Dashboard</a></li> 
-            <li><a href="/admin/manage/kelas">Manage Kelas Online</a></li>
-            <li><a href="/admin/manage/kajian">Manage Kajian</a></li>
-            <li><a href="/admin/manage/sedekah">Manage Donasi</a></li>
-            <li><a href="/admin/manage/mentor">Manage Mentor</a></li>
+            <h1 class="ml-3 mt-6">Manage</h1>
+            <li><a href="/admin/manage/kelas">Kelas</a></li>
+            <li><a href="/admin/manage/kajian">Kajian</a></li>
+            <li><a href="/admin/manage/sedekah">Donasi</a></li>
+            <li><a href="/admin/manage/mentor">Mentor</a></li>
+            <h1 class="ml-3 mt-6">Settings</h1>
+            <li><a href="#">Afiliasi</a></li>
+            <li><a href="#">Total Donasi</a></li>
         </ul>
-        <a href="/src/pages/profile.html">
-        <div class="admin-info" x-data="{
-            profile: {},
-            fetch_data: async function() {
-                let data = (await axios.get('/api/profile')).data;
-                if (data && data.foto_url) {
-                    data.foto_url = '/static/' + data.foto_url;
-                }
-                this.profile = data;
-            }
-        }" x-init="fetch_data()">
-            <div class="admin-avatar">
-                <img :src="profile.foto_url" alt="Admin Avatar" />
-            </div>
-            <div class="admin-details">
-                <p class="role" x-text="profile.role"></p>
-                <p x-text="profile.email"></p>
-            </div>
-        </div>
-        </a>
     </div>
     <div class="main-content">
         <div class="header">
