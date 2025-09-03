@@ -13,7 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.js" defer></script>
      <script>
     
-    async function rijal(id_donasi) {
+    async function kadapi(id_donasi) {
         let url = "/api/donasi/" + id_donasi + "/inspect"
             try {
                 const response = await axios.get(url);
@@ -103,9 +103,8 @@
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
-    <main x-data="{donasi:fetch_donasi()}">
+    <main x-data="{donasi:fetch_donasi(), rijal:{}}">
     <!-- Hero Section -->
-    <main x-data="{rijal: rijal()}">
     <section class="relative bg-white overflow-hidden">
         <div class="container mx-auto px-4 py-12 md:py-20 flex flex-col md:flex-row items-center">
             <div class="md:w-1/2 mb-10 md:mb-0">
@@ -129,38 +128,36 @@
     </section>
 
     <!-- Donation Progress -->
-    <section x-init=""class="bg-emerald-50 py-12">
+    <section x-init="rijal = kadapi((await donasi).data.id_program_donasi)"class="bg-emerald-50 py-12">
         <div class="container mx-auto px-4">
             <div class="bg-white rounded-xl shadow-sm p-6 md:p-8 max-w-4xl mx-auto">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-gray-800">Progress Donasi</h2>
                     <span class="text-emerald-600 font-bold">Aktif</span>
                 </div>
-                
                 <div class="mb-6">
                     <div class="flex justify-between mb-2">
                         <span class="text-gray-600">Terkumpul</span>
-                        <span class="font-semibold text-emerald-600">Rp 320,000</span>
+                        <span x-text="(await rijal).data.terkumpul" class="font-semibold text-emerald-600"></span>
                     </div>
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 64%"></div>
+                        <div x-bind:style="'width:' + hitung_persen((await rijal).data.terkumpul, (await donasi).data.target_donasi) + '%;'" class="progress-fill" style="width: 64%"></div>
                     </div>
                     <div class="flex justify-between mt-2">
-                        <span class="text-gray-600">Target: Rp 500,000</span>
-                        <span class="text-gray-600">64%</span>
+                        <span class="text-gray-600">Target: <span x-text="cetak_rupiah((await donasi).data.target_donasi)"></span></span>
+                        <span x-text="hitung_persen((await rijal).data.terkumpul, (await donasi).data.target_donasi)" class="text-gray-600"></span>
                     </div>
                 </div>
                 
                 <div class="flex w-full justify-center text-center">
                     <h1 class="text-6xl text-black">0821 2545 5993</h1>
                 </div>
-                
                 <div class="mt-12">
                     <div class="flex gap-8">
                         <input type="text" placeholder="Nama anda" 
-                               class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                               class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-black">
                         <input type="text" placeholder="Doa anda" 
-                               class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                               class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-black">
                     </div>
                     <button class="donate-btn w-full mt-4 text-white px-6 py-3 rounded-lg font-semibold">
                         Upload Bukti Pembayaran
@@ -175,7 +172,7 @@
         <div class="container mx-auto px-4 max-w-4xl">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Tentang Program Ini</h2>
             <div class="prose max-w-none text-gray-600">
-                <p>Program "Donasi di Heni" adalah inisiatif untuk membantu warga Padang yang sedang mengalami kesulitan ekonomi. Dengan kondisi yang semakin sulit, banyak keluarga membutuhkan bantuan untuk memenuhi kebutuhan pokok sehari-hari.</p>
+                <p x-text="(await rijal).data.deskripsi_lengkap">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perferendis dolor hic numquam distinctio qui doloremque dicta quidem odio dolorem id. Ab beatae ullam obcaecati laboriosam voluptatibus culpa itaque adipisci. At!</p>
                 
                 <p class="mt-4">Dana yang terkumpul akan digunakan untuk:</p>
                 <ul class="list-disc pl-5 mt-2 space-y-2">
@@ -256,7 +253,6 @@
             </button>
         </div>
     </section>
-    </main>
     </main>
 </body>
 </html>
