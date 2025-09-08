@@ -5,17 +5,97 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Program Kelas Mengaji</title>
   <link rel="stylesheet" href="/src/css/kelasmengaji.css">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
   <script>
-    async function get_kelas() {
-      let data = await axios.get("/api/kelas/discover", { withCredentials: true })
-      return data.data
+    // Mock data untuk demo
+    function get_kelas() {
+      return Promise.resolve({
+        status: 200,
+        data: [
+          {
+            id: 1,
+            judul: "Tahsin Al-Quran untuk Pemula",
+            deskripsi: "Belajar membaca Al-Quran dengan tartil dan benar sesuai kaidah tajwid. Cocok untuk pemula yang ingin memperbaiki bacaan.",
+            slug: "tahsin-alquran-pemula",
+            pengguna: {
+              nama_lengkap: "Ustadz Ahmad Fauzi"
+            }
+          },
+          {
+            id: 2,
+            judul: "Menghafal Juz 30",
+            deskripsi: "Program menghafal surat-surat pendek dalam Juz 30 dengan metode yang mudah dan menyenangkan.",
+            slug: "menghafal-juz-30",
+            pengguna: {
+              nama_lengkap: "Ustadzah Siti Nurhaliza"
+            }
+          },
+          {
+            id: 3,
+            judul: "Fiqih Ibadah Sehari-hari",
+            deskripsi: "Mempelajari hukum-hukum Islam dalam kehidupan sehari-hari, mulai dari bersuci hingga ibadah wajib.",
+            slug: "fiqih-ibadah-sehari-hari",
+            pengguna: {
+              nama_lengkap: "Ustadz Muhammad Ridwan"
+            }
+          },
+          {
+            id: 4,
+            judul: "Tafsir Al-Quran Juz 1",
+            deskripsi: "Memahami makna dan hikmah ayat-ayat Al-Quran dalam Juz 1 dengan penjelasan yang mudah dipahami.",
+            slug: "tafsir-alquran-juz-1",
+            pengguna: {
+              nama_lengkap: "Ustadz Ali Imron"
+            }
+          },
+          {
+            id: 5,
+            judul: "Sirah Nabawiyah",
+            deskripsi: "Mempelajari perjalanan hidup Rasulullah SAW dan mengambil pelajaran untuk kehidupan modern.",
+            slug: "sirah-nabawiyah",
+            pengguna: {
+              nama_lengkap: "Ustadz Yusuf Mansur"
+            }
+          },
+          {
+            id: 6,
+            judul: "Akhlak dan Adab Islam",
+            deskripsi: "Pembentukan karakter Islami melalui pembelajaran akhlak mulia dan adab-adab dalam Islam.",
+            slug: "akhlak-adab-islam",
+            pengguna: {
+              nama_lengkap: "Ustadzah Fatimah Az-Zahra"
+            }
+          }
+        ]
+      });
     }
+
+    // Ensure icons are replaced after DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      feather.replace();
+    });
+    
+    // Replace icons again after Alpine.js updates
+    document.addEventListener('alpine:initialized', () => {
+      setTimeout(() => {
+        feather.replace();
+      }, 100);
+    });
+    
+    // Debug search functionality
+    document.addEventListener('alpine:initialized', () => {
+      console.log('Alpine.js initialized successfully');
+    });
   </script>
 </head>
-<body>
+<body x-data="{ searchOpen: false, searchQuery: '', kelass: get_kelas() }">
 
   <!-- Navbar -->
   <header class="navbar">
@@ -25,58 +105,96 @@
         <a href="#">Home</a>
         <a href="#">Kelas</a>
         <a href="#">Donate</a>
+        <button @click="searchOpen = !searchOpen">
+          <i data-feather="search"></i>
+        </button>
         <img src="/src/assets/images/logo.png" alt="Profile" class="profile-pic">
       </nav>
+    </div>
+    <!-- Search Dropdown -->
+    <div x-show="searchOpen" 
+         x-transition:enter="transition duration-200"
+         x-transition:enter-start="opacity-0 transform -translate-y-2"
+         x-transition:enter-end="opacity-100 transform translate-y-0"
+         x-transition:leave="transition duration-150"
+         x-transition:leave-start="opacity-100 transform translate-y-0"
+         x-transition:leave-end="opacity-0 transform -translate-y-2"
+         @click.away="searchOpen = false" 
+         class="search-dropdown">
+      <div class="container">
+        <div class="search-container">
+          <input 
+            type="text" 
+            placeholder="Cari kelas mengaji..." 
+            class="search-input"
+            x-model="searchQuery"
+            @input="console.log('Search query:', searchQuery)"
+          >
+          <button class="search-button">
+            <i data-feather="search"></i>
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
   <!-- Hero -->
-  <section class="bg-green-400 text-white py-12 md:py-20">
-    <div class="container mx-auto px-4">
-      <div class="max-w-3xl mx-auto text-center">
-        <h1 class="text-3xl md:text-4xl font-bold leading-tight mb-6">
-          Pilih <span class="font-extrabold">Kelas Mengaji</span> dan mulai perjalanan Belajar Al-
-          <span class="font-extrabold">Quran</span> yang bermakna bagi Anda.
-        </h1>
-        <button class="bg-white text-black text-primary font-semibold px-8 py-3 rounded-full hover:bg-gray-100 transition shadow-lg">
-          Semua Kelas
-        </button>
-      </div>
+  <section class="hero">
+    <div class="hero-container">
+      <h1>
+        Pilih <span class="font-extrabold">Kelas Mengaji</span> dan mulai perjalanan Belajar Al-
+        <span class="font-extrabold">Quran</span> yang bermakna bagi Anda.
+      </h1>
+      <button class="hero-button">
+        Semua Kelas
+      </button>
     </div>
   </section>
 
   <!-- Program -->
-  <section class="program mt-6 mb-12" x-data="{kelass: get_kelas()}">
-    <h1 class="text-2xl mb-6">PROGRAM KELAS MENGAJI</h1>
-      <div class="">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" x-show="(await kelass).status == 200 ? true : false">
-          <template x-for="kelas in (await kelass).data">
-            <div class="bg-white rounded-xl overflow-hidden card-shadow">
-              <div class="p-6 flex flex-col justify-between h-full">
-                <div class="flex justify-between items-start mb-4">
-                  <h3 class="text-lg font-bold text-gray-800" x-text="kelas.judul"></h3>
-                  <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full badge">Baru</span>
+  <section class="program container">
+    <div class="program-header">
+      <h1>PROGRAM KELAS MENGAJI</h1>
+    </div>
+    
+    <div class="">
+      <div class="cards-grid" x-show="(await kelass).status == 200">
+        <template x-for="kelas in (await kelass).data.filter(k => k.judul.toLowerCase().includes(searchQuery.toLowerCase()) || searchQuery === '')" :key="kelas.id">
+          <div class="card">
+            <div class="card-content">
+              <div class="card-header">
+                <h3 class="card-title" x-text="kelas.judul"></h3>
+                <span class="badge">Baru</span>
+              </div>
+              <p class="card-description" x-text="kelas.deskripsi"></p>
+              <div class="card-footer">
+                <div class="instructor-info">
+                  <p class="instructor-label">Pengajar:</p>
+                  <p class="instructor-name" x-text="kelas.pengguna?.nama_lengkap || 'Tidak tersedia'"></p>
                 </div>
-                <p class="text-gray-600 mb-4 text-sm" x-text="kelas.deskripsi"></p>
-                <div class="flex justify-between items-center">
-                  <div>
-                    <p class="text-sm text-gray-500">Pengajar:</p>
-                    <p class="font-medium text-primary" x-text="kelas.pengguna.nama_lengkap"></p>
-                  </div>
-                  <button class="bg-blue-400 text-white px-2 py-2 rounded-lg text-sm hover:bg-secondary transition">
-                    <a x-bind:href="'/kelas/' + kelas.slug">Ikuti Kelas</a>
-                  </button>
-                </div>
+                <button class="join-button">
+                  <a x-bind:href="'/kelas/' + kelas.slug">Ikuti Kelas</a>
+                </button>
               </div>
             </div>
-          </template>
-        </div>
-        
-        <div class="text-center py-12" x-show="(await kelass).status !== 200 ? true : false">
-          <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mb-4"></div>
-          <h3 class="text-lg text-gray-700">Memuat data kelas...</h3>
-        </div>
+          </div>
+        </template>
       </div>
+      
+      <!-- Loading State -->
+      <div class="loading-state" x-show="(await kelass).status !== 200">
+        <div class="spinner"></div>
+        <h3 class="loading-text">Memuat data kelas...</h3>
+      </div>
+
+      <!-- No Results State -->
+      <div x-show="(await kelass).status == 200 && searchQuery !== '' && (await kelass).data.filter(k => k.judul.toLowerCase().includes(searchQuery.toLowerCase())).length === 0" 
+           class="no-results">
+        <i data-feather="search" class="no-results-icon"></i>
+        <h3>Tidak ditemukan kelas dengan kata kunci "<span x-text="searchQuery" class="search-term"></span>"</h3>
+        <p>Coba gunakan kata kunci yang berbeda</p>
+      </div>
+    </div>
   </section>
 
   <!-- Footer -->
@@ -103,5 +221,20 @@
     </div>
   </footer>
 
+  <script>
+    // Ensure icons are replaced after DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        feather.replace();
+      }, 100);
+    });
+    
+    // Replace icons again after Alpine.js updates
+    document.addEventListener('alpine:initialized', () => {
+      setTimeout(() => {
+        feather.replace();
+      }, 100);
+    });
+  </script>
 </body>
 </html>
