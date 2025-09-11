@@ -20,8 +20,7 @@
                 return response.data
             } catch (error) {
         if (error.response) {
-            const status = error.response.status;
-            document.querySelector("body").innerHTML = "<h1>404</h1>"
+            return error.response
         }
     }          
 }
@@ -128,8 +127,8 @@
     </section>
 
     <!-- Donation Progress -->
-    <section x-init="rijal = kadapi((await donasi).data.id_program_donasi)"class="bg-emerald-50 py-12">
-        <div class="container mx-auto px-4">
+    <section x-init="rijal = kadapi((await donasi).data.id_program_donasi)" class="bg-emerald-50 py-12">
+        <div x-transition x-show="(await rijal).status == 200" class="container mx-auto px-4">
             <div class="bg-white rounded-xl shadow-sm p-6 md:p-8 max-w-4xl mx-auto">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-gray-800">Progress Donasi</h2>
