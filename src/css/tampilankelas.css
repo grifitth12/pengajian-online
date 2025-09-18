@@ -1,0 +1,159 @@
+* {
+  padding: 0;
+  margin: 0;
+  color: black;
+  box-sizing: border-box; /* biar padding & border ikut hitung ukuran */
+}
+
+/* Hero */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  padding: 7rem 2rem 2rem 2rem;
+}
+
+.hero-text {
+  flex: 1;
+}
+
+.hero-text h2 {
+  font-size: 2rem;
+  margin: 0.5rem 0;
+}
+
+.hero-text h2 span {
+  font-weight: bold;
+}
+
+.hero-img {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-img img {
+  width: 100%;
+  max-width: 500px; /* jangan fixed besar, biar fleksibel */
+  border-radius: 12px;
+  height: auto;
+}
+
+/* Metode Belajar */
+.metode {
+  text-align: center;
+  margin: 3rem 0;
+  padding: 0 1rem;
+}
+
+.metode h3 {
+  font-weight: bold;
+  margin-bottom: 2rem;
+}
+
+.metode-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.metode-card {
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 280px; /* sedikit lebih fleksibel */
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.metode-card i {
+  margin-bottom: 0.8rem;
+  color: #22c55e;
+}
+
+/* Join Button */
+.join-container {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.join-btn {
+  background: #22c55e;
+  color: #fff;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-size: 1rem;
+}
+
+.join-btn:hover {
+  background: #1a9e49;
+}
+
+/* Pemateri */
+.pemateri {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 0 1rem;
+}
+
+.pemateri h4 {
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.pemateri-img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+}
+
+.nama-ustadz {
+  font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .hero {
+    gap: 2rem;
+    padding: 5rem 1.5rem 2rem 1.5rem;
+  }
+  
+  .hero-text h2 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 4rem 1rem 2rem 1rem;
+  }
+
+  .hero-img img {
+    max-width: 100%; /* full lebar di hp */
+  }
+
+  .metode-card {
+    width: 100%; /* supaya stack ke bawah */
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-text h2 {
+    font-size: 1.5rem;
+  }
+  .hero-text p {
+    font-size: 0.9rem;
+  }
+  .join-btn {
+    width: 100%; /* tombol full lebar */
+  }
+}

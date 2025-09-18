@@ -23,7 +23,7 @@ function getUserMetadata() {
     return payloadObject = JSON.parse(decodedPayload);
 }
 
-if(isAuthenticated()) {
-    window.rijal = true
-    window.user = getUserMetadata()
-} else { window.location.href = "https://hggxutlouhypvgmrsjkm.supabase.co/auth/v1/authorize?provider=google&redirect_to=http://localhost:5501/callback.html" }
+// if(isAuthenticated()) {
+//     window.rijal = true
+//     window.user = getUserMetadata()
+// } else { window.location.href = "https://hggxutlouhypvgmrsjkm.supabase.co/auth/v1/authorize?provider=google&redirect_to=http://localhost:5501/callback.html" }

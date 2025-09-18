@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donasi di Heni - Bantu Warga Padang</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/src/js/donasiPage.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.js" defer></script>
+     <script>
+    
+    async function kadapi(id_donasi) {
+        let url = "/api/donasi/" + id_donasi + "/inspect"
+            try {
+                const response = await axios.get(url);
+                return response.data
+            } catch (error) {
+        if (error.response) {
+            return error.response
+        }
+    }          
+}
+    async function fetch_donasi() {
+    let slug = window.location.href.split("/").at(-1)
+    let url = "/api/donasi/" + slug
+    try {
+        const response = await axios.get(url);
+        return response.data
+    } catch (error) {
+        if (error.response) {
+            const status = error.response.status;
+            document.querySelector("body").innerHTML = "<h1>404</h1>"
+        }
+    }    
+}
+        // FAQ toggle functionality
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('i');
+                
+                answer.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            });
+        });
+
+        // Simple donation amount selection
+        document.querySelectorAll('.donation-card').forEach(card => {
+            card.addEventListener('click', () => {
+                // Remove active class from all cards
+                document.querySelectorAll('.donation-card').forEach(c => {
+                    c.classList.remove('border-emerald-500', 'bg-emerald-50');
+                });
+                
+                // Add active class to clicked card
+                card.classList.add('border-emerald-500', 'bg-emerald-50');
+            });
+        });
+
+        // Simulate donation progress animation
+        window.addEventListener('load', () => {
+            const progressFill = document.querySelector('.progress-fill');
+            progressFill.style.width = '0%';
+            
+            setTimeout(() => {
+                progressFill.style.width = '64%';
+            }, 300);
+        });
+    </script>
+    <style>
+        .progress-bar {
+            height: 12px;
+            border-radius: 6px;
+            background-color: #e5e7eb;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #10b981;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        .donation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+        }
+        
+        .donate-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .donate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <main x-data="{donasi:fetch_donasi(), rijal:{}}">
+    <!-- Hero Section -->
+    <section class="relative bg-white overflow-hidden">
+        <div class="container mx-auto px-4 py-12 md:py-20 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <h1 x-text="(await donasi).data.nama_program" class="text-4xl md:text-5xl font-bold text-gray-800 mb-6 leading-tight"></h1>
+                <p x-text="(await donasi).data.deskripsi" class="text-lg text-gray-600 mb-8"></p>
+                <div class="flex space-x-4">
+                    <button class="donate-btn text-white px-8 py-3 rounded-full font-semibold">
+                        Donasi Sekarang
+                    </button>
+                    <button class="border-2 border-emerald-500 text-emerald-600 px-6 py-3 rounded-full font-semibold hover:bg-emerald-50">
+                        <i class="fas fa-share-alt mr-2"></i> Bagikan
+                    </button>
+                </div>
+            </div>
+            <div class="md:w-1/2">
+                <img x-bind:src="(await donasi).data.gambar"
+                     alt="Donasi di Heni" 
+                     class="w-full h-auto rounded-xl shadow-lg object-cover">
+            </div>
+        </div>
+    </section>
+
+    <!-- Donation Progress -->
+    <section x-init="rijal = kadapi((await donasi).data.id_program_donasi)" class="bg-emerald-50 py-12">
+        <div x-transition x-show="(await rijal).status == 200" class="container mx-auto px-4">
+            <div class="bg-white rounded-xl shadow-sm p-6 md:p-8 max-w-4xl mx-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800">Progress Donasi</h2>
+                    <span class="text-emerald-600 font-bold">Aktif</span>
+                </div>
+                <div class="mb-6">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-gray-600">Terkumpul</span>
+                        <span x-text="(await rijal).data.terkumpul" class="font-semibold text-emerald-600"></span>
+                    </div>
+                    <div class="progress-bar">
+                        <div x-bind:style="'width:' + hitung_persen((await rijal).data.terkumpul, (await donasi).data.target_donasi) + '%;'" class="progress-fill" style="width: 64%"></div>
+                    </div>
+                    <div class="flex justify-between mt-2">
+                        <span class="text-gray-600">Target: <span x-text="cetak_rupiah((await donasi).data.target_donasi)"></span></span>
+                        <span x-text="hitung_persen((await rijal).data.terkumpul, (await donasi).data.target_donasi)" class="text-gray-600"></span>
+                    </div>
+                </div>
+                
+                <div class="flex w-full justify-center text-center">
+                    <h1 class="text-6xl text-black">0821 2545 5993</h1>
+                </div>
+                <div class="mt-12">
+                    <div class="flex gap-8">
+                        <input type="text" placeholder="Nama anda" 
+                               class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-black">
+                        <input type="text" placeholder="Doa anda" 
+                               class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-black">
+                    </div>
+                    <button class="donate-btn w-full mt-4 text-white px-6 py-3 rounded-lg font-semibold">
+                        Upload Bukti Pembayaran
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Description Section -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Tentang Program Ini</h2>
+            <div class="prose max-w-none text-gray-600">
+                <p x-text="(await rijal).data.deskripsi_lengkap">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perferendis dolor hic numquam distinctio qui doloremque dicta quidem odio dolorem id. Ab beatae ullam obcaecati laboriosam voluptatibus culpa itaque adipisci. At!</p>
+                
+                <p class="mt-4">Dana yang terkumpul akan digunakan untuk:</p>
+                <ul class="list-disc pl-5 mt-2 space-y-2">
+                    <li>Pembelian paket sembako untuk keluarga kurang mampu</li>
+                    <li>Bantuan biaya pengobatan bagi warga yang sakit</li>
+                    <li>Pendidikan anak-anak dari keluarga prasejahtera</li>
+                    <li>Program pemberdayaan ekonomi kecil</li>
+                </ul>
+                
+                <p class="mt-4">Setiap rupiah yang Anda donasikan akan memberikan dampak besar bagi kehidupan mereka. Kami berkomitmen untuk menggunakan dana secara transparan dan tepat sasaran.</p>
+                
+                <div class="bg-emerald-50 p-4 rounded-lg mt-6 border border-emerald-100">
+                    <h3 class="font-semibold text-emerald-800 mb-2">Update Terbaru</h3>
+                    <p class="text-gray-700">19 Agustus 2025 - Program telah berjalan selama 2 minggu dan telah membantu 15 keluarga di daerah Padang. Terima kasih atas dukungan semua donatur!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Kata Mereka</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-emerald-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Ahmad Fauzi</h4>
+                            <p class="text-sm text-gray-500">Donatur</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"Saya sangat senang bisa berkontribusi untuk program ini. Laporan penggunaan dananya transparan dan update perkembangan program sangat membantu."</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-emerald-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Siti Rahma</h4>
+                            <p class="text-sm text-gray-500">Penerima Manfaat</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"Alhamdulillah berkat bantuan dari program ini, saya bisa membeli obat untuk anak saya yang sakit. Terima kasih banyak untuk semua donatur."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Pertanyaan Umum</h2>
+            <div class="space-y-4">
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                    <button class="faq-question w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 text-left">
+                        <span class="font-medium text-gray-800">Bagaimana cara melakukan donasi?</span>
+                        <i class="fas fa-chevron-down text-emerald-600 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden p-4 border-t border-gray-200 bg-gray-50 text-gray-600">
+                        Anda bisa melakukan donasi dengan mengklik tombol "Donasi Sekarang" di atas dan memilih nominal donasi yang tersedia atau memasukkan nominal sendiri. Setelah itu, Anda akan diarahkan ke halaman pembayaran.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-12 bg-emerald-600 text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-4">Mari Bantu Warga Padang Bersama-sama</h2>
+            <p class="text-lg mb-8 max-w-2xl mx-auto">Setiap donasi Anda akan memberikan harapan baru bagi mereka yang membutuhkan.</p>
+            <button class="bg-white text-emerald-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-all">
+                Donasi Sekarang
+            </button>
+        </div>
+    </section>
+    </main>
+</body>
+</html>

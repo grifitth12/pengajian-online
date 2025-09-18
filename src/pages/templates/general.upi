@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DonasiKu - Platform Donasi Terpercaya</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/src/js/kelasPage.js"></script>
+<script src="/src/js/global.js"></script>
+<script src="/src/js/auth.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="/src/css/index.css">
+<link rel="stylesheet" href="/src/css/footer.css">
+</head>
+<body x-data="{auth:true}">    
+<header class="header" id="header">
+<div class="header-container">
+<div class="logo">
+<img src="/src/assets/images/logo.png" alt="DonasiKu Logo">
+</div>
+<h1 style="color: black;"></h1>
+<nav class="nav">
+<button class="bell-btn">
+<img src="/src/assets/images/bell.png" alt="Notifikasi">
+</button>
+<a href="/" class="nav-link">Home</a>
+<a href="#"class="nav-link">About</a>
+<a href="/kajian" class="nav-link">Kajian</a>
+<a href="/kelas" class="nav-link">Kelas</a> 
+<a href="/profile" x-show="auth" button class="profile-btn" id="profileBtn">
+<img src="/src/assets/images/WhatsApp Image 2025-08-05 at 14.26.06.jpeg" alt="Profile" class="profile-img" id="profileImg">
+</a>
+<div class="btn-group" x-show="!auth">
+<a href="/src/pages/login.html" class="btn btn-primary">Login</a>
+</div>
+</nav>
+<button
+id="hamburger"
+class="hamburger"
+aria-label="Toggle menu"
+aria-controls="mobile-menu"
+aria-expanded="false"
+>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"></span>
+</button>
+<nav id="mobile-menu" class="menu hidden" role="navigation">
+<div x-show="!auth">
+<a href="login.html" class="btn btn-primary">Masuk</a>
+<a href="register.html" class="btn btn-secondary">Daftar</a>
+</div>
+<a href="/src/pages/profile.html" x-show="auth" class="nav-link" button class="profile-btn" id="profileBtn">
+<img src="/src/assets/images/WhatsApp Image 2025-08-05 at 14.26.06.jpeg" alt="Profile" class="profile-img" id="profileImg">Profile</a>
+<a href="#Home" class="nav-link">Home</a>
+<a href="#"class="nav-link">About</a>
+<a href="#" class="nav-link">Campaigns</a>
+<a href="#" class="nav-link">Contact</a>
+</nav>
+</div>
+</header>
+
+$generalContent
+<footer class="footer">
+<div class="footer-container">
+<div class="footer-content">
+<div class="footer-logo">
+<div class="logo-icon">
+<img src="/src/assets/images/logo.png" alt="Logo" />
+</div>
+<div>
+<div class="footer-title">PENGAJIAN</div>
+<div class="footer-subtitle">ONLINE</div>
+</div>
+</div>
+
+<p class="footer-description">
+PengajianOnline.id adalah platform resmi 
+pengajian daring Masjid Darussalam Kota Wisata, 
+untuk memudahkan jamaah mengikuti kajian 
+Islam secara rutin, mudah, dan tepercaya.
+</p>
+</div>
+
+<div class="footer-right">
+<div class="social-links">
+<div class="social-link" title="Facebook">
+<img src="/src/assets/icons/facebook.png" alt="icons">
+</div>
+<div class="social-link" title="Instagram">
+<img src="/src/assets/icons/instagram.png" alt="icons">
+</div>
+<div class="social-link" title="TikTok">
+<img src="/src/assets/icons/tiktok.png" alt="icons">
+</div>
+<div class="social-link" title="WhatsApp">
+<img src="/src/assets/icons/whatsup.png" alt="icons">
+</div>
+</div>
+
+<button class="footer-cta">
+HUBUNGI KAMI
+</button>
+</div>
+</div>
+</footer>
+<div class="tambahan">
+
+</div>
+</body>
+<script>
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms))
+    }
+    async function coba() {
+        await sleep(1000)
+        const btn = document.getElementById('hamburger');
+        const menu = document.getElementById('mobile-menu');
+    
+        btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        btn.classList.toggle('active');
+        if (menu) menu.classList.toggle('hidden');
+        });
+    }
+    coba()
+</script>
+</body>
+</html>

@@ -6,77 +6,25 @@
     <title>DonasiKu - Platform Donasi Terpercaya</title>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="src/js/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="/src/js/index.js"></script>
     <link rel="stylesheet" href="../src/css/index.css">
     <script src="/src/js/auth.js"></script>
-
 </head>
-<body x-data="{auth: window.rijal ? true : false}">
-    <!-- Header -->
-    <header class="header" id="header">
-        <div class="header-container">
-            <!-- Logo -->
-            <div class="logo">
-                <img src="../assets/images/logo.png" alt="DonasiKu Logo">
-            </div>
-            <h1 style="color: black;"></h1>
-            <!-- Nav -->
-            <nav class="nav">
-                <!-- Bell -->
-                <button class="bell-btn">
-                    <img src="../assets/images/bell.png" alt="Notifikasi">
-                </button>
-                <!-- Menu -->
-                <a href="#Home" class="nav-link">Home</a>
-                <a href="#"class="nav-link">About</a>
-                <a href="#" class="nav-link">Campaigns</a>
-                <a href="#" class="nav-link">Contact</a>
-            </nav>
-
-            <!-- Buttons -->
-            <div class="btn-group" x-show="!auth">
-                <a href="login.html" class="btn btn-primary">Masuk</a>
-                <a href="register.html" class="btn btn-secondary">Daftar</a>
-            </div>
-
-            <!-- BUTTON HAMBURGER -->
-            <button
-            id="hamburger"
-            class="hamburger"
-            aria-label="Toggle menu"
-            aria-controls="mobile-menu"
-            aria-expanded="false"
-            >
-            <span class="line"></span>
-            <span class="line"></span>
-            <span class="line"></span>
-            </button>
-
-            <!-- (Opsional) TARGET MENU -->
-            <nav id="mobile-menu" class="menu hidden" role="navigation">
-                <div x-show="!auth">
-                    <a href="login.html" class="btn btn-primary">Masuk</a>
-                    <a href="register.html" class="btn btn-secondary">Daftar</a>
-                </div>
-                <a href="#" x-show="auth">Profile</a>
-                <a href="#Home" class="nav-link">Home</a>
-                <a href="#"class="nav-link">About</a>
-                <a href="#" class="nav-link">Campaigns</a>
-                <a href="#" class="nav-link">Contact</a>
-            </nav>
-        </div>
-    </header>
-
+<body x-data="{auth:true}">    
+    <div x-data="{ html:'' }"
+       x-init="fetch('/src/assets/assets-pages/navbar-ngaji.html').then(r=>r.text()).then(t=>html=t)"
+       x-html="html">
+    </div>
     <main class="main-content">
         <!-- Banner Section -->
         <div class="banner-section" id="Home">
-            <img src="../assets/images/banner.png" 
+            <img src="/src/assets/images/banner.png" 
                  alt="Donation ceremony" 
                  class="banner-image">
             <div class="banner-overlay">
             </div>
         </div>
-        
         <!-- Stats -->
         <div class="stats-section">
             <div class="stat-card">
@@ -102,7 +50,7 @@
                     <!-- Kelas Mengaji -->
                     <div class="feature-item">
                         <div class="feature-icon">
-                            <img src="../assets/images/buku.png" alt="Kelas Mengaji">
+                            <img src="/src/assets/images/buku.png" alt="Kelas Mengaji">
                         </div>
                         <p class="feature-label">Kelas Mengaji</p>
                     </div>
@@ -110,7 +58,7 @@
                     <!-- Zakat -->
                     <div class="feature-item">
                         <div class="feature-icon">
-                            <img src="../assets/images/zakat.png" alt="Zakat">
+                            <img src="/src/assets/images/zakat.png" alt="Zakat">
                         </div>
                         <p class="feature-label">Zakat</p>
                     </div>
@@ -118,7 +66,7 @@
                     <!-- Donasi -->
                     <div class="feature-item">
                         <div class="feature-icon">
-                            <img src="../assets/images/kotak.png" alt="Donasi">
+                            <img src="/src/assets/images/kotak.png" alt="Donasi">
                         </div>
                         <p class="feature-label">Donasi</p>
                     </div>
@@ -160,52 +108,28 @@
             </div>
         </section>
     </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-content">
-                <h3>
-                    <i data-lucide="heart"></i>
-                    DonasiKu
-                </h3>
-                <p class="footer-description">
-                    Pengelolaan donasi dalam platform aman! Donasi yang Anda berikan kepada Organisasi Kelas Wirausaha
-                    online memungkinkan gerakan yang tepat sasaran bagi masyarakat yang membutuhkan.
-                </p>
-                <div class="social-links">
-                    <div class="social-link">
-                        <i data-lucide="facebook"></i>
-                    </div>
-                    <div class="social-link">
-                        <i data-lucide="instagram"></i>
-                    </div>
-                    <div class="social-link">
-                        <i data-lucide="linkedin"></i>
-                    </div>
-                    <div class="social-link">
-                        <i data-lucide="message-circle"></i>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <button class="footer-cta">
-                    Hubungi Kami
-                </button>
-            </div>
-        </div>
-    </footer>
-    <script>
-    const btn = document.getElementById('hamburger');
-    const menu = document.getElementById('mobile-menu');
-
-    btn.addEventListener('click', () => {
-    const expanded = btn.getAttribute('aria-expanded') === 'true';
-    btn.setAttribute('aria-expanded', String(!expanded));
-    btn.classList.toggle('active');
-    if (menu) menu.classList.toggle('hidden');
-    });
-
-    </script>
+    <!-- FOOTER -->
+  <div x-data="{ html:'' }"
+       x-init="fetch('/src/assets/assets-pages/footer-ngaji.html').then(r=>r.text()).then(t=>html=t)"
+       x-html="html">
+  </div>
+<script>
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms))
+    }
+    async function coba() {
+        await sleep(1000)
+        const btn = document.getElementById('hamburger');
+        const menu = document.getElementById('mobile-menu');
+    
+        btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        btn.classList.toggle('active');
+        if (menu) menu.classList.toggle('hidden');
+        });
+    }
+    coba()
+</script>
 </body>
 </html>

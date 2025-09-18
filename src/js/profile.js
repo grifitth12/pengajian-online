@@ -4,7 +4,7 @@
             document.querySelectorAll('.profile-section, .mentor-section').forEach(section => {
                 section.classList.remove('active');
                 if (section.id === 'profile-section') {
-                    section.style.display = sectionName === 'profile' ? 'block' : 'none';
+                    section.style.display = sectionName === 'profile' ? 'flex' : 'none';
                 }
                 if (section.id === 'mentor-section') {
                     section.classList.toggle('active', sectionName === 'mentor');
@@ -19,30 +19,49 @@
                 }
             });
         }
+axios.defaults.withCredentials = true;
+function selectPhoto() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
 
-        // Profile Functions
-        function selectPhoto() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        document.querySelector('.profile-image').src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                }
-            };
-            input.click();
-        }
+    input.onchange = async function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
 
-        function saveProfile(event) {
-            event.preventDefault();
-            alert('Profil berhasil disimpan!');
-            // Add your save logic here
+        // Show preview immediately
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            document.querySelector(".profile-image").src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+
+        // Upload to backend
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            let res = await axios.post(
+            "/api/file/upload",
+            formData,
+            { withCredentials: true }
+        );
+
+            // Update image with returned URL
+            document.querySelector(".profile-image").src = res.data.url;
+            console.log("Upload success:", res.url);
+
+        } catch (err) {
+            console.error("Upload failed:", err.response?.data || err.message);
+            alert("Failed to upload profile picture");
         }
+    };
+
+    input.click();
+}
+
+
+
 
         function registerMentor() {
             alert('Mengarahkan ke halaman pendaftaran mentor...');
@@ -57,4 +76,15 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             showSection('profile');
+            const container = document.getElementById('profileContainer');
+            const overlay = document.getElementById('overlay');
+            
+            // Start the initial animation
+            overlay.classList.add('show-initially');
+            
+            // After animation completes, enable hover functionality
+            setTimeout(() => {
+                overlay.classList.remove('show-initially');
+                container.classList.add('hover-enabled');
+            }, 2000); // 4 seconds to match the animation duration
         });

@@ -1,0 +1,51 @@
+<div>
+    <div class="stats-grid">
+        <div class="dash-card">
+            <!-- Kelas -->
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <img src="/src/assets/icons/kelas.png" alt="Kelas">
+                </div>
+                <div class="stat-info">
+                    <p>Kelas</p>
+                    <h3 x-text="stats.kelas"></h3>
+                </div>
+            </div>
+
+            <!-- Kajian -->
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <img src="/src/assets/icons/donasi.png" alt="donasi">
+                </div>
+                <div class="stat-info">
+                    <p>Donasi</p>
+                    <h3>Rp. 1000000</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="dash-card">
+            <!-- Donasi -->
+            <div class="stat-card">
+                <div class="stat-icon yellow">
+                    <img src="/src/assets/icons/kajian.png" alt="kajian">
+                </div>
+                <div class="stat-info">
+                    <p>Kajian</p>
+                    <h3>17</h3>
+                </div>
+            </div>
+
+            <!-- Pengguna -->
+            <div class="stat-card">
+                <div class="stat-icon purple">
+                    <img src="/src/assets/icons/pengguna.png" alt="Pengguna">
+                </div>
+                <div class="stat-info">
+                    <p>Pengguna</p>
+                    <h3 x-text="stats.pengguna.toLocaleString()"></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{judul}} - Kajian Islami</title>
+    <meta name="description" content="{{deskripsi}}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>        
+    <script src="/src/js/kajianPage.js"></script>
+    <script src="/src/js/global.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .hero-pattern {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .scroll-down {
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body x-data="{kajian : fetch_get_data()}" class="font-sans bg-white text-gray-800">
+    <!-- Navigation -->
+    <div x-data="{ html:'' }"
+        x-init="fetch('/src/assets/assets-pages/navbar-ngaji.html').then(r=>r.text()).then(t=>html=t)"
+        x-html="html">
+    </div>
+    <div id="loading" class="flex" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; align-items: center; justify-content: center; z-index: 9999;"><div style="border: 4px solid #f3f3f3; border-top: 4px solid #2e8b57; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;"></div><style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style></div>
+    <!-- Hero Section (Fullscreen) -->
+    <section class="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-emerald-100 hero-pattern relative overflow-hidden">
+        <div class="absolute inset-0 bg-emerald-500 opacity-10"></div>
+        <div class="container mx-auto px-4 py-20 md:py-0 relative z-10">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <span class="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-4">
+                        Kajian Islami
+                    </span>
+                    <h1 x-text="(await kajian).data.judul" class="text-4xl md:text-5xl lg:text-6xl font-bold text-emerald-900 leading-tight mb-4">
+                    </h1>
+                    <p x-text="(await kajian).data.deskripsi + `. Kajian bersama ${(await kajian).data.pemateri } di ${(await kajian).data.lokasi }`" class="text-lg text-gray-700 mb-8 max-w-lg"></p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#details" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition duration-300 shadow-lg hover:shadow-emerald-200">
+                            <i class="fas fa-calendar-alt mr-2"></i> Info Lengkap
+                        </a>
+                        <a href="#" class="px-6 py-3 bg-white hover:bg-gray-100 text-emerald-700 border border-emerald-200 rounded-lg font-medium transition duration-300 shadow hover:shadow-md">
+                            <i class="fas fa-share-alt mr-2"></i> Bagikan
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    <div class="relative w-full max-w-md">
+                        <div class="absolute -inset-4 bg-emerald-200 rounded-2xl opacity-50 blur-lg"></div>
+                        <div class="relative bg-white rounded-xl shadow-2xl overflow-hidden">
+                            <img src="{{thumbnail_url}}" alt="Thumbnail Kajian" class="w-full h-64 object-cover">
+                            <div class="p-6">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mr-4">
+                                        <i class="fas fa-user text-emerald-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 x-text="(await kajian).data.pemateri" class="font-bold text-gray-800"></h3>
+                                        <p class="text-sm text-gray-600">Pemateri</p>
+                                    </div>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-calendar-day text-emerald-500 mr-3"></i>
+                                        <span x-text="cetak_tenggal((await kajian).data.created_at)"></span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-clock text-emerald-500 mr-3"></i>
+                                        <span x-text="cetak_jam((await kajian).data.created_at).replaceAll('.', ':') + ' WIB'"></span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-map-marker-alt text-emerald-500 mr-3"></i>
+                                        <span x-text="(await kajian).data.lokasi"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="#details" class="absolute bottom-10 left-1/2 transform -translate-x-1/2 scroll-down text-emerald-700">
+            <i class="fas fa-chevron-down text-3xl animate-bounce"></i>
+        </a>
+    </section>
+
+    <!-- Details Section -->
+    <section id="details" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-emerald-900 mb-4">Detail Kajian</h2>
+                    <div class="w-24 h-1 bg-emerald-500 mx-auto"></div>
+                </div>
+                
+                <div class="bg-emerald-50 rounded-xl p-8 mb-10 shadow-sm">
+                    <h3 class="text-xl font-bold text-emerald-800 mb-6 flex items-center">
+                        <i class="fas fa-info-circle mr-3 text-emerald-600"></i> Deskripsi Kajian
+                    </h3>
+                    <p class="text-gray-700 leading-relaxed" x-text="(await kajian).data.deskripsi_lengkap">{{deskripsi_lengkap}}</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8 mb-10">
+                    <div class="bg-white border border-emerald-100 rounded-xl p-6 shadow-sm hover:shadow-md transition duration-300">
+                        <h3 class="text-lg font-bold text-emerald-800 mb-4 flex items-center">
+                            <i class="fas fa-map-marked-alt mr-3 text-emerald-600"></i> Lokasi
+                        </h3>
+                        <p class="text-gray-700 mb-2" x-text="(await kajian).data.lokasi"></p>
+                        <p class="text-gray-600" x-text="(await kajian).data.alamat"></p>
+                        <div class="mt-4">
+                            <a :href="(await kajian).data.lokasi_url" class="inline-flex items-center text-emerald-600 hover:text-emerald-800">
+                                <i class="fas fa-directions mr-2"></i> Dapatkan Petunjuk Arah
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white border border-emerald-100 rounded-xl p-6 shadow-sm hover:shadow-md transition duration-300">
+                        <h3 class="text-lg font-bold text-emerald-800 mb-4 flex items-center">
+                            <i class="fas fa-clock mr-3 text-emerald-600"></i> Waktu
+                        </h3>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-sm text-gray-500">Tanggal</p>
+                                <p class="text-gray-700" x-text="cetak_tenggal((await kajian).data.created_at)"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Waktu Mulai</p>
+                                <p class="text-gray-700" x-text="cetak_jam((await kajian).data.created_at).replaceAll('.', ':') + ' WIB'"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Status</p>
+                                <p class="text-emerald-600 font-medium" x-text="(await kajian).data.status">Aktif</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white border border-emerald-100 rounded-xl p-6 shadow-sm hover:shadow-md transition duration-300">
+                        <h3 class="text-lg font-bold text-emerald-800 mb-4 flex items-center">
+                            <i class="fas fa-user-tie mr-3 text-emerald-600"></i> Pemateri
+                        </h3>
+                        <div class="flex items-center">
+                            <div class="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mr-4">
+                                <i class="fas fa-user text-emerald-600 text-2xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800" x-text="(await kajian).data.pemateri"></h4>
+                                <p class="text-sm text-gray-600">Pemateri Kajian</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white border border-emerald-100 rounded-xl p-6 shadow-sm hover:shadow-md transition duration-300">
+                        <h3 class="text-lg font-bold text-emerald-800 mb-4 flex items-center">
+                            <i class="fas fa-envelope mr-3 text-emerald-600"></i> Kontak
+                        </h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <i class="fas fa-envelope text-emerald-500 mr-3"></i>
+                                <a x-text="(await kajian).data.kontak.email" href="mailto:kaplingtumbal@gmail.com" class="text-gray-700 hover:text-emerald-600">kaplingtumbal@gmail.com</a>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-3">Untuk informasi lebih lanjut, silakan hubungi kontak di atas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-emerald-600 text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-6">Ingin Hadir di Kajian Ini?</h2>
+            <p class="text-lg mb-8 max-w-2xl mx-auto">Daftarkan diri Anda sekarang untuk mendapatkan notifikasi dan informasi terbaru tentang kajian ini.</p>
+            <div class="max-w-md mx-auto flex flex-col sm:flex-row gap-4">
+                <input type="email" placeholder="Alamat Email Anda" class="flex-grow px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-300 text-gray-800">
+                <button class="px-6 py-3 bg-white hover:bg-gray-100 text-emerald-700 font-medium rounded-lg transition duration-300 shadow-lg">
+                    Daftar Sekarang
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <div x-data="{ html:'' }"
+      x-init="fetch('/src/assets/assets-pages/footer-ngaji.html').then(r=>r.text()).then(t=>html=t)"
+      x-html="html">
+    </div>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

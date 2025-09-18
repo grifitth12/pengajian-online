@@ -1,0 +1,61 @@
+<script>
+        async function get_data_kajian(query) {
+        return (
+            await axios.get(
+                "/api/kajian/carisemua", {
+                    withCredentials: true 
+                }
+            )
+        ).data
+    }
+</script>
+
+<div id="upi-1" upi-title="Manage Kajian" x-data="{query : '', data_kajian : false}">
+    <div class="data-table" x-data="{kajianData : get_data_kajian(query)}">
+        <div class="table-header"  id="biarapa">
+            <div class="action-buttons">
+                <button
+                    class="btn"
+                    :class="data_kajian.split(',')[1] == 'true' ? 'bg-red-300' : 'bg-green-300'"
+                    x-text="data_kajian.split(',')[1] == 'true' ? 'Reject' : 'Accept'"
+                    @click="accept(data_kajian.split(','))"
+                    x-show="data_kelas">
+                </button>
+                <button><a href="/create/kajian">Tambah Kajian</a></button>
+                <input type="text" @keyup.enter="kajianData = get_data_kajian(query)" x-model="query" class="p-1" name="query" id="q" placeholder="cari berdasarkan judul" autocomplete="off">
+            </div>
+        </div>
+        <table> 
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Nama Kajian</th>
+                    <th>Pemateri</th>
+                    <th>Deskripsi</th>
+                    <th>Tanggal</th>
+                    <th>Waktu</th>
+                    <th>Lokasi</th>
+                    <th>Alamat</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody :class="{'loading': loading}">
+                <template x-for="kajian in (await kajianData).data">
+                    <tr>
+                        <td><input type="radio" x-model="data_kajian" :value="[kajian.id_kajian]"></td>
+                        <td><a :href="'/manage/kajian/' + kajian.id_kajian" x-text="kajian.judul"></a></td>  
+                        <td x-text="kajian.pemateri"></td>
+                        <td x-text="kajian.deskripsi"></td>
+                        <td x-text="kajian.tanggal">-</td>  
+                        <td x-text="kajian.waktu_mulai">-</td>   
+                         <td x-text="kajian.lokasi">-</td>
+                        <td x-text="kajian.alamat"></td>                
+                        <td>
+                            <span class="status-badge status-active" x-text="kajian.status"></span>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </div>
+</div>

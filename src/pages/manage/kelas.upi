@@ -1,0 +1,159 @@
+<script src="/src/js/global.js"></script>
+<script src="/src/js/kelasPage.js"></script>
+<script>
+    let id_kelas = window.location.href.split("/").at(-1)
+    async function fetch_data() {
+        return JSON.parse(document.querySelector("script[data-upi]").textContent).result.data[0]
+    }
+</script>
+<!-- Main Content -->
+<div id="upi-1" id="upi-1" upi-title="Edit Kelas" class="content flex-1 overflow-auto">
+    <!-- Main Content Area -->
+    <main class="p-6" x-data="{kelas : fetch_data(), kelasForm : {}, pertemuan_i : {}}">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="p-6 border-b">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-semibold text-gray-800">Edit Kelas</h2>
+                    <button @click="update(kelasForm, (await kelas).id_kelas)" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center">
+                        <i class="fas fa-save mr-2"></i> Save Changes
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Left Column -->
+                <div class="md:col-span-2 space-y-6">
+                    <!-- Judul Kelas -->
+                    <div>
+                        <label for="judul" class="block text-sm font-medium text-gray-700 mb-1">Judul Kelas</label>
+                        <input type="text" x-model="kelasForm.judul" id="judul" :value="(await kelas).judul" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
+                    </div>
+                    <!-- Deskripsi -->
+                    <div>
+                        <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+                        <textarea id="deskripsi" x-model="kelasForm.deskripsi" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" x-text="(await kelas).deskripsi"></textarea>
+                    </div>
+
+                    <!-- Platform & Link -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="platform" class="block text-sm font-medium text-gray-700 mb-1">Platform</label>
+                            <select x-model="kelasForm.platfrom" id="platform" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
+                                <option value="YouTube" selected>YouTube</option>
+                                <option value="Zoom">Zoom</option>
+                                <option value="Google Meet">Google Meet</option>
+                                <option value="Website">Website</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="link_kelas" x-model="kelasForm.link_kelas" class="block text-sm font-medium text-gray-700 mb-1">Link Kelas</label>
+                            <input type="url" id="link_kelas" :value="(await kelas).link_kelas" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
+                        </div>
+                    </div>
+
+                    <!-- Status & Slug -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                            <select id="status" x-model="kelasForm.status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
+                                <option value="aktif" selected>Aktif</option>
+                                <option value="nonaktif">Nonaktif</option>
+                                <option value="draft">Draft</option>
+                            </select>
+                        </div>
+                    </div>
+                    <h1 class="text-2xl mt-4">Pertemuan</h1>
+                    <div class="grid grid-cols-3 md:grid-cols-2 gap-4">
+                        <div @click="tambah_kelas((await kelas).id_kelas)" class="border-green-500 flex justify-center items-center border p-3 rounded-lg">
+                            <h1 class="text-green-500 text-2xl">Tambah</h1>
+                        </div>                        
+                        <template x-for="pertemuan in (await fetch_pertemuan()).data">
+                            <div class="border-gray-300 border p-3 rounded-lg">
+                                <h1 x-text="pertemuan.judul" class="text-1xl font-bold mb-2"></h1>
+                                <p x-text="pertemuan.deskripsi"></p>
+                                <div class="flex gap-4 mt-3 gap-4">
+                                    <h2 x-text="cetak_tenggal(pertemuan.created_at)"></h2>
+                                    <h2 x-text="pertemuan.tipe_pertemuan"></h2>
+                                    <div class="flex gap-4">
+                                        <i @click="fetch_pertemuan_for_update(pertemuan.id_pertemuan_kelas)" class="fa-solid fa-pen" style="color: #0081a1;"></i>
+                                        <i @click="delete_pertemuan_kelas(pertemuan.id_kelas, pertemuan.id_pertemuan_kelas)" class="fa-solid fa-trash" style="color: #fa0000;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>                    
+                </div>
+
+                <!-- Right Column -->
+                <div class="space-y-6">
+                    <!-- Thumbnail -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Thumbnail</label>
+                        <div class="mt-1 flex flex-col items-center">
+                            <img id="thumbnailPreview" src="http://127.0.0.1:8080/src/assets/images/banner.png" alt="Thumbnail Preview" class="thumbnail-preview w-full mb-2 rounded-lg border border-gray-300">
+                            <div x-model="kelasForm.thumbnail_url" class="flex space-x-2">
+                                <input type="file" id="thumbnailUpload" class="hidden" accept="image/*">
+                                <button onclick="document.getElementById('thumbnailUpload').click()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
+                                    <i class="fas fa-upload mr-1"></i> Upload
+                                </button>
+                                <button id="removeThumbnail" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm">
+                                    <i class="fas fa-trash mr-1"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mentor Info -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <h3 class="text-sm font-medium text-gray-700 mb-3">Mentor</h3>
+                        <div class="flex items-center space-x-3">
+                            <img :src="(await kelas).pengguna.foto_url" alt="Mentor" class="w-10 h-10 rounded-full">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900" x-text="(await kelas).pengguna.nama_lengkap"></p>
+                                <p class="text-xs text-gray-500" x-text="'ID: ' + (await kelas).pengguna.id_pengguna"></p>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <button class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm flex items-center justify-center">
+                                <i class="fas fa-exchange-alt mr-2"></i> Change Mentor
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Metadata -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <h3 class="text-sm font-medium text-gray-700 mb-3">Metadata</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-500">Is Accepted:</span>
+                                <span class="font-medium" :class="(await kelas).is_accepted ? 'text-green-500' : 'text-red-500'">
+                                    <i class="fas mr-1" :class="(await kelas).is_accepted ? 'fa-check-circle' : 'fa-times-circle mr-1'"></i>
+                                    <span x-text="(await kelas).is_accepted ? 'Yes' : 'No'">-</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-500">Is Chapter Available:</span>
+                                <span class="font-medium" :class="(await kelas).is_chapter_available ? 'text-green-500' : 'text-red-500'">
+                                    <i class="fas mr-1" :class="(await kelas).is_chapter_available ? 'fa-check-circle' : 'fa-times-circle mr-1'"></i>
+                                    <span x-text="(await kelas).is_chapter_available ? 'Yes' : 'No'">-</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-500">Created At:</span>
+                                <span class="text-gray-700" x-text="cetak_tenggal((await kelas).created_at)"></span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-500">ID Kelas:</span>
+                                <span class="text-gray-700" x-text="(await kelas).id_kelas"></span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-500">URL:</span>
+                                <span class="text-gray-700"><a class="text-blue-600" :href="'/kelas/' + (await kelas).slug">Go To Page</a></span>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
