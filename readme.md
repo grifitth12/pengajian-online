@@ -12,20 +12,18 @@ Caddy digunakan sebagai penghubung antara Frontend & Backend dengan metode rever
 ### Set Up
 ```bash
 nimble install prologue puppy nimja
-nim c -d:release --outdir:build server/app
 ```
 
 ### Start
 ```bash
-./build/app
+nim c -d:release --outdir:build -r server/app
 ```
 
 ## Back End
 Berada di repository terpisah: <a href="https://github.com/upiKerja/kajian-online">upiKerja/kajian-online</a>. Pastikan clone dan run pada root directory yang berbeda.
+
 ### Set Up
-
 ```bash
-
 npm i
 mv .env.example .env # Jangan lupa set up .env
 ```
@@ -38,5 +36,5 @@ npm run dev
 ## Reverse Proxy (Opsional)
 Reverse Proxy dapat dilakukan dengan Caddy atau menggunakan Cloudflare Tunnel.
 ```bash
-sudo caddy run
+sudo caddy start
 ```

@@ -1,6 +1,6 @@
 async function fetch_get_data() {
     let slug = window.location.href.split("/").at(-1)
-    let url = "http://localhost:8081/api/kelas/index/" + slug
+    let url = "/api/kelas/index/" + slug
     try {
         const response = await axios.get(url);
         document.querySelector("#loading").classList.add("hidden")
@@ -51,8 +51,8 @@ async function daftar_kelas(id_kelas) {
     location.reload()
 }
 
-async function fetch_pertemuan_index() {
-    let id_pertemuan_kelas = window.location.href.split("/").at(-1)
+async function fetch_pertemuan_index(id_pertemuan_kelas) {
+    id_pertemuan_kelas = id_pertemuan_kelas || window.location.href.split("/").at(-1)
     let login_url = axios.get("/api/login/google")
 
     try {
@@ -73,4 +73,57 @@ async function fetch_pertemuan_index() {
         document.getElementById("loading").classList.add("hidden")        
     }
 
+}
+
+async function update(params, id_kelas) {
+    try {
+        await axios.put("/api/kelas/" + id_kelas + "/update", params)
+        supami("wow", "Kelas berhasil diupdate.", "")
+    } catch (error) { supami("error", "Gagal Menambahkan Pertemuan", "Anda bukan pemiliki dari kelas ini dan tidak memiliki izin untuk melakuka update.") }
+}
+
+async function tambah_kelas() {
+    let popup = document.getElementById("popup-child")
+    document.getElementById("popup").classList.remove("hidden")
+    
+    popup.setAttribute("dapdap", "rijal")
+    popup.setAttribute("x-init", "fetch('/src/pages/popup/tambahPertemuan.dap').then(r=>r.text()).then(t=>html=t)")
+}
+
+async function create_pertemuan_kelas(pertemuanForm) {
+    try {
+        await axios.post("/api/kelas/pertemuan/insert/" + id_kelas, pertemuanForm)
+        supami("rijal", "data berhasil ditambahkan", "")
+    } catch (error) {
+        if (error.response.status == 403) {
+            supami("error", "Gagal Menambahkan Pertemuan", "Anda bukan pemiliki dari kelas ini dan tidak memiliki izin untuk menambahkan pertemuan baru.")
+        }
+    }
+}
+
+async function fetch_pertemuan_for_update(id_pertemuan_kelas) {
+    window.data_pertemuan_for_update = axios.get("/api/kelas/pertemuan/" + id_pertemuan_kelas + "/m")
+    document.getElementById("popup").setAttribute("x-show", "true")
+    edit_pertemuan_kelas(id_pertemuan_kelas)
+}
+
+async function edit_pertemuan_kelas(id_pertemuan_kelas) {
+    let popup = document.getElementById("popup-child")
+    document.getElementById("popup").classList.remove("hidden")
+    
+    popup.setAttribute("upi-id-pertemuan-kelas", id_pertemuan_kelas)
+    popup.setAttribute("x-init", "fetch('/src/pages/popup/editPertemuan.dap').then(r=>r.text()).then(t=>html=t)")
+}
+
+async function delete_pertemuan_kelas(id_kelas, id_pertemuan_kelas) {
+    if (confirm("Yakin ingin menghapus pertemuan?")) {
+        try {
+            const response = await axios.delete("/api/kelas/pertemuan/" + id_kelas + "/" + id_pertemuan_kelas + "/delete")
+            supami("rijal", "Pertemuan berhasil dihapus~", "")
+        } catch (error) {
+            if (error.response.status == 403) {
+                supami("error", "Gagal Menghapus Pertemuan", "Anda bukan pemiliki dari kelas ini dan tidak memiliki izin untuk menghapus pertemuan.")
+            }
+        }
+    }
 }
