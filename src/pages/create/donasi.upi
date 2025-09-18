@@ -16,7 +16,7 @@
             // 1. Insert donation
             let response = await axios.post("/api/donasi/insert", params)
             let row = response.data.data[0]
-            let id_program_donasi = row?.id_program_donasi
+            let id_program_donasi = row?.id_donasi
             console.log(response.data)
             console.log(row)
             if (!id_program_donasi) {
