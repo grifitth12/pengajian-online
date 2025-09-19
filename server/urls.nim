@@ -27,11 +27,8 @@ let
     pattern("/{slug}", donasiPage, @[HttpGet])
   ]
   adminPatterns* = @[
-    pattern("/manage/kajian", adminManageKajian, @[HttpGet]),
-    pattern("/manage/kelas", adminManageKelas, @[HttpGet]),
-    pattern("/manage/mentor", adminManageMentor, @[HttpGet]),
-    pattern("/manage/sedekah", adminManageSedekah, @[HttpGet]),
-    pattern("/", adminIndex, @[HttpGet])
+    pattern("/", adminIndex, @[HttpGet]),
+    pattern("/manage/{source}", render_manage_index, @[HttpGet])
   ]
   managePatterns* = @[
     pattern("/kelas/{id_kelas}", manageKelas, @[HttpGet]),
