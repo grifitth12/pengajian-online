@@ -105,26 +105,8 @@
   <div class="container">
     <form>
       <div>
-        <label for="nama">Nama Lengkap</label>
-        <input type="text" id="nama" name="nama" placeholder="Masukkan nama lengkap" required>
-      </div>
-      <div>
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="contoh@email.com" required>
-      </div>
-      <div>
         <label for="telepon">Nomor Telepon / WhatsApp</label>
         <input type="tel" id="telepon" name="telepon" placeholder="+62..." required>
-      </div>
-      <div>
-        <label for="bidang">Bidang Kajian</label>
-        <select id="bidang" name="bidang" required>
-          <option value="">-- Pilih Bidang --</option>
-          <option value="tahsin">Tahsin & Tajwid</option>
-          <option value="tafsir">Tafsir</option>
-          <option value="fiqih">Fiqih</option>
-          <option value="adab">Adab & Akhlak</option>
-        </select>
       </div>
       <div>
         <label for="pengalaman">Pengalaman Mengajar</label>
@@ -134,10 +116,15 @@
         <label for="motivasi">Motivasi Bergabung</label>
         <textarea id="motivasi" name="motivasi" placeholder="Tuliskan motivasi Anda menjadi mentor." required></textarea>
       </div>
+      <div>
+        <label for="cv">Unggah CV</label>
+        <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx" required>
+      </div>
       <div class="actions">
         <button type="reset">Reset</button>
         <button type="submit">Daftar Sekarang</button>
       </div>
+
     </form>
   </div>
 
