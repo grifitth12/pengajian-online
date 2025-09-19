@@ -50,25 +50,8 @@
                 params.gambar = committedFile
             }
         }
-
         let response = await axios.put("/api/donasi/update/" + id_donasi, params)
-        alert(response.status)
-    }
-
-    async function create(params) {
-        let response = await axios.put("/api/donasi/insert/", params)
-        alert(response.status)
-    }
-    async function tambah_kelas(id_donasi) {
-        let popup = document.getElementById("popup-child")
-        document.getElementById("popup").classList.remove("hidden")
-        
-        popup.setAttribute("dapdap", "rijal")
-        popup.setAttribute("x-init", "fetch('/src/pages/popup/tambahPertemuan.dap').then(r=>r.text()).then(t=>html=t)")
-    }
-
-    async function close_popup() {
-        document.getElementById("popup").classList.add("hidden")
+        supami("sd", "Berhasil diupdate.", "")
     }
 </script>
 <!-- Main Content -->
@@ -79,7 +62,7 @@
             <div class="p-6 border-b">
                 <div class="flex justify-between items-center">
                     <h2 class="text-xl font-semibold text-gray-800">Edit Donasi</h2>
-                    <button @click="update(DonasiForm, (await donasi).id_program_donasi)" @click="create(DonasiForm, (await donasi))" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center">
+                    <button @click="update(DonasiForm, (await donasi).id_program_donasi)" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center">
                         <i class="fas fa-save mr-2"></i> Save Changes
                     </button>
                 </div>
@@ -101,7 +84,7 @@
                     <!-- target-donasi -->
                     <div>
                         <label for="target-donasi" class="block text-sm font-medium text-gray-700 mb-1">Target Donasi</label>
-                        <input type="number" x-model="DonasiForm.target_donasi" id="target-donasi" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
+                        <input type="number" x-model="DonasiForm.target_donasi" id="target-donasi" :value="(await donasi).target_donasi" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
                     </div>
                     <!-- status -->    
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -20,7 +20,7 @@ proc kajianPage*(ctx: Context) {.async.} =
     var
         slug = ctx.getPathParams("slug")
         ball = puppy.get(
-            fmt"http://localhost:8081/api/kajian/meta/{slug}")
+            fmt"http://localhost:5501/api/kajian/meta/{slug}")
         sukamto = parseJson ball.body
 
     if sukamto["data"].len > 0:
