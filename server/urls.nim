@@ -12,7 +12,8 @@ let
     pattern("/", dash.index, @[HttpGet], name = "index"),
     pattern("/profile", profile, @[HttpGet], name = "profile"),
     pattern("/p/{id_pertemuan_kelas}", kelasPertemuanPage, @[HttpGet]),
-    pattern("/k/{slug}", kelasPage, @[HttpGet])
+    pattern("/k/{slug}", kelasPage, @[HttpGet]),
+    pattern("/daftar-mentor", dash.daftar_mentor, @[HttpGet]) # Sementara ajah.
   ]
   kelasPatterns* = @[
     pattern("/", kelasIndex, @[HttpGet]),
