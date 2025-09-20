@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DonasiKu - Platform Donasi Terpercaya</title>
+    <link rel="stylesheet" href="../src/css/index.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="/src/js/index.js"></script>
-    <link rel="stylesheet" href="../src/css/index.css">
     <script src="/src/js/auth.js"></script>
 </head>
 <body x-data="{auth:true}">    
@@ -77,26 +77,22 @@
         <!-- Campaign Cards -->
         <section class="campaigns-section" id="Campaigns">
             <div class="campaigns-container">
-                <div class="campaigns-grid" x-data="{ campaigns: [
-                    { id: 1, title: 'Kelas Tahsin', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.' },
-                    { id: 2, title: 'Bantuan Pendidikan', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.' },
-                    { id: 3, title: 'Program Kesehatan', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.' },
-                    { id: 4, title: 'Bantuan Bencana', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.' },
-                    { id: 5, title: 'Kelas Hafalan', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.' },
-                    { id: 6, title: 'Program Yatim', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.' }
-                ] }">
-                    <template x-for="campaign in campaigns" :key="campaign.id">
+                <div class="campaigns-grid" x-data="
+                {
+                    campaigns : axios.get('/api/kelas/discover?limit=3'),
+                    donasi: axios.get('/api/donasi/discover?limit=3')
+                }
+                ">
+                    <template x-for="campaign in (await campaigns).data.data"> 
                         <div class="campaign-card">
                             <div class="campaign-image">
-                                <img src="https://via.placeholder.com/400x200/57AF5E/FFFFFF?text=Campaign" 
-                                     :alt="'Campaign ' + campaign.id">
-                                <div class="campaign-status">Baru</div>
+                                <img src="https://via.placeholder.com/400x200/57AF5E/FFFFFF?text=Campaign">
                             </div>
                             <div class="campaign-content">
-                                <h3 class="campaign-title" x-text="campaign.title"></h3>
-                                <p class="campaign-description" x-text="campaign.description"></p>
+                                <h3 class="campaign-title" x-text="campaign.judul"></h3>
+                                <p class="campaign-description" x-text="campaign.deskripsi"></p>
                                 <div class="campaign-footer">
-                                    <span class="campaign-progress">Ustadz alvin ganteng</span>
+                                    <span class="campaign-progress" x-text="campaign.pengguna.nama_lengkap"></span>
                                     <button class="campaign-btn">
                                         Ikuti kelas
                                     </button>
@@ -104,6 +100,22 @@
                             </div>
                         </div>
                     </template>
+                    <template x-for="campaign in (await donasi).data.data"> 
+                        <div class="campaign-card">
+                            <div class="campaign-image">
+                                <img src="https://via.placeholder.com/400x200/57AF5E/FFFFFF?text=Campaign">
+                            </div>
+                            <div class="campaign-content">
+                                <h3 class="campaign-title" x-text="campaign.nama_program"></h3>
+                                <p class="campaign-description" x-text="campaign.deskripsi"></p>
+                                <div class="campaign-footer">
+                                    <button class="campaign-btn">
+                                        Donasi
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>                    
                 </div>
             </div>
         </section>

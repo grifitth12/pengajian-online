@@ -1,10 +1,53 @@
 <script>
     let id_kajian = window.location.href.split("/").at(-1)
     async function fetch_data() {
-        return (await axios.get("/api/kajian/select?w=id_kajian&eq=" + id_kajian)).data.data[0]
+        let data = (await axios.get("/api/kajian/select?w=id_kajian&eq=" + id_kajian)).data.data[0]
+        if (data && data.thumbnail_url) {
+            // prepend /static/
+            data.thumbnail_url = "/static/" + data.thumbnail_url
+        }
+        return data
+    }
+
+    async function selectPhoto(previewId, target) {
+        let input = document.createElement("input")
+        input.type = "file"
+        input.accept = "image/*"
+
+        input.onchange = async e => {
+            let file = e.target.files[0]
+            if (!file) return
+
+            // preview
+            let reader = new FileReader()
+            reader.onload = ev => document.getElementById(previewId).src = ev.target.result
+            reader.readAsDataURL(file)
+
+            // upload temp
+            let fd = new FormData()
+            fd.append("file", file)
+            fd.append("InternalId", id_kajian)
+            let res = await axios.post("/api/file/temp-thumbnail-upload", fd, {headers:{"Content-Type":"multipart/form-data"}})
+            window[target] = res.data.filename 
+            document.getElementById(previewId).src = "/static/" + res.data.filename
+        }
+
+        input.click()
+    }
+
+    async function commitTemp(tempName) {
+        if (!tempName) return null
+        let res = await axios.post("/api/file/commit-temp-thumbnail", { filename: tempName, InternalId: id_kajian})
+        return res.data.filename
     }
 
     async function update(params, id_kajian) {
+        if (window.tempThumbnail) {
+            let committedFile = await commitTemp(window.tempThumbnail)
+            if (committedFile) {
+                params.thumbnail_url = committedFile
+            }
+        }
         let response = await axios.put("/api/kajian/update/" + id_kajian, params)
         supami("sd", "Berhasil diupdate.", "")
     }
@@ -75,10 +118,10 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Thumbnail</label>
                         <div class="mt-1 flex flex-col items-center">
-                            <img id="thumbnailPreview" src="http://127.0.0.1:8080/src/assets/images/banner.png" alt="Thumbnail Preview" class="thumbnail-preview w-full mb-2 rounded-lg border border-gray-300">
-                            <div x-model="kajian.thumbnail_url" class="flex space-x-2">
+                            <img id="thumbnailPreview" :src="(await kajian).thumbnail_url" alt="Thumbnail Preview" class="thumbnail-preview w-full mb-2 rounded-lg border border-gray-300">
+                            <div x-model="kajianForm.thumbnail_url" class="flex space-x-2">
                                 <input type="file" id="thumbnailUpload" class="hidden" accept="image/*">
-                                <button onclick="document.getElementById('thumbnailUpload').click()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
+                                <button onclick="selectPhoto('thumbnailPreview', 'tempThumbnail')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
                                     <i class="fas fa-upload mr-1"></i> Upload
                                 </button>
                                 <button id="removeThumbnail" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm">

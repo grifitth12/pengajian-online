@@ -15,7 +15,7 @@
         <div id="popup" class="fixed flex hidden justify-center items-center" style="height: 100vh; width: 100vw; z-index: 10000;">
             <div
                 id="popup-child"
-                class="popup p-6 rounded-lg w-auto h-auto"
+                class="pop  up p-6 rounded-lg w-auto h-auto"
                 style="z-index: 3; min-width: 500px;"
                 x-data="{ html:'' }"
                 x-html="html"

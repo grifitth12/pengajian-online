@@ -2,19 +2,18 @@ import
     prologue,
     strutils,
     streams,
-    withTemplate
-
-proc adminManageKajian*(ctx: Context) {.async.} =
-    resp strip loadFromTemplate "src/pages/admin/manageKajian.upi"
-
-proc adminManageKelas*(ctx: Context) {.async.} =
-    resp strip loadFromTemplate "src/pages/admin/manageKelas.upi"
-
-proc adminManageMentor*(ctx: Context) {.async.} =
-    resp strip loadFromTemplate "src/pages/admin/manageMentor.upi"
-
-proc adminManageSedekah*(ctx: Context) {.async.} =
-    resp strip loadFromTemplate "src/pages/admin/manageSedekah.upi"
+    withTemplate,
+    unicode
 
 proc adminIndex*(ctx: Context) {.async.} =
-    resp strip loadFromTemplate "src/pages/admin/dashboard.upi"
+    resp strip loadAdminTemplate "src/pages/admin/dashboard.upi"
+
+proc render_manage_index*(ctx: Context) {.async.} =
+    let
+        available_managed = @["kajian", "kelas", "mentor", "sedekah"]
+        source = ctx.getPathParams("source", "dashboard")
+    if source in available_managed :
+        var file_loc = "src/pages/admin/manage" & source.title & ".upi"
+        resp loadAdminTemplate file_loc
+    else :
+        resp errorTemplate("404 Not Found", "Page yang kamu cari tidak ditemukan!")

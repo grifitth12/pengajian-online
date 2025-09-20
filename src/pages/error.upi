@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$message</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <style>
+        .glitch {
+            position: relative;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #4ade80;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #86efac;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim-2 2s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim-1 {
+            0% { clip: rect(32px, 9999px, 78px, 0); }
+            20% { clip: rect(13px, 9999px, 37px, 0); }
+            40% { clip: rect(45px, 9999px, 29px, 0); }
+            60% { clip: rect(31px, 9999px, 92px, 0); }
+            80% { clip: rect(23px, 9999px, 89px, 0); }
+            100% { clip: rect(38px, 9999px, 55px, 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(94px, 9999px, 41px, 0); }
+            20% { clip: rect(3px, 9999px, 35px, 0); }
+            40% { clip: rect(65px, 9999px, 52px, 0); }
+            60% { clip: rect(88px, 9999px, 142px, 0); }
+            80% { clip: rect(30px, 9999px, 87px, 0); }
+            100% { clip: rect(13px, 9999px, 96px, 0); }
+        }
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col items-center justify-center p-4" style="background-color: #f0fdf4;">
+    <div class="max-w-4xl w-full text-center space-y-8">
+        <div class="relative">
+            <h1 class="glitch text-8xl md:text-9xl font-bold text-gray-800" data-text="404">404</h1>
+        </div>
+        
+        <div class="floating" data-aos="fade-up">
+            <img src="http://static.photos/green/640x360/42" alt="Lost in space" class="mx-auto rounded-lg shadow-lg w-full max-w-md">
+        </div>
+        
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-800" data-aos="fade-up">$message</h2>
+        
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+            The page you're looking for might have been removed, had its name changed, or is temporarily unavailable.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row justify-center gap-4 pt-6" data-aos="fade-up" data-aos-delay="200">
+            <a href="/" class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition duration-300 flex items-center justify-center gap-2">
+                <i data-feather="home"></i>
+                Go to Homepage
+            </a>
+            <a href="#" class="px-8 py-3 border-2 border-green-600 text-green-600 hover:bg-green-50 font-semibold rounded-lg shadow-md transition duration-300 flex items-center justify-center gap-2">
+                <i data-feather="help-circle"></i>
+                Contact Support
+            </a>
+        </div>
+        
+        <div class="pt-12" data-aos="fade-up" data-aos-delay="300">
+            <div class="inline-flex space-x-6">
+                <a href="#" class="text-gray-500 hover:text-green-600 transition">
+                    <i data-feather="twitter"></i>
+                </a>
+                <a href="#" class="text-gray-500 hover:text-green-600 transition">
+                    <i data-feather="facebook"></i>
+                </a>
+                <a href="#" class="text-gray-500 hover:text-green-600 transition">
+                    <i data-feather="instagram"></i>
+                </a>
+                <a href="#" class="text-gray-500 hover:text-green-600 transition">
+                    <i data-feather="linkedin"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.from(".glitch", {
+                duration: 1.5,
+                opacity: 0,
+                y: -50,
+                ease: "power3.out"
+            });
+            
+            feather.replace();
+        });
+    </script>
+</body>
+</html>
