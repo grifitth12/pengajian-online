@@ -113,15 +113,26 @@ async function create_pertemuan_kelas(pertemuanForm) {
 async function fetch_pertemuan_for_update(id_pertemuan_kelas) {
     window.data_pertemuan_for_update = axios.get("/api/kelas/pertemuan/" + id_pertemuan_kelas + "/m")
     document.getElementById("popup").setAttribute("x-show", "true")
-    edit_pertemuan_kelas(id_pertemuan_kelas)
+    edit_pertemuan_kelas_popup(id_pertemuan_kelas)
 }
 
-async function edit_pertemuan_kelas(id_pertemuan_kelas) {
+async function edit_pertemuan_kelas_popup(id_pertemuan_kelas) {
     let popup = document.getElementById("popup-child")
     document.getElementById("popup").classList.remove("hidden")
     
     popup.setAttribute("upi-id-pertemuan-kelas", id_pertemuan_kelas)
     popup.setAttribute("x-init", "fetch('/src/pages/popup/editPertemuan.dap').then(r=>r.text()).then(t=>html=t)")
+}
+
+async function edit_pertemuan_kelas(id_pertemuan_kelas, pertemuanForm) {
+    try {
+        await axios.put("/api/kelas/pertemuan/update/" + id_pertemuan_kelas, pertemuanForm)
+        supami("rijal", "data berhasil ditambahkan", "")
+    } catch (error) {
+        if (error.response.status == 403) {
+            supami("error", "Gagal Menambahkan Pertemuan", "Anda bukan pemiliki dari kelas ini dan tidak memiliki izin untuk menambahkan pertemuan baru.")
+        }
+    }
 }
 
 async function delete_pertemuan_kelas(id_kelas, id_pertemuan_kelas) {
