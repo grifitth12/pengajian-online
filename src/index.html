@@ -103,7 +103,7 @@
                     <template x-for="campaign in (await donasi).data.data"> 
                         <div class="campaign-card">
                             <div class="campaign-image">
-                                <img src="https://via.placeholder.com/400x200/57AF5E/FFFFFF?text=Campaign">
+                                <img :src="'/static/' + campaign.gambar">
                             </div>
                             <div class="campaign-content">
                                 <h3 class="campaign-title" x-text="campaign.nama_program"></h3>
