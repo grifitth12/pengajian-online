@@ -1,13 +1,81 @@
 <script>
-    let id_kajian = window.location.href.split("/").at(-1)
-
+    let now = new Date()
+    let temp_id =
+        now.getFullYear().toString() +
+        String(now.getMonth() + 1).padStart(2, "0") +
+        String(now.getDate()).padStart(2, "0") +
+        String(now.getHours()).padStart(2, "0") +
+        String(now.getMinutes()).padStart(2, "0") +
+        String(now.getSeconds()).padStart(2, "0") +
+        String(now.getMilliseconds()).padStart(3, "0")
+    
     async function create(params) {
-        let response = await axios.post("/api/kajian/insert", params)
-        alert(response.status)
+        try {
+            // 1. Insert donation
+            let response = await axios.post("/api/kajian/insert", params)
+            let row = response.data.data
+            let id_kajian = row?.id_kajian
+            console.log(response.data.data)
+            console.log(row)
+            if (!id_kajian) {
+                alert("Failed to create kajian, backend didn’t return ID!")
+                return
+            }
+
+            // 2. If thumbnail was uploaded, commit it
+            if (window.tempThumbnail) {
+                let finalFilename = await commitTemp(window.tempThumbnail, id_kajian)
+
+                // 3. Update donasi record with committed filename
+                await axios.put(`/api/kajian/update/` + id_kajian, {
+                    id_kajian,
+                    thumbnail_url: finalFilename
+                })
+            }
+
+            alert("kajian created successfully!")
+        } catch (err) {
+            console.error(err)
+            alert("Error creating kajian")
+        }
     }
 
-    async function close_popup() {
-        document.getElementById("popup").classList.add("hidden")
+    async function selectPhoto(previewId, target) {
+        let input = document.createElement("input")
+        input.type = "file"
+        input.accept = "image/*"
+
+        input.onchange = async e => {
+            let file = e.target.files[0]
+            if (!file) return
+
+            // preview
+            let reader = new FileReader()
+            reader.onload = ev => document.getElementById(previewId).src = ev.target.result
+            reader.readAsDataURL(file)
+
+            // upload temp
+            let fd = new FormData()
+            fd.append("file", file)
+            fd.append("InternalId", temp_id)
+            let res = await axios.post("/api/file/temp-thumbnail-upload", fd, {
+                headers: { "Content-Type": "multipart/form-data" }
+            })
+            window[target] = res.data.filename // store temp filename
+            document.getElementById(previewId).src = "/static/" + res.data.filename
+        }
+
+        input.click()
+    }
+
+    // COMMIT TEMP
+    async function commitTemp(tempName, realId) {
+        if (!tempName) return null
+        let res = await axios.post("/api/file/commit-temp-thumbnail", {
+            filename: tempName,
+            InternalId: realId
+        })
+        return res.data.filename
     }
 </script>
 <!-- Main Content -->
@@ -78,7 +146,7 @@
                             <img id="thumbnailPreview" src="http://127.0.0.1:8080/src/assets/images/banner.png" alt="Thumbnail Preview" class="thumbnail-preview w-full mb-2 rounded-lg border border-gray-300">
                             <div x-model="kajian.thumbnail_url" class="flex space-x-2">
                                 <input type="file" id="thumbnailUpload" class="hidden" accept="image/*">
-                                <button onclick="document.getElementById('thumbnailUpload').click()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
+                                <button onclick="selectPhoto('thumbnailPreview','tempThumbnail')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
                                     <i class="fas fa-upload mr-1"></i> Upload
                                 </button>
                                 <button id="removeThumbnail" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm">

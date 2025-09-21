@@ -14,6 +14,15 @@ async function fetch_get_data() {
     }    
 }
 
+async function is_user_registred(id_kelas) {
+    try {
+        await axios.get("/api/kelas/" + id_kelas + "/is_user_registred")
+        return true
+    } catch(err) {
+        return false
+    }
+}
+
 async function fetch_pertemuan(id_kelas) {
     let url = "/api/kelas/index/" + id_kelas
     try {
@@ -21,7 +30,7 @@ async function fetch_pertemuan(id_kelas) {
         if (response) {
             return [true, response]
         } else { return [false] }
-    } catch (error) {
+    } catch (error) {S
         return error 
     }
 }

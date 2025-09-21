@@ -3,7 +3,7 @@ import
     strutils,
     json
 
-proc loadFromTemplate*(
+proc loadAdminTemplate*(
     html_file: string,
     data: auto = ""
 ) : string =
@@ -24,3 +24,13 @@ proc generalTemplate*(
         page = templ % ["generalContent", htmll]
 
     return page
+
+proc errorTemplate*(
+    message: string = "404 Not Found",
+    statusText: string = "Not Found"
+) : string = 
+    let
+        templ = readAll newFileStream("src/pages/error.upi", fmRead)
+        page = templ % ["message", message] % ["statusText", statusText]
+
+    return page        

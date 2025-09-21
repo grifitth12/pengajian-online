@@ -12,7 +12,8 @@ let
     pattern("/", dash.index, @[HttpGet], name = "index"),
     pattern("/profile", profile, @[HttpGet], name = "profile"),
     pattern("/p/{id_pertemuan_kelas}", kelasPertemuanPage, @[HttpGet]),
-    pattern("/k/{slug}", kelasPage, @[HttpGet])
+    pattern("/k/{slug}", kelasPage, @[HttpGet]),
+    pattern("/daftar-mentor", dash.daftar_mentor, @[HttpGet]) # Sementara ajah.
   ]
   kelasPatterns* = @[
     pattern("/", kelasIndex, @[HttpGet]),
@@ -27,11 +28,8 @@ let
     pattern("/{slug}", donasiPage, @[HttpGet])
   ]
   adminPatterns* = @[
-    pattern("/manage/kajian", adminManageKajian, @[HttpGet]),
-    pattern("/manage/kelas", adminManageKelas, @[HttpGet]),
-    pattern("/manage/mentor", adminManageMentor, @[HttpGet]),
-    pattern("/manage/sedekah", adminManageSedekah, @[HttpGet]),
-    pattern("/", adminIndex, @[HttpGet])
+    pattern("/", adminIndex, @[HttpGet]),
+    pattern("/manage/{source}", render_manage_index, @[HttpGet])
   ]
   managePatterns* = @[
     pattern("/kelas/{id_kelas}", manageKelas, @[HttpGet]),
