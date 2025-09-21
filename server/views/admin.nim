@@ -6,7 +6,7 @@ import
     unicode
 
 proc adminIndex*(ctx: Context) {.async.} =
-    resp strip loadAdminTemplate "src/pages/admin/dashboard.upi"
+    resp strutils.strip loadAdminTemplate "src/pages/admin/dashboard.upi"
 
 proc render_manage_index*(ctx: Context) {.async.} =
     let
