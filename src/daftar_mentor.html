@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pendaftaran Mentor — PengajianOnline</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-1: #16a34a;
+      --green-2: #0ea5a8;
+      --text: #0f172a;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --bg: #f6faf8;
+      --radius: 14px;
+      --shadow: 0 8px 24px rgba(0,0,0,.1);
+    }
+    *{box-sizing:border-box}
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    header {
+      background: linear-gradient(135deg, var(--green-2), var(--green-1));
+      color: #fff;
+      text-align: center;
+      padding: 60px 20px 80px;
+    }
+    header h1 {
+      margin: 0 0 10px;
+      font-size: clamp(26px, 5vw, 40px);
+      font-weight: 800;
+    }
+    header p {
+      margin: 0;
+      font-size: clamp(15px, 2vw, 18px);
+      opacity: 0.9;
+    }
+    .container {
+      max-width: 700px;
+      margin: -60px auto 40px;
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 30px 24px;
+    }
+    form {
+      display: grid;
+      gap: 20px;
+    }
+    label {
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: block;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      font: inherit;
+      resize: vertical;
+    }
+    textarea { min-height: 100px; }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    button[type="submit"] {
+      background: linear-gradient(135deg, var(--green-1), var(--green-2));
+      color: #fff;
+    }
+    button[type="reset"] {
+      background: #f1f5f9;
+      color: var(--muted);
+    }
+    button:hover { transform: translateY(-2px); }
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Pendaftaran Mentor</h1>
+    <p>Bergabunglah menjadi mentor untuk berbagi ilmu dan membimbing jamaah.</p>
+  </header>
+
+  <div class="container">
+    <form>
+      <div>
+        <label for="telepon">Nomor Telepon / WhatsApp</label>
+        <input type="tel" id="telepon" name="telepon" placeholder="+62..." required>
+      </div>
+      <div>
+        <label for="pengalaman">Pengalaman Mengajar</label>
+        <textarea id="pengalaman" name="pengalaman" placeholder="Ceritakan pengalaman mengajar, latar belakang pendidikan, dll." required></textarea>
+      </div>
+      <div>
+        <label for="motivasi">Motivasi Bergabung</label>
+        <textarea id="motivasi" name="motivasi" placeholder="Tuliskan motivasi Anda menjadi mentor." required></textarea>
+      </div>
+      <div>
+        <label for="cv">Unggah CV</label>
+        <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx" required>
+      </div>
+      <div class="actions">
+        <button type="reset">Reset</button>
+        <button type="submit">Daftar Sekarang</button>
+      </div>
+
+    </form>
+  </div>
+
+  <footer>
+    © 2025 PengajianOnline.id — Semua Hak Dilindungi
+  </footer>
+</body>
+</html>

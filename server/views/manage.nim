@@ -17,7 +17,7 @@ proc manageKelas*(ctx: Context) {.async.} =
     if dapda.code == 200 :
         let
             jsonn = parseJson(dapda.body)
-            page = loadFromTemplate( "src/pages/manage/kelas.upi", jsonn )
+            page = loadAdminTemplate( "src/pages/manage/kelas.upi", jsonn )
 
         resp strip page
 
@@ -28,16 +28,16 @@ proc manageKelas*(ctx: Context) {.async.} =
         resp $dapda.code   
 
 proc manageSedekah*(ctx: Context) {.async.} = 
-    resp loadFromTemplate "src/pages/manage/sedekah.upi"
+    resp loadAdminTemplate "src/pages/manage/sedekah.upi"
 
 proc manageMentor*(ctx: Context) {.async.} = 
-    resp loadFromTemplate "src/pages/manage/mentor.upi"
+    resp loadAdminTemplate "src/pages/manage/mentor.upi"
 
 proc manageKajian*(ctx: Context) {.async.} = 
-    resp loadFromTemplate "src/pages/manage/kajian.upi"
+    resp loadAdminTemplate "src/pages/manage/kajian.upi"
 
 proc createDonasi*(ctx: Context) {.async.} = 
-    resp loadFromTemplate "src/pages/create/donasi.upi"
+    resp loadAdminTemplate "src/pages/create/donasi.upi"
 
 proc createKajian*(ctx: Context) {.async.} = 
-    resp loadFromTemplate "src/pages/create/kajian.upi"
+    resp loadAdminTemplate "src/pages/create/kajian.upi"
