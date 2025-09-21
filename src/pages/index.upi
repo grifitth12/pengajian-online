@@ -1,0 +1,124 @@
+<script src="/src/js/index.js"></script>
+<link rel="stylesheet" href="/src/css/index.css">
+<main class="main-content">
+    <!-- Banner Section -->
+    <div class="banner-section" id="Home">
+        <img src="/src/assets/images/banner.png" 
+                alt="Donation ceremony" 
+                class="banner-image">
+        <div class="banner-overlay">
+        </div>
+    </div>
+    <!-- Stats -->
+    <div class="stats-section">
+        <div class="stat-card">
+            <span class="stat-number">30</span>
+            <p class="stat-label">Program Donasi</p>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-number">Rp 30.000.000</span>
+            <p class="stat-label">Total Donasi Terkumpul</p>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-number">1200</span>
+            <p class="stat-label">Total Donatur</p>
+        </div>
+    </div>
+
+    <!-- Features -->
+    <section class="features-section">
+        <div class="features-container">
+            <div class="features-grid">
+                <!-- Kelas Mengaji -->
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <img src="/src/assets/images/buku.png" alt="Kelas Mengaji">
+                    </div>
+                    <p class="feature-label">Kelas Mengaji</p>
+                </div>
+
+                <!-- Zakat -->
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <img src="/src/assets/images/zakat.png" alt="Zakat">
+                    </div>
+                    <p class="feature-label">Zakat</p>
+                </div>
+
+                <!-- Donasi -->
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <img src="/src/assets/images/kotak.png" alt="Donasi">
+                    </div>
+                    <p class="feature-label">Donasi</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Campaign Cards -->
+    <section class="campaigns-section" id="Campaigns">
+        <div class="campaigns-container">
+            <div class="campaigns-grid" x-data="
+            {
+                campaigns : axios.get('/api/kelas/discover?limit=3'),
+                donasi: axios.get('/api/donasi/discover?limit=3')
+            }
+            ">
+                <template x-for="campaign in (await campaigns).data.data"> 
+                    <div class="campaign-card">
+                        <div class="campaign-image">
+                            <img src="https://via.placeholder.com/400x200/57AF5E/FFFFFF?text=Campaign">
+                        </div>
+                        <div class="campaign-content">
+                            <h3 class="campaign-title" x-text="campaign.judul"></h3>
+                            <p class="campaign-description" x-text="campaign.deskripsi"></p>
+                            <div class="campaign-footer">
+                                <span class="campaign-progress" x-text="campaign.pengguna.nama_lengkap"></span>
+                                <button class="campaign-btn">
+                                    Ikuti kelas
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <template x-for="campaign in (await donasi).data.data"> 
+                    <div class="campaign-card">
+                        <div class="campaign-image">
+                            <img :src="'/static/' + campaign.gambar">
+                        </div>
+                        <div class="campaign-content">
+                            <h3 class="campaign-title" x-text="campaign.nama_program"></h3>
+                            <p class="campaign-description" x-text="campaign.deskripsi"></p>
+                            <div class="campaign-footer">
+                                <button class="campaign-btn">
+                                    Donasi
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </template>                    
+            </div>
+        </div>
+    </section>
+</main>
+<script>
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+async function coba() {
+    await sleep(1000)
+    const btn = document.getElementById('hamburger');
+    const menu = document.getElementById('mobile-menu');
+
+    btn.addEventListener('click', () => {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!expanded));
+    btn.classList.toggle('active');
+    if (menu) menu.classList.toggle('hidden');
+    });
+}
+coba()
+</script>
