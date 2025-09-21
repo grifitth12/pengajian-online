@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}} - Kelas Belaja Ngaji Online</title>
-    <meta name="description" content="{{description}}">
+    <title>{{getStr data["judul"]}} - Kelas Belaja Ngaji Online</title>
+    <meta name="description" content="{{getStr data["deskripsi"]}}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -55,7 +55,7 @@
         }
     </style>
 </head>
-<body x-data="{auth: false, mdata : fetch_get_data()}" class="bg-gray-50">
+<body x-data="{auth: false}" class="bg-gray-50">
     <!-- Header Section -->
     <div x-data="{ html:'' }"
        x-init="fetch('/src/assets/assets-pages/navbar-ngaji.html').then(r=>r.text()).then(t=>html=t)"
@@ -63,20 +63,20 @@
     </div>
 
     <!-- Loading -->
-    <div id="loading" class="flex" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; align-items: center; justify-content: center; z-index: 9999;"><div style="border: 4px solid #f3f3f3; border-top: 4px solid #2e8b57; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;"></div><style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style></div>
+    <!-- <div id="loading" class="flex" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; align-items: center; justify-content: center; z-index: 9999;"><div style="border: 4px solid #f3f3f3; border-top: 4px solid #2e8b57; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;"></div><style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style></div> -->
 
     <!-- Hero Section -->
     <section class="mt-12 bg-gradient-to-r from-green-50 to-white py-12 islamic-pattern">
-        <div class="container mx-auto px-4">
+        <div class="container mx-auto px-4" x-data="{a: false}">
             <div class="flex flex-col md:flex-row items-center">
                 <div class="md:w-1/2 mb-8 md:mb-0">
-                    <h2 class="text-4xl md:text-5xl font-bold text-green-800 mb-4" x-text="(await mdata).data.judul"></h2>
-                    <p class="text-lg text-gray-600 mb-6" x-text="(await mdata).data.deskripsi"></p>
-                    <div class="flex space-x-4">
+                    <h2 class="text-4xl md:text-5xl font-bold text-green-800 mb-4">{{getStr data["judul"]}}</h2>
+                    <p class="text-lg text-gray-600 mb-6">{{getStr data["deskripsi"]}}</p>
+                    <div class="flex space-x-4" x-init="a = await is_user_registred('{{getStr data["id_kelas"]}}')">
                         <button class="border-2 border-green-600 text-green-600 hover:bg-green-50 px-6 py-3 rounded-lg font-medium transition duration-300">
                             <i class="fas fa-book-open mr-2"></i> Liat Pertemuan
                         </button>
-                        <button @click="daftar_kelas((await mdata).data.id_kelas)" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300">
+                        <button x-show="!a" x-transition @click="daftar_kelas('{{getStr data["id_kelas"]}}')" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300">
                             <i class="fas fa-user-graduate mr-2"></i> Daftar
                         </button>
                     </div>
@@ -99,12 +99,12 @@
             </div>
             
             <!-- Course Card -->
-            <div x-data="{donasi : fetch_donasi(), sukam : {}}" class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden mb-12 course-card transition duration-300">
+            <div x-data="{donasi : fetch_donasi(), sukam : false}" class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden mb-12 course-card transition duration-300">
                 <div class="md:flex">
                     <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" x-bind:src="(await donasi).data.gambar" alt="Quran Course">
+                        <img class="h-full w-full object-cover" x-bind:src="'/static/' + (await donasi).data.gambar" alt="Quran Course">
                     </div>
-                    <div class="p-8 md:w-2/3" x-init="sukam = fetch_donasi_inspect((await donasi).data.id_donasi)">
+                    <div class="p-8 md:w-2/3" x-init="sukam = fetch_donasi_inspect((await donasi).data.id_program_donasi)">
                         <div class="flex justify-between items-start mb-4">
                             <div>
                                 <div class="uppercase tracking-wide text-sm text-green-600 font-semibold">Palestina</div>
@@ -113,32 +113,18 @@
                         </div>
                         
                         <p class="mt-2 text-gray-600" x-text="(await donasi).data.deskripsi">A comprehensive course covering proper Quran recitation rules (Tajweed) and memorization techniques with practical exercises.</p>
-                        <div class="mt-6">
+                        <div class="mt-6" x-show="(await sukam).data" x-transition>
                             <div class="w-full flex justify-between">
                                 <h1 class="text-black" x-text="cetak_rupiah((await sukam).data.terkumpul)"></h1>
                                 <h1 class="text-black" x-text="cetak_rupiah((await donasi).data.target_donasi)"></h1>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
                                 <div class="bg-green-600 h-2.5 rounded-full" x-bind:style="'width:' + hitung_persen((await sukam).data.terkumpul, (await donasi).data.target_donasi) + '%;'"></div>
-                            </div>                
+                            </div>
                         </div>
-                        <!-- <div class="mt-6 flex flex-wrap justify-between items-center">
-                            <div class="flex items-center text-sm text-gray-500">
-                                <i class="fas fa-users mr-1"></i>
-                                <span x-text="(await sukam).data.terkumpul"></span>
-                            </div>
-                            <div class="flex items-center text-sm text-gray-500">
-                                <i class="fas fa-clock mr-1"></i>
-                                <span>12 Weeks</span>
-                            </div>
-                            <div class="flex items-center text-sm text-gray-500">
-                                <i class="fas fa-calendar-alt mr-1"></i>
-                                <span>Starts June 15</span>
-                            </div>
-                        </div> -->
                         
                         <div class="mt-6">
-                            <button class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition duration-300">
+                            <button @click="window.location.href = '/donasi/' + (await donasi).data.slug" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition duration-300">
                                 <i class="fas fa-book-reader mr-2"></i> Sedekah Sekarang
                             </button>
                         </div>
@@ -154,9 +140,9 @@
                 
                 <div class="bg-white rounded-lg shadow-md p-6 teacher-card transition duration-300">
                     <div class="flex flex-col md:flex-row items-center">
-                        <img class="h-24 w-24 rounded-full border-4 border-green-100" x-bind:src="(await mdata).data.pengguna.foto_url" alt="Teacher">
+                        <img class="h-24 w-24 rounded-full border-4 border-green-100" src='{{getStr data["pengguna"]["foto_url"]}}' alt="Teacher">
                         <div class="md:ml-6 mt-4 md:mt-0 text-center md:text-left">
-                            <h4 class="text-xl font-bold text-gray-900" x-text="(await mdata).data.pengguna.nama_lengkap"></h4>
+                            <h4 class="text-xl font-bold text-gray-900">{{getStr data["pengguna"]["nama_lengkap"]}}</h4>
                             <p class="text-green-600 font-medium">Quran Specialist</p>
                             <p class="text-gray-600 mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis, explicabo!</p>
                         </div>
@@ -172,7 +158,7 @@
                 
                 <div class="space-y-4">
                     <!-- Meeting 1 -->
-                    <template x-for="pertemuan in (await fetch_pertemuan((await mdata).data.id_kelas)).data">
+                    <template x-for="pertemuan in (await fetch_pertemuan('{{getStr data["id_kelas"]}}')).data">
                         <div class="bg-white rounded-lg shadow-md p-4 meeting-item transition duration-300">
                             <div class="flex items-start">
                                 <div class="bg-green-100 text-green-800 rounded-full p-3 mr-4">

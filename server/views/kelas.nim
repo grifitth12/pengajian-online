@@ -12,22 +12,17 @@ proc kelasIndex*(ctx: Context) {.async.} =
 
 proc kelasPage*(ctx: Context) {.async.} =
     proc myRenderProc(
-        title: string,
-        description: string): string =
+        data: JsonNode): string =
         compileTemplateFile("../../src/pages/kelas/page.upi", baseDir = getScriptDir())    
     
     var
         slug = ctx.getPathParams("slug")
         ball = puppy.get(
-            fmt"http://localhost:5501/api/kelas/meta/{slug}")
+            fmt"http://localhost:5501/api/kelas/{slug}")
         sukamto = parseJson ball.body
 
-    if sukamto["data"].len > 0:
-        resp myRenderProc(
-            getStr sukamto["data"]["judul"],
-            getStr sukamto["data"]["deskripsi"])        
-    else :
-        resp "<h1>404 Not Found</h1>"
+    if sukamto["data"].len > 0 : resp myRenderProc(sukamto["data"])        
+    else : resp "<h1>404 Not Found</h1>"
 
 
 proc kelasDaftar*(ctx: Context) {.async.} =
