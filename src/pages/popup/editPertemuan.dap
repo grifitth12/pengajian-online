@@ -35,7 +35,7 @@
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
         </div>   
         <div class="mt-12 flex flex-col gap-2">
-            <button class="w-full bg-green-100 h-10 rounded-lg" @click="create_pertemuan_kelas(pertemuanForm)">Update</button>
+            <button class="w-full bg-green-100 h-10 rounded-lg" @click="edit_pertemuan_kelas((await pertemuan_i).data.data.id_pertemuan_kelas, pertemuanForm)">Update</button>
             <button class="w-full border-2 text-black border-gray-200 h-10 rounded-lg" @click="close_popup()">Batal</button>
         </div>
     </div>

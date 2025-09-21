@@ -9,6 +9,119 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/src/css/profile2.css">
 </head>
+<script>
+    function appData(){
+        return {
+            activeTab: 'profile',
+            mobileNavOpen: false,
+            user: {
+                nama_lengkap: "",
+                role: "",
+                email: "",
+                bio: "",
+                kontak: "",
+                foto_url: ""
+            },
+            loading: false,
+            error: null,
+            success: null,
+            tempProfileImage: null,
+            activities: [],
+            loadingActivities: true,
+            mentor: { field: "", description: "", experience: 0, registered: false },
+
+            init() {
+                this.fetchUser();
+
+                if (this.$watch) {
+                    this.$watch('mobileNavOpen', (val) => {
+                        document.body.style.overflow = val ? 'hidden' : '';
+                    });
+
+                    this.$watch('activeTab', (value) => {
+                        if (value === 'activity' && this.activities.length === 0) {
+                            this.fetchActivities();
+                        }
+                    });
+                }
+            },
+
+            closeMobileNav() {
+                this.mobileNavOpen = false;
+                document.body.style.overflow = '';
+            },
+
+            toggleMobileNav() {
+                this.mobileNavOpen = !this.mobileNavOpen;
+            },
+
+            async fetchUser(){
+                try {
+                    this.loading = true;
+                    let res = await axios.get("http://localhost:5501/api/profile");
+                    let data = res.data;
+
+                    this.user = {
+                        nama_lengkap: data.nama_lengkap || "",
+                        role: data.role || "",
+                        email: data.email || "",
+                        bio: data.bio || "",
+                        kontak: data.kontak || "",
+                        foto_url: data.foto_url || ""
+                    };
+
+                    // mapping log kelas ke activity log
+                    if (data.log_kelas && Array.isArray(data.log_kelas)) {
+                        this.activities = data.log_kelas.map((item, idx) => ({
+                            action: `Mengikuti kelas: ${item.kelas.judul}`,
+                            date: item.kelas.status
+                        }));
+                        this.loadingActivities = false;
+                    }
+
+                } catch (err) {
+                    console.error(err);
+                    this.error = err.message || "Failed to fetch user.";
+                } finally {
+                    this.loading = false;
+                }
+            },
+
+            async fetchActivities(){
+                this.loadingActivities = true;
+                try {
+                    await new Promise(r => setTimeout(r, 700));
+                    if (this.activities.length === 0) {
+                        this.activities = [
+                            { action: "update informasi profil", date: "2025-09-18 14:30" },
+                            { action: "Login dari device baru", date: "2025-09-13 09:00" }
+                        ];
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch activities:", err);
+                } finally {
+                    this.loadingActivities = false;
+                }
+            },
+
+            async saveProfile() {
+                try {
+                    await axios.post("http://localhost:5501/api/profile", {
+                        nama_lengkap: this.user.nama_lengkap.trim(),
+                        bio: this.user.bio,
+                        kontak: this.user.kontak
+                    });
+
+                    alert("Profile updated successfully!");
+                } catch (err) {
+                    console.error(err);
+                    alert("Failed to save profile");
+                }
+            }
+        };
+    }
+</script>
+
 <body>
     <div class="container" x-data="appData()" x-init="init()" x-cloak>
         <!-- left decorative column (desktop only) -->
@@ -47,7 +160,7 @@
         <!-- Main Content -->
         <div class="main-content">
             <!-- Profile Section -->
-            <section class="profile-section" x-show="activeTab === 'profile'" x-transition>
+            <section class="profile-section tab-section" x-show="activeTab === 'profile'"  x-transition>
                 <div class="profiles">
                     <div class="profile-header" style="width:100%;">
                         <div style="display:flex; gap:20px; align-items:center; justify-content:center; flex-wrap:wrap;">
@@ -76,12 +189,8 @@
                     <form class="form-section" @submit.prevent="saveProfile" style="width:100%; max-width:800px;">
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Nama Depan</label>
-                                <input type="text" class="form-input" x-model="firstName" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Nama Belakang</label>
-                                <input type="text" class="form-input" x-model="lastName" required>
+                                <label class="form-label">Nama Lengkap</label>
+                                <input type="text" class="form-input" x-model="user.nama_lengkap" required>
                             </div>
                         </div>
 
@@ -111,7 +220,7 @@
             </section>
 
             <!-- Mentor Section (SIMPLE) -->
-            <section class="mentor-section" x-show="activeTab === 'mentor'" x-transition>
+            <section class="mentor-section tab-section" x-show="activeTab === 'mentor'" x-transition>
                 <div class="mentor-card" role="region" aria-labelledby="mentorTitle">
                     <h2 id="mentorTitle" class="mentor-title">Anda belum terdaftar sebagai mentor</h2>
                     <p class="mentor-sub">Daftar sekarang agar siswa dapat menemukan dan memesan sesi dengan Anda.</p>
@@ -122,7 +231,7 @@
             </section>
 
             <!-- Activity Log Section -->
-            <section class="activity-section" x-show="activeTab === 'activity'" x-transition>
+            <section class="activity-section tab-section" x-show="activeTab === 'activity'" x-transition>
                 <div class="activity-content">
                     <h2 class="activity-title">Activity Log</h2>
 
@@ -144,162 +253,6 @@
                 </div>
             </section>
         </div>
-    </div>
-
-    <script>
-        function appData(){
-            return {
-                activeTab: 'profile',
-                mobileNavOpen: false,
-                user: {
-                    nama_lengkap: "Muntazier",
-                    role: "Owner",
-                    email: "Zahir@gmail.com",
-                    bio: "akhhh bingungg ngk tau cara bikin animasi gmn",
-                    kontak: "8123456789",
-                    foto_url: ""
-                },
-                firstName: "Muntazier",
-                lastName: "",
-                loading: false,
-                error: null,
-                success: null,
-                tempProfileImage: null,
-                activities: [],
-                loadingActivities: true,
-                mentor: { field: "", description: "", experience: 0, registered: false },
-
-                init() {
-                    // fetch initial user and set watchers
-                    this.fetchUser();
-
-                    // watcher untuk mobileNavOpen: agar body overflow dikembalikan saat menu ditutup
-                    if (this.$watch) {
-                        this.$watch('mobileNavOpen', (val) => {
-                            document.body.style.overflow = val ? 'hidden' : '';
-                        });
-
-                        // watch tab changes to load activities lazily
-                        this.$watch('activeTab', (value) => {
-                            if (value === 'activity' && this.activities.length === 0) {
-                                this.fetchActivities();
-                            }
-                        });
-                    }
-                },
-
-                // helper untuk menutup mobile nav dari berbagai tempat (link, klik luar, dll)
-                closeMobileNav() {
-                    this.mobileNavOpen = false;
-                    // pastikan scroll dikembalikan
-                    document.body.style.overflow = '';
-                },
-
-                toggleMobileNav() {
-                    this.mobileNavOpen = !this.mobileNavOpen;
-                    // sekarang watcher mobileNavOpen akan mengatur body overflow
-                },
-
-                async fetchUser(){
-                    try {
-                        this.loading = true;
-                        // simulate API call
-                        await new Promise(r => setTimeout(r, 400));
-                        if (this.user.nama_lengkap) {
-                            let parts = this.user.nama_lengkap.trim().split(" ");
-                            this.firstName = parts.shift() || "";
-                            this.lastName = parts.join(" ") || "";
-                        }
-                    } catch (err) {
-                        this.error = err.message || "Failed to fetch user.";
-                    } finally {
-                        this.loading = false;
-                    }
-                },
-
-                async fetchActivities(){
-                    this.loadingActivities = true;
-                    try {
-                        await new Promise(r => setTimeout(r, 700));
-                        // dummy activities
-                        this.activities = [
-                            { action: "update informasi profil", date: "2025-09-18 14:30" },
-                            { action: "Mengikuti pengajian Zahir", date: "2025-09-14 10:15" },
-                            { action: "Login dari device baru", date: "2025-09-13 09:00" },
-                            { action: "Mengirimkan Donasi ke Palestina", date: "2025-09-10 16:45" },
-                            { action: "Mendaftar sebagai user baru", date: "2025-09-01 12:00" }
-                        ];
-                    } catch (err) {
-                        console.error("Failed to fetch activities:", err);
-                    } finally {
-                        this.loadingActivities = false;
-                    }
-                },
-
-                selectPhoto(){
-                    const input = document.createElement('input');
-                    input.type = 'file'; input.accept = 'image/*';
-                    input.onchange = async (e) => {
-                        const file = e.target.files[0]; if (!file) return;
-                        const reader = new FileReader();
-                        reader.onload = (ev) => {
-                            document.querySelector('.profile-image').src = ev.target.result;
-                        };
-                        reader.readAsDataURL(file);
-                        await this.uploadTempFile(file);
-                    };
-                    input.click();
-                },
-
-                async uploadTempFile(file) {
-                    const formData = new FormData();
-                    formData.append("file", file);
-                    try {
-                        await new Promise(r => setTimeout(r, 700));
-                        this.tempProfileImage = "temp_" + file.name;
-                        console.log("Temp upload success");
-                    } catch (err) {
-                        console.error("Temp upload failed", err);
-                        alert("Failed to upload file");
-                    }
-                },
-
-                async commitTempFile() {
-                    if (!this.tempProfileImage) return;
-                    try {
-                        await new Promise(r => setTimeout(r, 600));
-                        this.user.foto_url = "/static/profile_" + Date.now() + ".jpg";
-                        this.tempProfileImage = null;
-                    } catch (err) {
-                        console.error("Commit failed", err);
-                        alert("Failed to commit photo");
-                    }
-                },
-
-                async saveProfile() {
-                    try {
-                        if (this.tempProfileImage) await this.commitTempFile();
-                        // simulate save
-                        await new Promise(r => setTimeout(r, 600));
-                        this.user.nama_lengkap = `${this.firstName} ${this.lastName}`.trim();
-                        alert("Profile updated successfully!");
-                    } catch (err) {
-                        console.error(err);
-                        alert("Failed to save profile");
-                    }
-                },
-
-                submitMentor() {
-                    // dummy register
-                    if (!this.mentor.field || !this.mentor.description) {
-                        alert("Mohon isi bidang & deskripsi.");
-                        return;
-                    }
-                    this.mentor.registered = true;
-                    alert("Pendaftaran mentor dicatat (dummy).");
-                }
-            };
-        }
-    </script>
+    </div>   
 </body>
 </html>

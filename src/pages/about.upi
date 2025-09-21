@@ -1,0 +1,336 @@
+<style>
+  body { 
+    font-family: 'Inter', sans-serif; 
+    scroll-behavior: smooth;
+  }
+  .card-hover { 
+    transition: all 0.3s ease; 
+  }
+  .card-hover:hover { 
+    transform: translateY(-8px); 
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  }
+  .fade-in { 
+    animation: fadeIn 0.8s ease-in-out; 
+  }
+  .stagger-item {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  @keyframes fadeIn { 
+    from { opacity: 0; transform: translateY(20px); } 
+    to { opacity: 1; transform: translateY(0); } 
+  }
+  @keyframes fadeUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .gradient-bg {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  }
+  .stat-number {
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+<!-- Hero Section yang Diperbarui -->
+<section class="gradient-bg text-white py-20 md:py-24 fade-in">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    <h1 class="text-4xl md:text-5xl font-bold mb-6">Tentang Kami</h1>
+    <div class="w-24 h-1 bg-white/30 mx-auto mb-8"></div>
+    <p class="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-10 leading-relaxed">
+      Menghubungkan hati dermawan dengan mereka yang membutuhkan melalui program donasi yang transparan dan terpercaya.
+    </p>
+    <div class="flex justify-center space-x-4 mt-10">
+      <a href="#visi-misi" class="px-6 py-3 bg-white text-green-700 font-semibold rounded-full hover:bg-gray-100 transition">
+        Jelajahi Lebih
+      </a>
+      <a href="#kontak" class="px-6 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition">
+        Hubungi Kami
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Visi Misi -->
+<section id="visi-misi" class="max-w-6xl mx-auto px-6 py-16 md:py-20">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <!-- Visi -->
+    <div class="bg-white rounded-2xl shadow-xl p-8 card-hover stagger-item">
+      <div class="flex items-center mb-6">
+        <div class="bg-green-100 p-4 rounded-2xl mr-4">
+          <i class="fas fa-eye text-green-600 text-2xl"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-800">Visi Kami</h2>
+      </div>
+      <p class="text-gray-700 leading-relaxed text-lg">
+        Menjadi platform donasi terdepan yang menghubungkan hati dermawan dengan mereka yang membutuhkan, 
+        menciptakan dampak positif yang berkelanjutan bagi masyarakat Indonesia.
+      </p>
+    </div>
+
+    <!-- Misi -->
+    <div class="bg-white rounded-2xl shadow-xl p-8 card-hover stagger-item">
+      <div class="flex items-center mb-6">
+        <div class="bg-green-100 p-4 rounded-2xl mr-4">
+          <i class="fas fa-bullseye text-green-600 text-2xl"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-800">Misi Kami</h2>
+      </div>
+      <ul class="text-gray-700 leading-relaxed space-y-4 text-lg">
+        <li class="flex items-start">
+          <div class="bg-green-100 p-2 rounded-lg mr-3 mt-1">
+            <i class="fas fa-check-circle text-green-600"></i>
+          </div>
+          <span>Menyediakan platform donasi yang transparan dan mudah diakses</span>
+        </li>
+        <li class="flex items-start">
+          <div class="bg-green-100 p-2 rounded-lg mr-3 mt-1">
+            <i class="fas fa-check-circle text-green-600"></i>
+          </div>
+          <span>Memastikan bantuan tepat sasaran kepada yang membutuhkan</span>
+        </li>
+        <li class="flex items-start">
+          <div class="bg-green-100 p-2 rounded-lg mr-3 mt-1">
+            <i class="fas fa-check-circle text-green-600"></i>
+          </div>
+          <span>Membangun kepercayaan melalui transparansi dan akuntabilitas</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Nilai-nilai -->
+<section class="max-w-6xl mx-auto px-6 py-16 md:py-20 bg-white">
+  <div class="text-center mb-16">
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">Nilai-Nilai Kami</h2>
+    <p class="text-gray-600 max-w-2xl mx-auto">Prinsip-prinsip yang menjadi pedoman dalam setiap langkah dan keputusan kami</p>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    
+    <!-- Transparansi -->
+    <div class="bg-gray-50 rounded-2xl shadow-lg p-8 text-center card-hover stagger-item">
+      <div class="bg-green-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+        <i class="fas fa-search text-green-600 text-3xl"></i>
+      </div>
+      <h3 class="font-bold text-xl mb-4 text-gray-800">Transparansi</h3>
+      <p class="text-gray-600">
+        Keterbukaan dalam setiap proses donasi dan penyaluran bantuan
+      </p>
+    </div>
+
+    <!-- Integritas -->
+    <div class="bg-gray-50 rounded-2xl shadow-lg p-8 text-center card-hover stagger-item">
+      <div class="bg-green-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+        <i class="fas fa-shield-alt text-green-600 text-3xl"></i>
+      </div>
+      <h3 class="font-bold text-xl mb-4 text-gray-800">Integritas</h3>
+      <p class="text-gray-600">
+        Berkomitmen untuk selalu jujur dan dapat dipercaya
+      </p>
+    </div>
+
+    <!-- Empati -->
+    <div class="bg-gray-50 rounded-2xl shadow-lg p-8 text-center card-hover stagger-item">
+      <div class="bg-green-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+        <i class="fas fa-heart text-green-600 text-3xl"></i>
+      </div>
+      <h3 class="font-bold text-xl mb-4 text-gray-800">Empati</h3>
+      <p class="text-gray-600">
+        Memahami dan merasakan penderitaan sesama manusia
+      </p>
+    </div>
+
+    <!-- Kolaborasi -->
+    <div class="bg-gray-50 rounded-2xl shadow-lg p-8 text-center card-hover stagger-item">
+      <div class="bg-green-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+        <i class="fas fa-hands-helping text-green-600 text-3xl"></i>
+      </div>
+      <h3 class="font-bold text-xl mb-4 text-gray-800">Kolaborasi</h3>
+      <p class="text-gray-600">
+        Bekerja sama dengan berbagai pihak untuk dampak maksimal
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Tim -->
+<section class="max-w-6xl mx-auto px-6 py-16 md:py-20">
+  <div class="text-center mb-16">
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">Tim Kami</h2>
+    <p class="text-gray-600 max-w-2xl mx-auto">Orang-orang berdedikasi di balik kesuksesan program donasi kami</p>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    
+    <!-- Tim Member 1 -->
+    <div class="bg-white rounded-2xl shadow-lg p-8 text-center card-hover stagger-item">
+      <div class="w-32 h-32 bg-green-100 rounded-2xl mx-auto mb-6 flex items-center justify-center overflow-hidden">
+        <i class="fas fa-user text-green-600 text-5xl"></i>
+      </div>
+      <h3 class="font-bold text-xl mb-2 text-gray-800">Ahmad Sutrisno</h3>
+      <p class="text-green-600 font-semibold mb-4">Direktur Eksekutif</p>
+      <p class="text-gray-600">
+        Berpengalaman 15 tahun dalam bidang sosial dan pemberdayaan masyarakat
+      </p>
+      <div class="flex justify-center mt-6 space-x-4">
+        <a href="#" class="text-gray-400 hover:text-green-600 transition"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="text-gray-400 hover:text-green-600 transition"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+
+    <!-- Tim Member 2 -->
+    <div class="bg-white rounded-2xl shadow-lg p-8 text-center card-hover stagger-item">
+      <div class="w-32 h-32 bg-green-100 rounded-2xl mx-auto mb-6 flex items-center justify-center overflow-hidden">
+        <i class="fas fa-user text-green-600 text-5xl"></i>
+      </div>
+      <h3 class="font-bold text-xl mb-2 text-gray-800">Siti Nurhaliza</h3>
+      <p class="text-green-600 font-semibold mb-4">Manajer Program</p>
+      <p class="text-gray-600">
+        Ahli dalam pengelolaan program sosial dengan fokus pada transparansi
+      </p>
+      <div class="flex justify-center mt-6 space-x-4">
+        <a href="#" class="text-gray-400 hover:text-green-600 transition"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="text-gray-400 hover:text-green-600 transition"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+
+    <!-- Tim Member 3 -->
+    <div class="bg-white rounded-2xl shadow-lg p-8 text-center card-hover stagger-item">
+      <div class="w-32 h-32 bg-green-100 rounded-2xl mx-auto mb-6 flex items-center justify-center overflow-hidden">
+        <i class="fas fa-user text-green-600 text-5xl"></i>
+      </div>
+      <h3 class="font-bold text-xl mb-2 text-gray-800">Budi Setiawan</h3>
+      <p class="text-green-600 font-semibold mb-4">Koordinator Lapangan</p>
+      <p class="text-gray-600">
+        Bertanggung jawab dalam penyaluran bantuan dan monitoring program
+      </p>
+      <div class="flex justify-center mt-6 space-x-4">
+        <a href="#" class="text-gray-400 hover:text-green-600 transition"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="text-gray-400 hover:text-green-600 transition"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Kontak -->
+<section id="kontak" class="bg-gray-100 py-16 md:py-20">
+  <div class="max-w-4xl mx-auto px-6 text-center">
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">Hubungi Kami</h2>
+    <p class="text-gray-700 mb-12 max-w-2xl mx-auto">
+      Punya pertanyaan atau ingin bekerjasama? Jangan ragu untuk menghubungi kami.
+    </p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+      <div class="flex flex-col items-center bg-white p-6 rounded-2xl shadow-md">
+        <div class="bg-green-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
+          <i class="fas fa-envelope text-green-600 text-xl"></i>
+        </div>
+        <p class="font-semibold text-gray-800 mb-2">Email</p>
+        <p class="text-gray-600">info@programdonasi.org</p>
+      </div>
+
+      <div class="flex flex-col items-center bg-white p-6 rounded-2xl shadow-md">
+        <div class="bg-green-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
+          <i class="fas fa-phone text-green-600 text-xl"></i>
+        </div>
+        <p class="font-semibold text-gray-800 mb-2">Telepon</p>
+        <p class="text-gray-600">+62 21 1234 5678</p>
+      </div>
+
+      <div class="flex flex-col items-center bg-white p-6 rounded-2xl shadow-md">
+        <div class="bg-green-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
+          <i class="fas fa-map-marker-alt text-green-600 text-xl"></i>
+        </div>
+        <p class="font-semibold text-gray-800 mb-2">Alamat</p>
+        <p class="text-gray-600">Jakarta, Indonesia</p>
+      </div>
+    </div>
+
+    <button class="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-4 rounded-full transition transform hover:-translate-y-1 shadow-lg hover:shadow-xl">
+      <i class="fas fa-envelope mr-2"></i> Kirim Pesan
+    </button>
+  </div>
+</section>
+<script>
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
+
+  async function initializeMenu() {
+    await sleep(1000)
+    const btn = document.getElementById('hamburger');
+    const menu = document.getElementById('mobile-menu');
+
+    if (btn && menu) {
+      btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        btn.classList.toggle('active');
+        menu.classList.toggle('hidden');
+      });
+    }
+  }
+
+  initializeMenu()
+
+  // Animate elements on scroll
+  document.addEventListener('DOMContentLoaded', function() {
+    // Stagger animation for cards
+    const staggerItems = document.querySelectorAll('.stagger-item');
+    
+    const staggerObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.style.animation = `fadeUp 0.6s ease-out forwards`;
+            entry.target.style.animationDelay = `${index * 0.1}s`;
+          }, 100);
+          staggerObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    staggerItems.forEach(item => {
+      staggerObserver.observe(item);
+    });
+
+    // Animate statistics on scroll
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const counters = entry.target.querySelectorAll('.stat-number');
+          counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-count'));
+            let current = 0;
+            const increment = target / 100;
+            const timer = setInterval(() => {
+              current += increment;
+              if (current >= target) {
+                if (target === 25) {
+                  counter.textContent = target + 'M+';
+                } else {
+                  counter.textContent = Math.floor(target).toLocaleString() + '+';
+                }
+                clearInterval(timer);
+              } else {
+                if (target === 25) {
+                  counter.textContent = Math.floor(current) + 'M+';
+                } else {
+                  counter.textContent = Math.floor(current).toLocaleString() + '+';
+                }
+              }
+            }, 20);
+          });
+          statsObserver.unobserve(entry.target);
+        }
+      });
+    });
+
+    const statsSection = document.querySelector('.gradient-bg');
+    if (statsSection) {
+      statsObserver.observe(statsSection);
+    }
+  });
+</script>
