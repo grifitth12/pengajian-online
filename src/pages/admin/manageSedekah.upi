@@ -25,52 +25,81 @@
         }
 
         if (rijal.status == 204) {
-            location.reload() }
+            location.reload() 
+        }
     }   
-
 </script>
+
 <div id="upi-1" upi-title="Manage Donasi" x-data="{query : '', data_donasi : false}">
     <div class="data-table" x-data="{dataDonasi : get_data_donasi(query)}">
-        <div class="table-header" id="biarapa"> 
+        <div class="table-header">
+            <h3>Manage Donasi</h3>
             <div class="action-buttons">
                 <button
                 class="btn"
-                    :class="data_donasi.split(',')[1] == 'true' ? 'bg-red-300' : 'bg-green-300'"
-                    x-text="data_donasi.split(',')[1] == 'true' ? 'Reject' : 'Accept'"
+                    :class="data_donasi && data_donasi.split(',')[1] == 'true' ? 'btn-danger' : 'btn-success'"
+                    x-text="data_donasi && data_donasi.split(',')[1] == 'true' ? 'Reject' : 'Accept'"
                     @click="accept(data_donasi.split(','))"
                     x-show="data_donasi">
                 </button>
-                <button><a href="/create/donasi">Tambah Donasi</a></button>
-                <input type="text" @keyup.enter="data_donasi = get_data_donasi(query)" x-model="query" class="p-1" name="query" id="q" placeholder="cari berdasarkan judul" autocomplete="off">
+                <button class="btn btn-success">
+                    <i class="fas fa-plus mr-2"></i>
+                    <a href="/create/donasi" class="text-white">Tambah Donasi</a>
+                </button>
+                <input type="text" 
+                       @keyup.enter="dataDonasi = get_data_donasi(query)" 
+                       x-model="query" 
+                       class="search-input" 
+                       name="query" 
+                       id="q" 
+                       placeholder="Cari berdasarkan judul" 
+                       autocomplete="off">
             </div>
         </div>
-        <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Program</th>
-                    <th>Slug</th>
-                    <th>Id</th>
-                    <th>Deskripsi</th>
-                    <th>Status</th>
-                    <th>Accepted</th>
-                </tr>
-            </thead>
-            <tbody :class="{'loading': loading}">
-                <template x-for="sedekah in (await dataDonasi).data">
+        
+        <div class="table-container">
+            <table>
+                <thead>
                     <tr>
-                        <td><input type="radio" x-model="data_donasi" :value="[sedekah.id_program_donasi, sedekah.is_accepted]"></td>
-                        <td><a :href="'/manage/sedekah/' + sedekah.id_program_donasi" x-text="sedekah.nama_program"></a></td>
-                        <td x-text="sedekah.slug"></td>
-                        <td x-text="sedekah.id_program_donasi"></span></td>
-                        <td x-text="sedekah.deskripsi"></td>
-                        <td>
-                            <span class="status-badge status-ongoing" x-text="sedekah.status"></span>
-                        </td>
-                        <td x-text="sedekah.is_accepted"></td>  ":l,kmn "
+                        <th>Select</th>
+                        <th>Program</th>
+                        <th>Slug</th>
+                        <th>ID</th>
+                        <th>Deskripsi</th>
+                        <th>Status</th>
+                        <th>Accepted</th>
                     </tr>
-                </template>
-            </tbody>
-        </table>
+                </thead>
+                <tbody :class="{'loading': loading}">
+                    <template x-for="sedekah in (await dataDonasi).data">
+                        <tr>
+                            <td>
+                                <input type="radio" 
+                                       x-model="data_donasi" 
+                                       :value="[sedekah.id_program_donasi, sedekah.is_accepted]"
+                                       class="w-4 h-4 text-green-600">
+                            </td>
+                            <td>
+                                <a :href="'/manage/sedekah/' + sedekah.id_program_donasi" 
+                                   x-text="sedekah.nama_program"
+                                   class="text-green-600 hover:text-green-800 font-medium"></a>
+                            </td>
+                            <td x-text="sedekah.slug" class="text-gray-700"></td>
+                            <td x-text="sedekah.id_program_donasi" class="text-gray-700"></td>
+                            <td x-text="sedekah.deskripsi" class="text-gray-700 max-w-xs truncate"></td>
+                            <td>
+                                <span class="status-badge status-ongoing" x-text="sedekah.status"></span>
+                            </td>
+                            <td>
+                                <span 
+                                    :class="sedekah.is_accepted ? 'status-badge status-active' : 'status-badge bg-red-100 text-red-800'"
+                                    x-text="sedekah.is_accepted ? 'Yes' : 'No'">
+                                </span>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
