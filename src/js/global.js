@@ -26,7 +26,9 @@ function cetak_jam(tanggal) {
 }
 
 function hitung_persen(a, b) {
-    return a / b * 100
+    let has = a / b * 100
+    if (has >= 100) has = 100
+    return has
 }
 
 function cetak_rupiah(amount, { symbol = true, decimals = 0 } = {}) {

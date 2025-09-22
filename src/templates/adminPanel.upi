@@ -9,13 +9,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/src/js/global.js"></script>
     <link rel="stylesheet" href="/src/css/super-admin.css">
+    <link rel="stylesheet" href="/src/css/animation.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
     <body x-data="adminSystem()">
         <div id="popup" class="fixed flex hidden justify-center items-center" style="height: 100vh; width: 100vw; z-index: 10000;">
             <div
                 id="popup-child"
-                class="popup p-6 rounded-lg w-auto h-auto"
+                class="pop  up p-6 rounded-lg w-auto h-auto"
                 style="z-index: 3; min-width: 500px;"
                 x-data="{ html:'' }"
                 x-html="html"

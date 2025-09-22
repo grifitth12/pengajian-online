@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Profile Page</title>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/css/profile2.css">
+</head>
+<script>
+    function appData(){
+        return {
+            activeTab: 'profile',
+            mobileNavOpen: false,
+            user: {
+                nama_lengkap: "",
+                role: "",
+                email: "",
+                bio: "",
+                kontak: "",
+                foto_url: ""
+            },
+            loading: false,
+            error: null,
+            success: null,
+            tempProfileImage: null,
+            activities: [],
+            loadingActivities: true,
+            mentor: { field: "", description: "", experience: 0, registered: false },
+
+            init() {
+                this.fetchUser();
+
+                if (this.$watch) {
+                    this.$watch('mobileNavOpen', (val) => {
+                        document.body.style.overflow = val ? 'hidden' : '';
+                    });
+
+                    this.$watch('activeTab', (value) => {
+                        if (value === 'activity' && this.activities.length === 0) {
+                            this.fetchActivities();
+                        }
+                    });
+                }
+            },
+
+            closeMobileNav() {
+                this.mobileNavOpen = false;
+                document.body.style.overflow = '';
+            },
+
+            toggleMobileNav() {
+                this.mobileNavOpen = !this.mobileNavOpen;
+            },
+
+            async fetchUser(){
+                try {
+                    this.loading = true;
+                    let res = await axios.get("http://localhost:5501/api/profile");
+                    let data = res.data;
+
+                    this.user = {
+                        nama_lengkap: data.nama_lengkap || "",
+                        role: data.role || "",
+                        email: data.email || "",
+                        bio: data.bio || "",
+                        kontak: data.kontak || "",
+                        foto_url: data.foto_url || ""
+                    };
+
+                    // mapping log kelas ke activity log
+                    if (data.log_kelas && Array.isArray(data.log_kelas)) {
+                        this.activities = data.log_kelas.map((item, idx) => ({
+                            action: `Mengikuti kelas: ${item.kelas.judul}`,
+                            date: item.kelas.status
+                        }));
+                        this.loadingActivities = false;
+                    }
+
+                } catch (err) {
+                    console.error(err);
+                    this.error = err.message || "Failed to fetch user.";
+                } finally {
+                    this.loading = false;
+                }
+            },
+
+            async fetchActivities(){
+                this.loadingActivities = true;
+                try {
+                    await new Promise(r => setTimeout(r, 700));
+                    if (this.activities.length === 0) {
+                        this.activities = [
+                            { action: "update informasi profil", date: "2025-09-18 14:30" },
+                            { action: "Login dari device baru", date: "2025-09-13 09:00" }
+                        ];
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch activities:", err);
+                } finally {
+                    this.loadingActivities = false;
+                }
+            },
+
+            async saveProfile() {
+                try {
+                    await axios.post("http://localhost:5501/api/profile", {
+                        nama_lengkap: this.user.nama_lengkap.trim(),
+                        bio: this.user.bio,
+                        kontak: this.user.kontak
+                    });
+
+                    alert("Profile updated successfully!");
+                } catch (err) {
+                    console.error(err);
+                    alert("Failed to save profile");
+                }
+            }
+        };
+    }
+</script>
+
+<body>
+    <div class="container" x-data="appData()" x-init="init()" x-cloak>
+        <!-- left decorative column (desktop only) -->
+        <div class="bg-copy" aria-hidden="true"></div>
+        <div class="bg-gradient" aria-hidden="true">
+            <a href="/src/index.html" class="header">
+                <div class="back-btn"></div>
+                <h1 class="page-title">Profile</h1>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="sidebar" role="navigation" aria-label="Sidebar">
+                <a href="#" class="nav-item" :class="{'active': activeTab === 'profile'}" @click.prevent="activeTab = 'profile'">Edit Profil</a>
+                <a href="#" class="nav-item" :class="{'active': activeTab === 'mentor'}" @click.prevent="activeTab = 'mentor'">Mentor</a>
+                <a href="#" class="nav-item" :class="{'active': activeTab === 'activity'}" @click.prevent="activeTab = 'activity'">Activity Log</a>
+            </nav>
+        </div>
+
+        <!-- Mobile top: hamburger + small header (title + back) -->
+        <div class="mobile-header" aria-hidden="false">
+            <div class="back-btn" style="cursor:pointer" onclick="history.back()"></div>
+            <div class="page-title">Profile</div>
+        </div>
+
+        <div class="mobile-nav-toggle" @click="toggleMobileNav()" :class="{'active': mobileNavOpen}" aria-label="Open navigation">
+            <span></span><span></span><span></span>
+        </div>
+
+        <!-- Mobile Navigation Overlay -->
+        <div class="mobile-sidebar" :class="{'active': mobileNavOpen}" @click.self="closeMobileNav()">
+            <a href="#" class="nav-item" :class="{'active': activeTab === 'profile'}" @click.prevent="activeTab = 'profile'; closeMobileNav()">Edit Profil</a>
+            <a href="#" class="nav-item" :class="{'active': activeTab === 'mentor'}" @click.prevent="activeTab = 'mentor'; closeMobileNav()">Mentor</a>
+            <a href="#" class="nav-item" :class="{'active': activeTab === 'activity'}" @click.prevent="activeTab = 'activity'; closeMobileNav()">Activity Log</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Profile Section -->
+            <section class="profile-section tab-section" x-show="activeTab === 'profile'"  x-transition>
+                <div class="profiles">
+                    <div class="profile-header" style="width:100%;">
+                        <div style="display:flex; gap:20px; align-items:center; justify-content:center; flex-wrap:wrap;">
+                            <div class="profile-container" id="profileContainer">
+                                <img @click="selectPhoto()"
+                                    class="profile-image"
+                                    :src="user.foto_url || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 150'%3E%3Ccircle cx='75' cy='75' r='75' fill='%23e0e0e0'/%3E%3Cpath d='M75 75c13.8 0 25-11.2 25-25S88.8 25 75 25 50 36.2 50 50s11.2 25 25 25zm0 12.5c-16.7 0-50 8.35-50 25v12.5h100v-12.5c0-16.65-33.3-25-50-25z' fill='%23999'/%3E%3C/svg%3E`"
+                                    alt="Profile Picture">
+                                <div class="overlay">
+                                    <div class="camera-icon">📷</div>
+                                    <div class="change-text">Change Profile<br>Picture</div>
+                                </div>
+                            </div>
+
+                            <div class="profile-info">
+                                <h2 class="user-name" x-text="user.nama_lengkap"></h2>
+                                <p class="user-role" x-text="user.role"></p>
+                                <p class="user-email" x-text="user.email"></p>
+
+                                <!-- replaced anchor with real button that switches tab -->
+                                <button type="button" class="mentor-link" @click="activeTab = 'mentor'">Daftar Sebagai Mentor</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form class="form-section" @submit.prevent="saveProfile" style="width:100%; max-width:800px;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Nama Lengkap</label>
+                                <input type="text" class="form-input" x-model="user.nama_lengkap" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label class="form-label">Bio</label>
+                                <textarea style="resize: none;" class="form-input" id="bio" x-model="user.bio" placeholder="Tuliskan bio kamu..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label class="form-label">Nomor Telepon</label>
+                                <div class="phone-input">
+                                    <div class="country-code">
+                                        <div class="flag-icon"></div>
+                                        <span class="country-code-text">+62</span>
+                                    </div>
+                                    <input class="form-input" type="tel" x-model="user.kontak" placeholder="8123456789">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="save-btn" @click="saveProfile">Simpan</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Mentor Section (SIMPLE) -->
+            <section class="mentor-section tab-section" x-show="activeTab === 'mentor'" x-transition>
+                <div class="mentor-card" role="region" aria-labelledby="mentorTitle">
+                    <h2 id="mentorTitle" class="mentor-title">Anda belum terdaftar sebagai mentor</h2>
+                    <p class="mentor-sub">Daftar sekarang agar siswa dapat menemukan dan memesan sesi dengan Anda.</p>
+
+                    <!-- CTA: change href to your registration path -->
+                    <a href="/mentor/register" class="mentor-cta" @click="/* optional: do extra tracking here */">Daftar Sekarang</a>
+                </div>
+            </section>
+
+            <!-- Activity Log Section -->
+            <section class="activity-section tab-section" x-show="activeTab === 'activity'" x-transition>
+                <div class="activity-content">
+                    <h2 class="activity-title">Activity Log</h2>
+
+                    <div x-show="loadingActivities" class="loading">Loading activities...</div>
+
+                    <ul class="activity-list" x-show="!loadingActivities && activities.length > 0">
+                        <template x-for="(activity, index) in activities" :key="index">
+                            <li class="activity-item">
+                                <div class="activity-icon" x-text="activity.action.charAt(0).toUpperCase()"></div>
+                                <div>
+                                    <div class="activity-action" x-text="activity.action"></div>
+                                    <div class="activity-date" x-text="activity.date"></div>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+
+                    <div x-show="!loadingActivities && activities.length === 0" class="loading">No activities found.</div>
+                </div>
+            </section>
+        </div>
+    </div>   
+</body>
+</html>
