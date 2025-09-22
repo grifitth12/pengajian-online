@@ -1,23 +1,25 @@
 <link rel="stylesheet" href="/src/css/index.css">
-<!-- Header -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 <header class="header" id="header">
     <div class="header-container">
-        <!-- Logo -->
         <div class="logo">
             <img src="/src/assets/images/logo.png" alt="DonasiKu Logo">
         </div>
-        <h1 style="color: black;"></h1>
-        <!-- Nav -->
+        <h1 class="header-title"></h1>
         <nav class="nav">
-            <!-- Bell -->
             <button class="bell-btn">
                 <img src="/src/assets/images/bell.png" alt="Notifikasi">
             </button>
-            <!-- Menu -->
             <a href="/" class="nav-link">Home</a>
             <a href="#"class="nav-link">About</a>
             <a href="/kajian" class="nav-link">Kajian</a>
             <a href="/kelas" class="nav-link">Kelas</a> 
+
+            <a href="/src/pages/searchpage.html" class="nav-link" aria-label="Search">
+                <i class="fas fa-search"></i>
+            </a>
+            
             <a href="/profile" x-show="auth" button class="profile-btn" id="profileBtn">
                 <img src="/src/assets/images/WhatsApp Image 2025-08-05 at 14.26.06.jpeg" alt="Profile" class="profile-img" id="profileImg">
             </a>
@@ -25,7 +27,6 @@
             <a href="/src/pages/login.html" class="btn btn-primary">Login</a>
             </div>
         </nav>
-        <!-- BUTTON HAMBURGER -->
         <button
         id="hamburger"
         class="hamburger"
@@ -38,7 +39,6 @@
         <span class="line"></span>
         </button>
 
-        <!-- (Opsional) TARGET MENU -->
         <nav id="mobile-menu" class="menu hidden" role="navigation">
             <div x-show="!auth">
                 <a href="login.html" class="btn btn-primary">Masuk</a>
