@@ -30,13 +30,8 @@ let
   ]
   adminPatterns* = @[
     pattern("/", adminIndex, @[HttpGet]),
-    pattern("/manage/{source}", render_manage_index, @[HttpGet])
-  ]
-  managePatterns* = @[
-    pattern("/kelas/{id_kelas}", manageKelas, @[HttpGet]),
-    pattern("/sedekah/{slug}", manageSedekah, @[HttpGet]),
-    pattern("/mentor/{slug}", manageMentor, @[HttpGet]),
-    pattern("/kajian/{slug}", manageKajian, @[HttpGet])
+    pattern("/manage/{source}", render_manage_index, @[HttpGet]),
+    pattern("/manage/{model}/{id}", triyono, @[HttpGet])
   ]
   createPatterns* = @[
     pattern("/donasi", createDonasi, @[HttpGet]),

@@ -348,7 +348,6 @@ input[type="text"] {
   backdrop-filter: blur(10px);
   min-width: 200px;
   flex: 1;
-  max-width: 300px;
 }
 
 input[type="text"]:focus {

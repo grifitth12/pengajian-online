@@ -24,10 +24,7 @@
                 { is_accepted: false }
             )
         }
-
-        if (rijal.status == 204) {
-            location.reload() 
-        }
+        location.reload()
     }
 </script>
 
@@ -76,7 +73,7 @@
                                        class="w-4 h-4 text-green-600">
                             </td>
                             <td>
-                                <a :href="'/manage/kelas/' + kelas.id_kelas" 
+                                <a :href="'kelas/' + kelas.id_kelas" 
                                    x-text="kelas.judul"
                                    class="text-green-600 hover:text-green-800 font-medium"></a>
                             </td>  
