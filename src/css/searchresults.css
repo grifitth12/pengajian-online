@@ -1,0 +1,110 @@
+:root {
+    --primary-green: #10b981; --dark-green: #059669; --text-dark: #1f2937; --text-light: #6b7280;
+    --bg-page: #f9fafb; --white: #ffffff; --border-color: #e5e7eb;
+    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background-color: var(--bg-page); color: var(--text-dark); }
+body.overflow-hidden { overflow: hidden; }
+.search-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+
+/* Header Baru yang Sticky (Sama seperti di halaman landing) */
+.search-header-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--white);
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-soft);
+}
+.back-button {
+    flex-shrink: 0;
+    font-size: 1.25rem;
+    color: var(--text-dark);
+    text-decoration: none;
+    padding: 0.5rem;
+}
+.search-form {
+    flex-grow: 1;
+    position: relative;
+}
+.search-form .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+}
+.search-form input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-page);
+    font-size: 1rem;
+    font-weight: 500;
+    outline: none;
+    transition: all 0.2s ease;
+}
+.search-form input:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+
+/* Layout Konten Hasil */
+.search-page-content { padding-top: 2rem; }
+.section-title { font-size: 1.5rem; font-weight: 800; }
+#results-content { width: 100%; }
+.results-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; }
+.open-filter-btn { display: inline-flex; align-items: center; gap: 0.5rem; background-color: var(--white); border: 1px solid var(--border-color); padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.open-filter-btn:hover { background-color: var(--primary-green); color: var(--white); border-color: var(--primary-green); }
+.results-list { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+
+/* Kartu Hasil */
+.result-item { display: flex; align-items: center; gap: 1.5rem; padding: 1rem; background-color: var(--white); border-radius: 16px; text-decoration: none; color: inherit; transition: all 0.3s ease; border: 1px solid var(--border-color); box-shadow: var(--shadow-soft); }
+.result-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--primary-green); }
+.result-item img { width: 90px; height: 90px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
+.item-details h3 { font-weight: 700; font-size: 1.125rem; }
+.item-details p { color: var(--text-light); font-size: 0.9rem; }
+.item-badge { margin-left: auto; font-size: 0.8rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 6px; text-transform: capitalize; white-space: nowrap; flex-shrink: 0; }
+.badge-donasi { background-color: #fee2e2; color: #ef4444; }
+.badge-kajian { background-color: #dbeafe; color: #3b82f6; }
+.badge-kelas { background-color: #fef3c7; color: #f59e0b; }
+
+/* Pesan & Loader */
+.info-text, .error-text { text-align: center; padding: 3rem 0; font-size: 1.1rem; color: #666; }
+.error-text { color: #dc3545; }
+.loader { margin: 3rem auto; border: 5px solid #f3f3f3; border-top: 5px solid var(--primary-green); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* Filter Sidebar (Tidak berubah) */
+.sidebar-backdrop { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 40; }
+.filter-sidebar { position: fixed; top: 0; right: 0; height: 100%; width: 350px; max-width: 90vw; background-color: var(--white); z-index: 50; box-shadow: -10px 0 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+.sidebar-header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--border-color); }
+.sidebar-title { font-size: 1.25rem; font-weight: 700; }
+.close-sidebar-btn { font-size: 2rem; color: var(--text-light); background: none; border: none; cursor: pointer; line-height: 1; }
+.sidebar-content { padding: 1.5rem; overflow-y: auto; flex-grow: 1; }
+.filter-group { margin-bottom: 2rem; }
+.filter-group-title { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-dark); }
+.filter-options { display: flex; flex-direction: column; gap: 0.75rem; }
+.sidebar-footer { padding: 1.5rem; border-top: 1px solid var(--border-color); margin-top: auto; }
+.apply-filter-btn { width: 100%; background: var(--primary-green); color: var(--white); font-weight: 700; padding: 1rem; border-radius: 12px; border: none; cursor: pointer; transition: background-color 0.2s; }
+.apply-filter-btn:hover { background-color: var(--dark-green); }
+.custom-checkbox, .custom-radio { display: flex; align-items: center; cursor: pointer; font-size: 1rem; }
+.custom-checkbox input, .custom-radio input { display: none; }
+.custom-checkbox span, .custom-radio span { margin-left: 0.75rem; }
+.custom-checkbox span::before, .custom-radio span::before { content: ''; display: inline-block; width: 20px; height: 20px; border: 2px solid var(--border-color); margin-right: 0.75rem; vertical-align: middle; transition: all 0.2s; }
+.custom-checkbox span::before { border-radius: 4px; }
+.custom-radio span::before { border-radius: 50%; }
+.custom-checkbox input:checked + span::before { background-color: var(--primary-green); border-color: var(--primary-green); background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e"); }
+.custom-radio input:checked + span::before { border-color: var(--primary-green); background-color: var(--white); box-shadow: inset 0 0 0 4px var(--primary-green); }
+
+/* Responsiveness */
+@media (max-width: 768px) { .search-container { padding: 0 1rem; } .results-header { flex-direction: column; align-items: flex-start; gap: 1rem; } }
+@media (min-width: 900px) { .results-list { grid-template-columns: 1fr 1fr; } }
