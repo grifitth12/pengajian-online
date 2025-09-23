@@ -140,7 +140,6 @@
                 </a>
             </div>
         </div>
-
         <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-green-500 hover:border-opacity-30">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-semibold text-gray-900">Statistik Hari Ini</h3>
