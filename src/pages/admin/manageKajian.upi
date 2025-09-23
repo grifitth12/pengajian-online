@@ -8,6 +8,9 @@
             )
         ).data
     }
+    async function delete_kajian(id_kajian) {
+        supami("success", "Supami", "Supami")
+    }
 </script>
 
 <div id="upi-1" upi-title="Manage Kajian" x-data="{query : '', data_kajian : false}">
@@ -18,10 +21,16 @@
                 <button
                     class="btn"
                     :class="data_kajian && data_kajian.split(',')[1] == 'true' ? 'btn-danger' : 'btn-success'"
-                    x-text="data_kajian && data_kajian.split(',')[1] == 'true' ? 'Reject' : 'Accept'"
+                    x-text="'Edit'"
                     @click="accept(data_kajian.split(','))"
                     x-show="data_kajian">
                 </button>
+                <button
+                    class="btn btn-danger"
+                    x-text="'Delete'"
+                    @click="accept(data_kajian.split(','))"
+                    x-show="data_kajian">
+                </button>                     
                 <button class="btn btn-success">
                     <i class="fas fa-plus mr-2"></i>
                     <a href="/create/kajian" class="text-white">Tambah Kajian</a>
@@ -58,11 +67,11 @@
                             <td>
                                 <input type="radio" 
                                        x-model="data_kajian" 
-                                       :value="[kajian.id_kajian]"
+                                       :value="kajian.id_kajian"
                                        class="w-4 h-4 text-green-600">
                             </td>
                             <td>
-                                <a :href="'/manage/kajian/' + kajian.id_kajian" 
+                                <a :href="'kajian/' + kajian.id_kajian" 
                                    x-text="kajian.judul"
                                    class="text-green-600 hover:text-green-800 font-medium"></a>
                             </td>  
