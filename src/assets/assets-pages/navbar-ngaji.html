@@ -1,5 +1,95 @@
 <link rel="stylesheet" href="/src/css/index.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* Pastikan container header memiliki posisi relatif */
+        .header-container {
+            position: relative;
+        }
+
+        /* Styling untuk Panel Notifikasi */
+        .notification-panel {
+            display: none; /* Disembunyikan secara default */
+            position: absolute;
+            top: 100%; /* Posisi persis di bawah header container */
+            right: 0;
+            margin-top: 10px; /* Jarak dari header */
+            width: 360px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1001; /* Pastikan di atas konten lain */
+            font-family: sans-serif;
+        }
+
+        .notification-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .notification-header h2 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .notification-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            display: flex;
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .notification-item.unread {
+            background-color: #eaf2ff;
+        }
+
+        .notification-text {
+            margin: 0;
+            font-size: 0.875rem;
+            color: #333;
+        }
+
+        .notification-time {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .notification-footer {
+            padding: 10px;
+            text-align: center;
+            background-color: #f7f7f7;
+            border-top: 1px solid #eee;
+        }
+
+        .notification-footer a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
 
 <header class="header" id="header">
     <div class="header-container">
@@ -8,52 +98,98 @@
         </div>
         <h1 class="header-title"></h1>
         <nav class="nav">
+            <a href="/src/pages/searchpage.html" class="nav-link" aria-label="Search">
+                <i class="fas fa-search"></i> 
+            </a>
             <button class="bell-btn">
                 <img src="/src/assets/images/bell.png" alt="Notifikasi">
             </button>
             <a href="/" class="nav-link">Home</a>
-            <a href="#"class="nav-link">About</a>
+            <a href="#" class="nav-link">About</a>
             <a href="/kajian" class="nav-link">Kajian</a>
             <a href="/kelas" class="nav-link">Kelas</a> 
-<<<<<<< HEAD
-
-            <a href="/src/pages/searchpage.html" class="nav-link" aria-label="Search">
-                <i class="fas fa-search"></i>
-            </a>
-            
             <a href="/profile" x-show="auth" button class="profile-btn" id="profileBtn">
-=======
-            <a href="/src/pages/profile/profile.html" x-show="auth" button class="profile-btn" id="profileBtn">
->>>>>>> 3f939b0707b54f103c01317c3ccb0d4d4ad69f43
                 <img src="/src/assets/images/WhatsApp Image 2025-08-05 at 14.26.06.jpeg" alt="Profile" class="profile-img" id="profileImg">
             </a>
             <div class="btn-group" x-show="!auth">
-            <a href="/src/pages/login.html" class="btn btn-primary">Login</a>
+                <a href="/src/pages/login.html" class="btn btn-primary">Login</a>
             </div>
         </nav>
-        <button
-        id="hamburger"
-        class="hamburger"
-        aria-label="Toggle menu"
-        aria-controls="mobile-menu"
-        aria-expanded="false"
-        >
-        <span class="line"></span>
-        <span class="line"></span>
-        <span class="line"></span>
+        <button id="hamburger" class="hamburger" aria-label="Toggle menu" aria-controls="mobile-menu" aria-expanded="false">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
         </button>
-
         <nav id="mobile-menu" class="menu hidden" role="navigation">
             <div x-show="!auth">
                 <a href="login.html" class="btn btn-primary">Masuk</a>
                 <a href="register.html" class="btn btn-secondary">Daftar</a>
             </div>
-            <a href="/src/pages/profile/profile.html" x-show="auth" class="nav-link" button class="profile-btn" id="profileBtn">
-               <img src="/src/assets/images/WhatsApp Image 2025-08-05 at 14.26.06.jpeg" alt="Profile" class="profile-img" id="profileImg">Profile</a>
+            <a href="/src/pages/profile/profile.html" x-show="auth" class="nav-link" button class="profile-btn" id="profileBtnMobile">
+               <img src="/src/assets/images/WhatsApp Image 2025-08-05 at 14.26.06.jpeg" alt="Profile" class="profile-img" id="profileImgMobile">Profile
+            </a>
             <a href="#Home" class="nav-link">Home</a>
-            <a href="/src/pages/about.html"class="nav-link">About</a>
+            <a href="/src/pages/about.html" class="nav-link">About</a>
             <a href="#" class="nav-link">Campaigns</a>
             <a href="#" class="nav-link">Contact</a>
         </nav>
-    </div>
+
+        <div class="notification-panel" id="notificationPanel">
+            <div class="notification-header">
+                <h2>Notifikasi</h2>
+            </div>
+            <ul class="notification-list">
+                <li class="notification-item unread">
+                    <div class="notification-content">
+                        <p class="notification-text"><strong>Donasi berhasil!</strong> Pembayaran Anda untuk kampanye "Bantu Sekolah Anak Pedalaman" telah diterima.</p>
+                        <div class="notification-time">5 menit yang lalu</div>
+                    </div>
+                </li>
+                <li class="notification-item">
+                    <div class="notification-content">
+                        <p class="notification-text"><strong>Kajian Fiqih</strong> akan dimulai dalam 1 jam. Jangan sampai ketinggalan!</p>
+                        <div class="notification-time">55 menit yang lalu</div>
+                    </div>
+                </li>
+                <li class="notification-item">
+                    <div class="notification-content">
+                        <p class="notification-text">Ada 3 kampanye baru di sekitar Anda. Lihat sekarang!</p>
+                        <div class="notification-time">3 jam yang lalu</div>
+                    </div>
+                </li>
+            </ul>
+            <div class="notification-footer">
+                <a href="#">Lihat Semua Notifikasi</a>
+            </div>
+        </div>
+        </div>
 </header>
+
+<main style="padding: 2rem; text-align: center;">
+    <h1>Konten Utama Halaman</h1>
+    <p>Ini adalah area konten utama di bawah header.</p>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const bellButton = document.querySelector('.bell-btn');
+        const notificationPanel = document.getElementById('notificationPanel');
+
+        // Tampilkan/sembunyikan panel saat tombol lonceng diklik
+        bellButton.addEventListener('click', function (event) {
+            // Menghentikan event agar tidak langsung ditutup oleh document click
+            event.stopPropagation();
+            // Toggle display panel
+            const isVisible = notificationPanel.style.display === 'block';
+            notificationPanel.style.display = isVisible ? 'none' : 'block';
+        });
+
+        // Sembunyikan panel saat klik di luar area panel
+        document.addEventListener('click', function (event) {
+            // Cek apakah panel sedang terlihat dan klik terjadi di luar panel & tombol
+            if (notificationPanel.style.display === 'block' && !notificationPanel.contains(event.target) && !bellButton.contains(event.target)) {
+                notificationPanel.style.display = 'none';
+            }
+        });
+    });
+</script>
