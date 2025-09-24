@@ -24,43 +24,63 @@
         }
 
         if (rijal.status == 204) {
-            location.reload() }
-        
+            location.reload() 
+        }
     }   
 </script>
 
 <div id="upi-1" upi-title="Manage Mentor" x-data="{query : '', data_mentor : false}">
     <div class="data-table" x-data="{mentorData : get_data_mentor(query)}">
-        <div class="table-header"  id="biarapa">
+        <div class="table-header">
+            <h3>Manage Mentor</h3>
             <div class="action-buttons">
-                <input type="text" @keyup.enter="mentorData = get_data_mentor(query)" x-model="query" class="p-1" name="query" id="q" placeholder="cari berdasarkan judul" autocomplete="off">
+                <input type="text" 
+                       @keyup.enter="mentorData = get_data_mentor(query)" 
+                       x-model="query" 
+                       class="search-input" 
+                       name="query" 
+                       id="q" 
+                       placeholder="Cari berdasarkan nama" 
+                       autocomplete="off">
             </div>
         </div>
-        <table> 
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Nama Mentor</th>
-                    <th>Role</th>
-                    <th>jenis kelamin</th>
-                    <th>email</th>
-                    <th>afiliasi</th>
-                    <th>kontak</th>
-                </tr>
-            </thead>  
-            <tbody :class="{'loading': loading}">
-                <template x-for="mentor in (await mentorData).data">
+        
+        <div class="table-container">
+            <table> 
+                <thead>
                     <tr>
-                        <td><input type="radio" x-model="data_mentor" :value="[mentor.id_pengguna]"></td>
-                        <td><a :href="'/manage/mentor/' + mentor.id_pengguna" x-text="mentor.nama_lengkap"></a></td>  
-                        <td x-text="mentor.role"></td>
-                        <td x-text="mentor.jenis_kelamin">-</td>
-                        <td x-text="mentor.email"></td>      
-                        <td x-text="mentor.afiliasi"></td>                 
-                        <td x-text="mentor.kontak"></td> 
+                        <th>Select</th>
+                        <th>Nama Mentor</th>
+                        <th>Role</th>
+                        <th>Jenis Kelamin</th>
+                        <th>Email</th>
+                        <th>Afiliasi</th>
+                        <th>Kontak</th>
                     </tr>
-                </template>
-            </tbody>
-        </table>
+                </thead>  
+                <tbody :class="{'loading': loading}">
+                    <template x-for="mentor in (await mentorData).data">
+                        <tr>
+                            <td>
+                                <input type="radio" 
+                                       x-model="data_mentor" 
+                                       :value="[mentor.id_pengguna]"
+                                       class="w-4 h-4 text-green-600">
+                            </td>
+                            <td>
+                                <a :href="'/manage/mentor/' + mentor.id_pengguna" 
+                                   x-text="mentor.nama_lengkap"
+                                   class="text-green-600 hover:text-green-800 font-medium"></a>
+                            </td>  
+                            <td x-text="mentor.role" class="text-gray-700"></td>
+                            <td x-text="mentor.jenis_kelamin || '-'" class="text-gray-700"></td>
+                            <td x-text="mentor.email" class="text-gray-700"></td>      
+                            <td x-text="mentor.afiliasi" class="text-gray-700"></td>                 
+                            <td x-text="mentor.kontak" class="text-gray-700"></td> 
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

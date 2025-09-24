@@ -93,7 +93,6 @@
             </div>
 
             <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <!-- Left Column -->
                 <div class="md:col-span-2 space-y-6">
                     <!-- Judul Kelas -->
                     <div>
@@ -110,23 +109,26 @@
                         <label for="deskripsi_lengkap" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Lengkap</label>
                         <textarea id="deskripsi" x-model="kajianForm.deskripsi_lengkap" :value="(await kajian).deskripsi_lengkap" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" x-text="(await kajian).deskripsi_lengkap"></textarea>
                     </div>         
-                    <!-- Pemateri -->
-                    <div>
-                        <label for="Pemateri" class="block text-sm font-medium text-gray-700 mb-1">Pemateri</label>
-                        <input type="text" x-model="kajianForm.pemateri" :value="(await kajian).pemateri" id="Pemateri" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
-                    </div>
-                    <!-- Lokasi -->
-                    <div>
-                        <label for="Lokasi" class="block text-sm font-medium text-gray-700 mb-1">Lokasi</label>
-                        <input type="text" x-model="kajianForm.lokasi" :value="(await kajian).lokasi" id="Pemateri" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
-                    </div>
                     <!-- Alamat -->
-                    <div>
-                        <label for="Alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
-                        <input type="text" x-model="kajianForm.alamat" :value="(await kajian).alamat" id="Pemateri" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
-                    </div>
-                    <!-- status -->    
+   
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="Pemateri" class="block text-sm font-medium text-gray-700 mb-1">Pemateri</label>
+                            <input type="text" x-model="kajianForm.pemateri" :value="(await kajian).pemateri" id="Pemateri" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
+                        </div>
+                        <!-- Lokasi -->
+                        <div>
+                            <label for="Lokasi" class="block text-sm font-medium text-gray-700 mb-1">Lokasi</label>
+                            <input type="text" x-model="kajianForm.lokasi" :value="(await kajian).lokasi" id="Pemateri" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
+                        </div>
+                        <div>
+                            <label for="Alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
+                            <input type="text" x-model="kajianForm.alamat" :value="(await kajian).alamat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
+                        </div>
+                        <div>
+                            <label for="Alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
+                            <input type="text" x-model="kajianForm.alamat" :value="(await kajian).alamat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
+                        </div>
                         <div>
                             <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
                             <select id="status" x-model="kajianForm.status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
@@ -134,7 +136,7 @@
                                 <option value="Tutup">Tutup</option>
                                 <option value="selesai">Selesai</option>
                             </select>
-                        </div>
+                        </div>                        
                     </div>       
                 </div>
                 <!-- Right Column -->
@@ -153,39 +155,6 @@
                                     <i class="fas fa-trash mr-1"></i> Remove
                                 </button>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- qrCode-->
-                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Qr code</label>
-                        <div class="mt-1 flex flex-col items-center">
-                            <img id="qrCode" src="http://127.0.0.1:8080/src/assets/images/banner.png" alt="qrCodeView" class="qrCodeView w-full mb-2 rounded-lg border border-gray-300">
-                            <div x-model="kajian.thumbnail_url" class="flex space-x-2">
-                                <input type="file" id="qrCodeUpload" class="hidden" accept="image/*">
-                                <button onclick="document.getElementById('qrCodeUpload').click()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
-                                    <i class="fas fa-upload mr-1"></i> Upload
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Metadata -->
-                    <div class="border border-gray-200 rounded-lg p-4">
-                        <h3 class="text-sm font-medium text-gray-700 mb-3">Metadata</h3>
-                        <div class="space-y-2">
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-500">Created At:</span>
-                                <span class="text-gray-700" x-text="(await kajian).created_at"></span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-500">ID:</span>
-                                <span class="text-gray-700" x-text="(await kajian).id_kajian"></span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-500">URL:</span>
-                                <span class="text-gray-700"><a class="text-blue-600" :href="'/kajian/' + (await kajian).slug">Go To Page</a></span>
-                            </div>                            
                         </div>
                     </div>
                 </div>

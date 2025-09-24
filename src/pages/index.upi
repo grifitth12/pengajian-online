@@ -33,26 +33,22 @@
             <div class="features-grid">
                 <!-- Kelas Mengaji -->
                 <div class="feature-item">
-                    <div class="feature-icon">
-                        <img src="/src/assets/images/buku.png" alt="Kelas Mengaji">
-                    </div>
+                    <a href="/src/pages/kelas/index.upi">
+                        <div class="feature-icon">
+                            <img src="/src/assets/images/buku.png" alt="Kelas Mengaji">
+                        </div>
+                    </a>
                     <p class="feature-label">Kelas Mengaji</p>
                 </div>
 
-                <!-- Zakat -->
+                <!-- Kajian -->
                 <div class="feature-item">
+                <a href="/src/pages/kajian/index.upi">
                     <div class="feature-icon">
-                        <img src="/src/assets/images/zakat.png" alt="Zakat">
+                        <img src="/src/assets/images/logoKajian.png" alt="Kajian">
                     </div>
-                    <p class="feature-label">Zakat</p>
-                </div>
-
-                <!-- Donasi -->
-                <div class="feature-item">
-                    <div class="feature-icon">
-                        <img src="/src/assets/images/kotak.png" alt="Donasi">
-                    </div>
-                    <p class="feature-label">Donasi</p>
+                </a>
+                    <p class="feature-label">Kajian</p>
                 </div>
             </div>
         </div>
@@ -104,21 +100,3 @@
         </div>
     </section>
 </main>
-<script>
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
-}
-async function coba() {
-    await sleep(1000)
-    const btn = document.getElementById('hamburger');
-    const menu = document.getElementById('mobile-menu');
-
-    btn.addEventListener('click', () => {
-    const expanded = btn.getAttribute('aria-expanded') === 'true';
-    btn.setAttribute('aria-expanded', String(!expanded));
-    btn.classList.toggle('active');
-    if (menu) menu.classList.toggle('hidden');
-    });
-}
-coba()
-</script>

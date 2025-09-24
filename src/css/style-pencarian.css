@@ -1,0 +1,315 @@
+/* ==========================================================================
+   Variables & Global Styles
+   ========================================================================== */
+:root {
+    /* Colors */
+    --primary-green: #10b981;
+    --dark-green: #059669;
+    --text-dark: #1f2937;
+    --text-medium: #4b5563; /* New: for secondary text */
+    --text-light: #6b7280;
+    --bg-page: #f9fafb;
+    --white: #ffffff;
+    --border-color: #e5e7eb;
+    --danger-red: #ef4444;
+    --danger-red-light: #fee2e2;
+
+    /* Sizing & Spacing */
+    --border-radius-md: 12px;
+    --border-radius-full: 9999px;
+
+    /* Effects */
+    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    --focus-ring: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother transition */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-page);
+    color: var(--text-dark);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.search-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* ==========================================================================
+   Sticky Search Header
+   ========================================================================== */
+.search-header-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Increased z-index */
+    background-color: rgba(255, 255, 255, 0.85); /* Added transparency for a modern look */
+    backdrop-filter: blur(8px); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(8px);
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: var(--transition-fast);
+}
+
+.back-button {
+    flex-shrink: 0;
+    font-size: 1.25rem;
+    color: var(--text-dark);
+    text-decoration: none;
+    padding: 0.5rem;
+    border-radius: var(--border-radius-full);
+    transition: var(--transition-fast);
+}
+
+.back-button:hover {
+    background-color: #f3f4f6;
+    transform: scale(1.1);
+}
+
+.search-form {
+    flex-grow: 1;
+    position: relative;
+}
+
+.search-form .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    pointer-events: none; /* Icon doesn't block clicks */
+}
+
+.search-form input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-page);
+    font-size: 1rem;
+    font-weight: 500;
+    outline: none;
+    transition: var(--transition-fast);
+}
+
+.search-form input:focus {
+    border-color: var(--primary-green);
+    box-shadow: var(--focus-ring);
+    background-color: var(--white);
+}
+
+/* ==========================================================================
+   Content Layout
+   ========================================================================== */
+.search-page-content {
+    padding-top: 2rem;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.clear-all-btn {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--primary-green);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 8px;
+    transition: var(--transition-fast);
+}
+
+.clear-all-btn:hover {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--dark-green);
+}
+
+/* ==========================================================================
+   Search History
+   ========================================================================== */
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: var(--white);
+    border-radius: var(--border-radius-md);
+    text-decoration: none;
+    color: var(--text-medium);
+    font-weight: 600;
+    transition: var(--transition-fast);
+    border: 1px solid var(--border-color);
+}
+
+.history-item:hover {
+    background-color: #f3f4f6;
+    color: var(--text-dark);
+    transform: translateY(-2px); /* Subtle lift effect */
+    box-shadow: var(--shadow-soft);
+}
+
+.history-item i {
+    margin-right: 0.75rem;
+    color: var(--text-light);
+}
+
+.history-item span {
+    flex-grow: 1;
+}
+
+.remove-history {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem; /* Larger click area */
+    line-height: 1;
+    border-radius: var(--border-radius-full);
+    transition: var(--transition-fast);
+}
+
+.remove-history:hover {
+    color: var(--danger-red);
+    background-color: var(--danger-red-light);
+    transform: scale(1.1); /* Pop effect */
+}
+
+.info-text {
+    padding: 1rem;
+    text-align: center;
+    color: var(--text-light);
+    background-color: var(--white);
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--border-color);
+}
+
+/* ==========================================================================
+   Topics & Categories
+   ========================================================================== */
+.topic-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.topic-pills a {
+    color: var(--dark-green);
+    background-color: rgba(16, 185, 129, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-full);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition-fast);
+}
+
+.topic-pills a:hover {
+    background-color: var(--primary-green);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-soft);
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.category-card {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: 16px; /* Increased for a softer look */
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    padding: 1.25rem;
+    text-decoration: none;
+    color: var(--white);
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Added shadow transition */
+    box-shadow: var(--shadow-soft);
+}
+
+.category-card:hover {
+    transform: scale(1.04); /* Slightly more noticeable */
+    box-shadow: var(--shadow-md);
+}
+
+.category-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 60%);
+    transition: var(--transition-fast);
+}
+
+.category-card:hover::before {
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 70%); /* Darker on hover */
+}
+
+.category-card span {
+    position: relative;
+    font-size: 1.25rem;
+    font-weight: 800;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+}
+
+
+/* ==========================================================================
+   Responsive Layout
+   ========================================================================== */
+@media (min-width: 768px) {
+    .search-page-content {
+        padding-top: 3rem;
+    }
+    .content-wrapper {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+    .main-content {
+        flex: 2;
+    }
+    .sidebar {
+        flex: 1;
+        position: sticky; /* Sticky sidebar on desktop */
+        top: 80px; /* Adjust based on header height */
+    }
+}
+
+@media (max-width: 768px) {
+    .search-container {
+        padding: 0 1rem;
+    }
+}
