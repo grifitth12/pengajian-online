@@ -15,12 +15,15 @@ async function fetch_get_data() {
 }
 
 async function is_user_registred(id_kelas) {
+    let res
     try {
         await axios.get("/api/kelas/" + id_kelas + "/is_user_registred")
-        return true
+        res = true
     } catch(err) {
-        return false
+        res = false
     }
+    document.querySelector("#loading").classList.add("hidden")
+    return res
 }
 
 async function fetch_pertemuan(id_kelas) {
