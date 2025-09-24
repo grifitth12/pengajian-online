@@ -52,3 +52,21 @@
         </nav>
     </div>
 </header>
+<script>
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+async function coba() {
+    await sleep(1000)
+    const btn = document.getElementById('hamburger');
+    const menu = document.getElementById('mobile-menu');
+
+    btn.addEventListener('click', () => {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!expanded));
+    btn.classList.toggle('active');
+    if (menu) menu.classList.toggle('hidden');
+    });
+}
+coba()
+</script>
