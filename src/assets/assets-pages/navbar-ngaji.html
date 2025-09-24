@@ -295,6 +295,9 @@ body.notification-active {
             <a href="#" class="nav-link">About</a>
             <a href="/kajian" class="nav-link">Kajian</a>
             <a href="/kelas" class="nav-link">Kelas</a> 
+            <a href="/src/pages/searchpage.html" class="nav-link" aria-label="Search">
+                <i class="fas fa-search"></i>
+            </a>
             <a href="/profile" x-show="auth" button class="profile-btn" id="profileBtn">
                 <img src="/src/assets/images/WhatsApp Image 2025-08-05 at 14.26.06.jpeg" alt="Profile" class="profile-img" id="profileImg">
             </a>
@@ -365,9 +368,9 @@ body.notification-active {
     <h1>Konten Utama Halaman</h1>
     <p>Ini adalah area konten utama di bawah header.</p>
 </main>
-
+</header>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+ document.addEventListener('DOMContentLoaded', function () {
     const bellButton = document.querySelector('.bell-btn');
     const notificationPanel = document.getElementById('notificationPanel');
     const notificationList = document.getElementById('notificationList');
@@ -455,5 +458,22 @@ body.notification-active {
     // Panggil fungsi ini saat pertama kali halaman dimuat
     checkEmptyState();
     checkUnreadState();
-});
+});  
+  
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+async function coba() {
+    await sleep(1000)
+    const btn = document.getElementById('hamburger');
+    const menu = document.getElementById('mobile-menu');
+
+    btn.addEventListener('click', () => {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!expanded));
+    btn.classList.toggle('active');
+    if (menu) menu.classList.toggle('hidden');
+    });
+}
+coba()
 </script>

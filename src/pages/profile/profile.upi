@@ -154,7 +154,7 @@
         <div class="mobile-sidebar" :class="{'active': mobileNavOpen}" @click.self="closeMobileNav()">
             <a href="#" class="nav-item" :class="{'active': activeTab === 'profile'}" @click.prevent="activeTab = 'profile'; closeMobileNav()">Edit Profil</a>
             <a href="#" class="nav-item" :class="{'active': activeTab === 'mentor'}" @click.prevent="activeTab = 'mentor'; closeMobileNav()">Mentor</a>
-            <a href="#" class="nav-item" :class="{'active': activeTab === 'activity'}" @click.prevent="activeTab = 'activity'; closeMobileNav()">Activity Log</a>
+            <a href="#" class="nav-item" :cla ss="{'active': activeTab === 'activity'}" @click.prevent="activeTab = 'activity'; closeMobileNav()">Activity Log</a>
         </div>
 
         <!-- Main Content -->
