@@ -14,13 +14,14 @@ proc triyono*(ctx: Context) {.async.} =
         model = base_m.replace("sedekah", "donasi")
         identifier = "id_" & model.replace("donasi", "program_donasi")
         val = ctx.getPathParams("id")
+        host = loadPrologueEnv(".env").get("BACKEND_URL")
     
     if model == "triyono" :
         resp "404", Http404
     
     else :
         let jajat = puppy.get(
-                fmt"http://localhost:8081/api/{model}/select?w={identifier}&eq=" & val,
+                fmt"{host}/api/{model}/select?w={identifier}&eq=" & val,
                 @[("Cookie", "access_token=" & ac)]
             )
         
@@ -40,8 +41,9 @@ proc triyono*(ctx: Context) {.async.} =
 proc manageKelas*(ctx: Context) {.async.} =
     var
         ac = ctx.getCookie("access_token")
+        host = loadPrologueEnv(".env").get("BACKEND_URL")
         dapda = 
-            puppy.get("http://localhost:8081/api/kelas/select?w=id_kelas&eq=" &
+            puppy.get(fmt"{host}/api/kelas/select?w=id_kelas&eq=" &
             $ctx.getPathParams("id_kelas"),
             @[("Cookie", "access_token=" & ac)])
     

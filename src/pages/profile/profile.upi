@@ -58,7 +58,7 @@
             async fetchUser(){
                 try {
                     this.loading = true;
-                    let res = await axios.get("http://localhost:5501/api/profile");
+                    let res = await axios.get("/api/profile");
                     let data = res.data;
 
                     this.user = {
@@ -106,7 +106,7 @@
 
             async saveProfile() {
                 try {
-                    await axios.post("http://localhost:5501/api/profile", {
+                    await axios.post("/api/profile", {
                         nama_lengkap: this.user.nama_lengkap.trim(),
                         bio: this.user.bio,
                         kontak: this.user.kontak
