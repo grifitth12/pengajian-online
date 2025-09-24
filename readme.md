@@ -11,12 +11,12 @@ Caddy digunakan sebagai penghubung antara Frontend & Backend dengan metode rever
 ## Front End
 ### Set Up
 ```bash
-nimble install prologue puppy nimja
+nimble install prologue puppy nimja jwt
 ```
 
 ### Start
 ```bash
-nim c -d:release --outdir:build -r server/app
+nim c -d:release --mm:refc --outdir:build -r server/app
 ```
 
 ## Back End

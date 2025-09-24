@@ -63,3 +63,7 @@ function supami(level, headline, message, file_nov = "") {
     })
         
 }
+
+function sleep(ms) {
+return new Promise(resolve => setTimeout(resolve, ms))
+}
