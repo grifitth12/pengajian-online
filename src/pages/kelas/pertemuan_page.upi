@@ -60,8 +60,13 @@
                     <span><i class="fas fa-clock mr-1"></i> <span x-text="cetak_jam((await pertemuan).data.created_at)"></span></span>
                 </div>
                 
-                <div id="YouTubeIframe" x-html="(await pertemuan).data.youtube_iframe_url" class="video-container hidden rounded-lg mb-6 overflow-hidden shadow">
-                    <!-- <iframe src="https://www.youtube.com/embed/kbNdx0yqbZE?si=u1SYuetYYLTToJr0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> -->
+                <div id="YouTubeIframe" class="video-container hidden rounded-lg mb-6 overflow-hidden shadow">
+                    <iframe 
+                        src="https://www.youtube.com/embed/id" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                    </iframe>
                 </div>
 
                 <div id="Blog" class="hidden rounded-lg overflow-hidden p-6 mb-6 shadow">
