@@ -3,7 +3,7 @@
         return (
             await axios.get(
                 query ?
-                "/api/kelas/cari?q=" + query :
+                "/api/kelas/cari?full=true&q=" + query :
                 "/api/kelas/carisemua", {
                     withCredentials: true 
                 }

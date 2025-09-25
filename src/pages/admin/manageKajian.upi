@@ -2,14 +2,23 @@
     async function get_data_kajian(query) {
         return (
             await axios.get(
+                query ?
+                "/api/kajian/cari?full=true&q=" + query :
                 "/api/kajian/carisemua", {
                     withCredentials: true 
                 }
             )
         ).data
-    }
+    } 
     async function delete_kajian(id_kajian) {
-        supami("success", "Supami", "Supami")
+        let response
+        try {
+            response = await axios.delete(
+                "/api/kajian/delete/" + id_kajian, {withCredentials: true})
+        } catch (err) {
+            response = err.response
+        }
+        window.location.reload()
     }
 </script>
 
@@ -28,7 +37,7 @@
                 <button
                     class="btn btn-danger"
                     x-text="'Delete'"
-                    @click="accept(data_kajian.split(','))"
+                    @click="delete_kajian(data_kajian)"
                     x-show="data_kajian">
                 </button>                     
                 <button class="btn btn-success">
@@ -77,8 +86,8 @@
                             </td>  
                             <td x-text="kajian.pemateri" class="text-gray-700"></td>
                             <td x-text="kajian.deskripsi" class="text-gray-700 max-w-xs truncate"></td>
-                            <td x-text="kajian.tanggal || '-'" class="text-gray-700"></td>  
-                            <td x-text="kajian.waktu_mulai || '-'" class="text-gray-700"></td>   
+                            <td x-text="cetak_tenggal(kajian.tanggal) || '-'" class="text-gray-700"></td>  
+                            <td x-text="cetak_tenggal(kajian.waktu_mulai) || '-'" class="text-gray-700"></td>   
                             <td x-text="kajian.lokasi || '-'" class="text-gray-700"></td>
                             <td x-text="kajian.alamat" class="text-gray-700 max-w-xs truncate"></td>                
                             <td>
