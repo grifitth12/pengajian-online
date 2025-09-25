@@ -28,13 +28,6 @@
             <h3>Manage Kajian</h3>
             <div class="action-buttons">
                 <button
-                    class="btn"
-                    :class="data_kajian && data_kajian.split(',')[1] == 'true' ? 'btn-danger' : 'btn-success'"
-                    x-text="'Edit'"
-                    @click="accept(data_kajian.split(','))"
-                    x-show="data_kajian">
-                </button>
-                <button
                     class="btn btn-danger"
                     x-text="'Delete'"
                     @click="delete_kajian(data_kajian)"
