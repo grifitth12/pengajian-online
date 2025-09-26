@@ -21,6 +21,7 @@ app.use(forAdmin())
 
 app.addRoute(urls.indexPatterns, "/")
 app.addRoute(urls.adminPatterns, "/admin")
+app.addRoute(urls.mentorPatterns, "/mentor")
 app.addRoute(urls.kelasPatterns, "/kelas")
 app.addRoute(urls.kajianPatterns, "/kajian")
 app.addRoute(urls.donasiPatterns, "/donasi")
