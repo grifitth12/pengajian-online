@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pendaftaran Mentor — PengajianOnline</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>  
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -102,11 +104,24 @@
     <p>Bergabunglah menjadi mentor untuk berbagi ilmu dan membimbing jamaah.</p>
   </header>
 
+  <script>
+    async function sub() {
+      const form = document.getElementById("mentorForm")
+      const data = new FormData(form)
+      await axios({
+        method: "post",
+        url: "/api/mentorform/insert",
+        data: data,
+      })
+      console.log(data)
+    }
+  </script>
+
   <div class="container">
-    <form>
+    <form id="mentorForm" enctype="multipart/form-data">
       <div>
         <label for="telepon">Nomor Telepon / WhatsApp</label>
-        <input type="tel" id="telepon" name="telepon" placeholder="+62..." required>
+        <input type="tel" id="telepon" name="phone_number" placeholder="+62..." required>
       </div>
       <div>
         <label for="pengalaman">Pengalaman Mengajar</label>
@@ -114,15 +129,15 @@
       </div>
       <div>
         <label for="motivasi">Motivasi Bergabung</label>
-        <textarea id="motivasi" name="motivasi" placeholder="Tuliskan motivasi Anda menjadi mentor." required></textarea>
+        <textarea id="motivasi" name="motivasi_bergabung" placeholder="Tuliskan motivasi Anda menjadi mentor." required></textarea>
       </div>
       <div>
         <label for="cv">Unggah CV</label>
-        <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx" required>
+        <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx,.jpeg" required>
       </div>
       <div class="actions">
         <button type="reset">Reset</button>
-        <button type="submit">Daftar Sekarang</button>
+        <button type="button" onclick="sub()">Daftar Sekarang</button>
       </div>
 
     </form>
