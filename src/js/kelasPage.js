@@ -71,7 +71,9 @@ async function fetch_pertemuan_index(id_pertemuan_kelas) {
         let url = "/api/kelas/pertemuan/" + id_pertemuan_kelas
         let response = (await axios.get(url, { withCredentials: true }))
         document.getElementById(response.data.data.tipe_pertemuan).classList.remove("hidden")
-        
+        if (response.data.data.youtube_iframe_url) {
+            await renderYoutubeIframe(response.data.data.youtube_iframe_url)
+        }
         return response.data
     } catch (error) {
         if (error.response.status == 403) {
@@ -148,5 +150,30 @@ async function delete_pertemuan_kelas(id_kelas, id_pertemuan_kelas) {
                 supami("error", "Gagal Menghapus Pertemuan", "Anda bukan pemiliki dari kelas ini dan tidak memiliki izin untuk menghapus pertemuan.")
             }
         }
+    }
+}
+
+async function getYoutubeId(url) {
+  const regex = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([A-Za-z0-9_-]{11})/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+
+}
+
+async function renderYoutubeIframe(youtubeUrl) {
+    const container = document.getElementById("YouTubeIframe");
+    const videoId = await getYoutubeId(youtubeUrl);
+
+    if (videoId) {
+        container.classList.remove("hidden");
+        container.innerHTML = `
+            <iframe src="https://www.youtube.com/embed/${videoId}" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+            </iframe>
+        `;
+    } else {
+        container.classList.add("hidden");
     }
 }
