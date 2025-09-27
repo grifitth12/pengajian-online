@@ -36,4 +36,5 @@ let
   createPatterns* = @[
     pattern("/donasi", createDonasi, @[HttpGet]),
     pattern("/kajian", createKajian, @[HttpGet]),
+    pattern("/kelas", createkelas, @[HttpGet])
   ]

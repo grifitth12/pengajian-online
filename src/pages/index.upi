@@ -44,19 +44,19 @@
     </section>
 
     <!-- Stats -->
-    <div class="stats-section">
+    <div class="stats-section" x-data="{donasi: axios.get('/api/donasi/stats')}">
         <div class="stat-card">
-            <span class="stat-number">30</span>
+            <span class="stat-number" x-text="(await donasi).data.data.total_program_donasi">-</span>
             <p class="stat-label">Program Donasi</p>
         </div>
 
         <div class="stat-card">
-            <span class="stat-number">Rp 30.000.000</span>
+            <span class="stat-number" x-text="(await donasi).data.data.total_donasi_terkumpul"></span>
             <p class="stat-label">Total Donasi Terkumpul</p>
         </div>
 
         <div class="stat-card">
-            <span class="stat-number">1200</span>
+            <span class="stat-number" x-text="(await donasi).data.data.total_donatur"></span>
             <p class="stat-label">Total Donatur</p>
         </div>
     </div>
