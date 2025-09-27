@@ -42,8 +42,8 @@
     <section class="relative bg-white overflow-hidden">
         <div class="container mx-auto px-4 py-12 md:py-20 flex flex-col md:flex-row items-center">
             <div class="md:w-1/2 mb-10 md:mb-0">
-                <h1 x-text="donasi.nama_program" class="text-4xl md:text-5xl font-bold text-gray-800 mb-6 leading-tight"></h1>
-                <p x-text="donasi.deskripsi" class="text-lg text-gray-600 mb-8"></p>
+                <h1 x-text="(await donasi)data.data.nama_program" class="text-4xl md:text-5xl font-bold text-gray-800 mb-6 leading-tight"></h1>
+                <p x-text="(await donasi)data.data.deskripsi" class="text-lg text-gray-600 mb-8"></p>
                 <div class="flex space-x-4">
                     <button class="donate-btn text-white px-8 py-3 rounded-full font-semibold">
                         Donasi Sekarang
