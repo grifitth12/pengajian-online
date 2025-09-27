@@ -2,47 +2,13 @@
 <link rel="stylesheet" href="/src/css/index.css">
 <main class="main-content">
     <!-- Banner Section -->
-    <section class="hero relative overflow-hidden bg-gradient-to-br from-emerald-500 via-green-500 to-teal-600 text-white py-16 md:py-24">
-
-        <!-- Lingkaran animasi di background -->
-        <div class="absolute inset-0 opacity-10">
-            <div class="absolute top-10 left-10 w-32 h-32 bg-white rounded-full animate-pulse"></div>
-            <div class="absolute top-32 right-20 w-24 h-24 bg-white rounded-full animate-bounce delay-300"></div>
-            <div class="absolute bottom-20 left-1/4 w-20 h-20 bg-white rounded-full animate-pulse delay-700"></div>
-            <div class="absolute bottom-32 right-1/3 w-28 h-28 bg-white rounded-full animate-bounce delay-1000"></div>
+    <div class="banner-section" id="Home">
+        <img src="/src/assets/images/banner.png" 
+                alt="Donation ceremony" 
+                class="banner-image">
+        <div class="banner-overlay">
         </div>
-
-        <!-- Pattern dekoratif -->
-        <div class="absolute inset-0 opacity-5">
-            <svg class="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <pattern id="islamic-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                        <circle cx="10" cy="10" r="2" fill="white" />
-                        <path d="M10,5 L15,10 L10,15 L5,10 Z" fill="white" opacity="0.3" />
-                    </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#islamic-pattern)" />
-            </svg>
-        </div>
-
-        <!-- Konten hero -->
-        <div class="container mx-auto px-4 relative z-10 text-center">
-            <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-8">
-                Selamat Datang di <span class="font-extrabold bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent animate-pulse">Platform Pengajian Online</span>
-            </h1>
-            <p class="text-lg md:text-xl text-green-100 mb-10 max-w-2xl mx-auto leading-relaxed">
-                lorem ipsum color dot amet ngk tau mau nambahin apa aku ngk hapal lorem ipsum
-            </p>
-        </div>
-
-        <!-- Wave di bagian bawah -->
-        <div class="absolute bottom-0 left-0 right-0">
-            <svg class="w-full h-16 text-white" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path d="M0,60 C300,120 900,0 1200,60 L1200,120 L0,120 Z" fill="currentColor" class="animate-pulse"></path>
-            </svg>
-        </div>
-    </section>
-
+    </div>
     <!-- Stats -->
     <div class="stats-section">
         <div class="stat-card">
@@ -67,22 +33,26 @@
             <div class="features-grid">
                 <!-- Kelas Mengaji -->
                 <div class="feature-item">
-                    <a href="/src/pages/kelas/index.upi">
-                        <div class="feature-icon">
-                            <img src="/src/assets/images/buku.png" alt="Kelas Mengaji">
-                        </div>
-                    </a>
+                    <div class="feature-icon">
+                        <img src="/src/assets/images/buku.png" alt="Kelas Mengaji">
+                    </div>
                     <p class="feature-label">Kelas Mengaji</p>
                 </div>
 
-                <!-- Kajian -->
+                <!-- Zakat -->
                 <div class="feature-item">
-                <a href="/src/pages/kajian/index.upi">
                     <div class="feature-icon">
-                        <img src="/src/assets/images/logoKajian.png" alt="Kajian">
+                        <img src="/src/assets/images/zakat.png" alt="Zakat">
                     </div>
-                </a>
-                    <p class="feature-label">Kajian</p>
+                    <p class="feature-label">Zakat</p>
+                </div>
+
+                <!-- Donasi -->
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <img src="/src/assets/images/kotak.png" alt="Donasi">
+                    </div>
+                    <p class="feature-label">Donasi</p>
                 </div>
             </div>
         </div>
@@ -134,3 +104,21 @@
         </div>
     </section>
 </main>
+<script>
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+async function coba() {
+    await sleep(1000)
+    const btn = document.getElementById('hamburger');
+    const menu = document.getElementById('mobile-menu');
+
+    btn.addEventListener('click', () => {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!expanded));
+    btn.classList.toggle('active');
+    if (menu) menu.classList.toggle('hidden');
+    });
+}
+coba()
+</script>
