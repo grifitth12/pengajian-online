@@ -285,9 +285,6 @@ body.notification-active {
         </div>
         <h1 class="header-title"></h1>
         <nav class="nav">
-            <a href="/src/pages/searchpage.html" class="nav-link" aria-label="Search">
-                <i class="fas fa-search"></i> 
-            </a>
             <button class="bell-btn">
                 <img src="/src/assets/images/bell.png" alt="Notifikasi">
             </button>
@@ -362,12 +359,6 @@ body.notification-active {
         <button id="markAllAsReadBtn">Tandai semua sudah dibaca</button>
     </div>
 </div>
-</header>
-
-<main style="padding: 2rem; text-align: center;">
-    <h1>Konten Utama Halaman</h1>
-    <p>Ini adalah area konten utama di bawah header.</p>
-</main>
 </header>
 <script>
  document.addEventListener('DOMContentLoaded', function () {
