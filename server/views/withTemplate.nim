@@ -22,7 +22,15 @@ proc generalTemplate*(
     let
         templ = readAll newFileStream("src/templates/general.upi", fmRead)
         htmll = readAll newFileStream(html_file, fmRead)
-        page = templ % ["generalContent", htmll, "title", title]
+        header = readAll newFileStream("src/assets/assets-pages/navbar-ngaji.upi")
+        footer = readAll newFileStream("src/assets/assets-pages/footer-ngaji.upi")
+
+        page = templ % [
+            "generalContent", htmll,
+            "title", title,
+            "header", header,
+            "footer", footer,
+        ]
 
     return page
 
