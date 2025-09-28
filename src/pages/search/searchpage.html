@@ -6,7 +6,7 @@
   <title>Pencarian - NgajiOnline</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="../css/style-pencarian.css">
+  <link rel="stylesheet" href="/src/css/style-pencarian.css">
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
@@ -49,7 +49,7 @@ function searchPage() {
     doSearch() {
       if (!this.query) return;
       this.saveHistory(this.query);
-      window.location.href = `search-results.html?q=${encodeURIComponent(this.query)}`;
+      window.location.href = `/search?q=${encodeURIComponent(this.query)}`;
     },
     saveHistory(term) {
       this.history = this.history.filter(h => h.toLowerCase() !== term.toLowerCase());
@@ -58,7 +58,7 @@ function searchPage() {
       localStorage.setItem('ngajiOnlineSearchHistory', JSON.stringify(this.history));
     },
     redirectSearch(term) {
-      window.location.href = `search-results.html?q=${encodeURIComponent(term)}`;
+      window.location.href = `/search?q=${encodeURIComponent(term)}`;
     },
     removeHistory(term) {
       this.history = this.history.filter(h => h !== term);
