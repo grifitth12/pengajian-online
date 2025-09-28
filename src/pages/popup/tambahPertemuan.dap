@@ -1,6 +1,32 @@
 <div class="bg-white p-6 rounded-lg">
     <h1 class="text-3xl">Tambah Pertemuan Kelas</h1>
-    <div x-data="{pertemuanForm : {}}">
+    <div x-data="{pertemuanForm : {}, quillEditor: null}" 
+         x-init="
+            // Initialize Quill editor when component loads
+            $nextTick(() => {
+                if (typeof Quill !== 'undefined') {
+                    quillEditor = new Quill('#blog_text_editor', {
+                        theme: 'snow',
+                        modules: {
+                            toolbar: [
+                                [{ 'header': [1, 2, 3, false] }],
+                                ['bold', 'italic', 'underline', 'strike'],
+                                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                ['link'],
+                                ['clean']
+                            ]
+                        }
+                    });
+                    
+                    // Update hidden input when editor content changes
+                    quillEditor.on('text-change', function() {
+                        const html = quillEditor.root.innerHTML;
+                        const encodedHtml = encodeURIComponent(html);
+                        document.getElementById('blog_text_hidden').value = encodedHtml;
+                    });
+                }
+            });
+         ">
         <input type="text" class="hidden" :value="id_kelas" x-init="pertemuanForm.id_kelas = id_kelas">
         <div class="mt-3">
             <label for="judul" class="block text-sm font-medium text-gray-700 mb-1">Judul Pertemuan</label>
@@ -22,9 +48,8 @@
         </div>      
         <div class="mt-4" x-show="pertemuanForm.tipe_pertemuan == 'Blog'">
             <label for="blog_text" class="block text-sm font-medium text-gray-700 mb-1">Blog Text</label>
-            <textarea id="blog_text" x-model="pertemuanForm.blog_text" 
-                rows="6" 
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500"></textarea>
+            <div id="blog_text_editor" class="border border-gray-300 rounded-lg" style="height: 200px;"></div>
+            <input type="hidden" id="blog_text_hidden" x-model="pertemuanForm.blog_text">
         </div>
         <div class="mt-4" x-show="pertemuanForm.tipe_pertemuan === 'YouTubeIframe'">
             <label for="youtube_iframe_url" class="block text-sm font-medium text-gray-700 mb-1">YouTube Iframe URL</label>
