@@ -20,7 +20,7 @@ proc render_manage_index*(ctx: Context) {.async.} =
 
 proc render_manage_index_mentor*(ctx: Context) {.async.} =
     let
-        available_managed = @["kelas", "pertemuan", "profile"]
+        available_managed = @["kelas", "profile", "pertemuan"]
         source = ctx.getPathParams("source", "dashboard")
     if source in available_managed :
         var file_loc = "src/pages/mentor/" & source & ".upi"

@@ -43,3 +43,6 @@ proc createDonasi*(ctx: Context) {.async.} =
 
 proc createKajian*(ctx: Context) {.async.} = 
     resp loadAdminTemplate "src/pages/create/kajian.upi"
+
+proc createkelas*(ctx: Context) {.async.} = 
+    resp loadAdminTemplate "src/pages/create/kelas.upi"
