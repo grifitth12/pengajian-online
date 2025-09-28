@@ -38,37 +38,6 @@ proc triyono*(ctx: Context) {.async.} =
 
             resp $jajat.code   
 
-proc manageKelas*(ctx: Context) {.async.} =
-    var
-        ac = ctx.getCookie("access_token")
-        host = loadPrologueEnv(".env").get("BACKEND_URL")
-        dapda = 
-            puppy.get(fmt"{host}/api/kelas/select?w=id_kelas&eq=" &
-            $ctx.getPathParams("id_kelas"),
-            @[("Cookie", "access_token=" & ac)])
-    
-    if dapda.code == 200 :
-        let
-            jsonn = parseJson(dapda.body)
-            page = loadAdminTemplate( "src/pages/manage/kelas.upi", jsonn )
-
-        resp strip page
-
-    else :
-        echo $dapda.body
-        echo ctx.getPathParams("id_kelas")
-
-        resp $dapda.code
-
-proc manageSedekah*(ctx: Context) {.async.} = 
-    resp loadAdminTemplate "src/pages/manage/sedekah.upi"
-
-proc manageMentor*(ctx: Context) {.async.} = 
-    resp loadAdminTemplate "src/pages/manage/mentor.upi"
-
-proc manageKajian*(ctx: Context) {.async.} = 
-    resp loadAdminTemplate "src/pages/manage/kajian.upi"
-
 proc createDonasi*(ctx: Context) {.async.} = 
     resp loadAdminTemplate "src/pages/create/donasi.upi"
 
