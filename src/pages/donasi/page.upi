@@ -5,12 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donasi di Heni - Bantu Warga Padang</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="/src/js/donasiPage.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.js" defer></script>
     <style>
         .progress-bar {
             height: 12px;
@@ -18,23 +15,19 @@
             background-color: #e5e7eb;
             overflow: hidden;
         }
-        
         .progress-fill {
             height: 100%;
             background-color: #10b981;
             transition: width 0.5s ease-in-out;
         }
-        
         .donation-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
         }
-        
         .donate-btn {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             transition: all 0.3s ease;
         }
-        
         .donate-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
@@ -42,13 +35,24 @@
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
-    <main x-data="{donasi:fetch_donasi(), rijal:{}}">
+    <main x-data="{donasi:{}}" 
+      x-init="
+        let slug = window.location.pathname.split('/').pop(); 
+        axios.get('/api/donasi/discover')
+          .then(res => {
+            let all = res.data.data;
+            let found = all.find(item => item.slug === slug);
+            donasi = found || {};
+            console.log('FOUND DONASI:', donasi);
+          })
+      ">
+
     <!-- Hero Section -->
     <section class="relative bg-white overflow-hidden">
         <div class="container mx-auto px-4 py-12 md:py-20 flex flex-col md:flex-row items-center">
             <div class="md:w-1/2 mb-10 md:mb-0">
-                <h1 x-text="(await donasi).data.nama_program" class="text-4xl md:text-5xl font-bold text-gray-800 mb-6 leading-tight"></h1>
-                <p x-text="(await donasi).data.deskripsi" class="text-lg text-gray-600 mb-8"></p>
+                <h1 x-text="donasi.nama_program" class="text-4xl md:text-5xl font-bold text-gray-800 mb-6 leading-tight"></h1>
+                <p x-text="donasi.deskripsi" class="text-lg text-gray-600 mb-8"></p>
                 <div class="flex space-x-4">
                     <button class="donate-btn text-white px-8 py-3 rounded-full font-semibold">
                         Donasi Sekarang
@@ -59,32 +63,34 @@
                 </div>
             </div>
             <div class="md:w-1/2">
-                <img x-bind:src="'/static/' + (await donasi).data.gambar"
+                <img :src="'/static/' + donasi.gambar"
                      alt="Donasi di Heni" 
                      class="w-full h-auto rounded-xl shadow-lg object-cover">
             </div>
         </div>
     </section>
+</main>
+
 
     <!-- Donation Progress -->
-    <section x-init="rijal = kadapi((await donasi).data.id_program_donasi)" class="bg-emerald-50 py-12">
-        <div x-transition x-show="(await rijal).status == 200" class="container mx-auto px-4">
+    <section class="bg-emerald-50 py-12">
+        <div class="container mx-auto px-4">
             <div class="bg-white rounded-xl shadow-sm p-6 md:p-8 max-w-4xl mx-auto">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-gray-800">Progress Donasi</h2>
-                    <span class="text-emerald-600 font-bold">Aktif</span>
+                    <span class="text-emerald-600 font-bold" x-text="donasi.status"></span>
                 </div>
                 <div class="mb-6">
                     <div class="flex justify-between mb-2">
                         <span class="text-gray-600">Terkumpul</span>
-                        <span x-text="(await rijal).data.terkumpul" class="font-semibold text-emerald-600"></span>
+                        <span class="font-semibold text-emerald-600">Rp 0</span>
                     </div>
                     <div class="progress-bar">
-                        <div x-bind:style="'width:' + hitung_persen((await rijal).data.terkumpul, (await donasi).data.target_donasi) + '%;'" class="progress-fill" style="width: 64%"></div>
+                        <div class="progress-fill" style="width: 0%"></div>
                     </div>
                     <div class="flex justify-between mt-2">
-                        <span class="text-gray-600">Target: <span x-text="cetak_rupiah((await donasi).data.target_donasi)"></span></span>
-                        <span x-text="hitung_persen((await rijal).data.terkumpul, (await donasi).data.target_donasi)" class="text-gray-600"></span>
+                        <span class="text-gray-600">Target: <span x-text="donasi.target_donasi"></span></span>
+                        <span class="text-gray-600">0%</span>
                     </div>
                 </div>
                 
@@ -110,24 +116,7 @@
     <section class="py-12 bg-white">
         <div class="container mx-auto px-4 max-w-4xl">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Tentang Program Ini</h2>
-            <div class="prose max-w-none text-gray-600">
-                <p x-text="(await rijal).data.deskripsi_lengkap">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perferendis dolor hic numquam distinctio qui doloremque dicta quidem odio dolorem id. Ab beatae ullam obcaecati laboriosam voluptatibus culpa itaque adipisci. At!</p>
-                
-                <p class="mt-4">Dana yang terkumpul akan digunakan untuk:</p>
-                <ul class="list-disc pl-5 mt-2 space-y-2">
-                    <li>Pembelian paket sembako untuk keluarga kurang mampu</li>
-                    <li>Bantuan biaya pengobatan bagi warga yang sakit</li>
-                    <li>Pendidikan anak-anak dari keluarga prasejahtera</li>
-                    <li>Program pemberdayaan ekonomi kecil</li>
-                </ul>
-                
-                <p class="mt-4">Setiap rupiah yang Anda donasikan akan memberikan dampak besar bagi kehidupan mereka. Kami berkomitmen untuk menggunakan dana secara transparan dan tepat sasaran.</p>
-                
-                <div class="bg-emerald-50 p-4 rounded-lg mt-6 border border-emerald-100">
-                    <h3 class="font-semibold text-emerald-800 mb-2">Update Terbaru</h3>
-                    <p class="text-gray-700">19 Agustus 2025 - Program telah berjalan selama 2 minggu dan telah membantu 15 keluarga di daerah Padang. Terima kasih atas dukungan semua donatur!</p>
-                </div>
-            </div>
+            <div class="prose max-w-none text-gray-600" x-text="donasi.deskripsi_lengkap"></div>
         </div>
     </section>
 
