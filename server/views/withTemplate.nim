@@ -15,6 +15,18 @@ proc loadAdminTemplate*(
 
     return page
 
+proc loadMentorTemplate*(
+    html_file: string,
+    data: auto = ""
+) : string =
+    let
+        templ = readAll newFileStream("src/templates/mentorPanel.upi", fmRead)
+        htmll = readAll newFileStream(html_file, fmRead)
+        dataa = %*{"result" : data}
+        page = templ % ["adminContent", htmll] % ["dataUpi", $dataa]
+
+    return page
+
 proc generalTemplate*(
     html_file: string,
     title: string = "Platform belajar ngaji online"
