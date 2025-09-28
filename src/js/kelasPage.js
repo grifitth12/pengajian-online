@@ -133,6 +133,8 @@ async function edit_pertemuan_kelas_popup(id_pertemuan_kelas) {
 
 async function edit_pertemuan_kelas(id_pertemuan_kelas, pertemuanForm) {
     try {
+        let blog_content = document.getElementById("blog_text_hidden_edit").value
+        pertemuanForm.blog_text = blog_content ? blog_content : null        
         await axios.put("/api/kelas/pertemuan/update/" + id_pertemuan_kelas, pertemuanForm)
         supami("rijal", "data berhasil ditambahkan", "")
     } catch (error) {

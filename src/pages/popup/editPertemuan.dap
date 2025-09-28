@@ -3,42 +3,36 @@
     y = (await pertemuan_i).data.data.tipe_pertemuan === 'YouTubeIframe'
     b = (await pertemuan_i).data.data.tipe_pertemuan == 'Blog'
     e = (await pertemuan_i).data.data.tipe_pertemuan === 'External'
-    
-    // Initialize Quill editor when component loads
-    $nextTick(() => {
-        if (typeof Quill !== 'undefined') {
-            quillEditor = new Quill('#blog_text_editor_edit', {
-                theme: 'snow',
-                modules: {
-                    toolbar: [
-                        [{ 'header': [1, 2, 3, false] }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                        ['link'],
-                        ['clean']
-                    ]
-                }
-            });
-            
-            // Load existing content if it's a blog type
-            if (b && (await pertemuan_i).data.data.blog_text) {
-                try {
-                    const decodedHtml = decodeURIComponent((await pertemuan_i).data.data.blog_text);
-                    quillEditor.root.innerHTML = decodedHtml;
-                } catch (e) {
-                    // If decoding fails, use the content as-is
-                    quillEditor.root.innerHTML = (await pertemuan_i).data.data.blog_text;
-                }
+
+    if (typeof Quill !== 'undefined') {
+        quillEditor = new Quill('#blog_text_editor_edit', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['link'],
+                    ['clean']
+                ]
             }
-            
-            // Update hidden input when editor content changes
-            quillEditor.on('text-change', function() {
-                const html = quillEditor.root.innerHTML;
-                const encodedHtml = encodeURIComponent(html);
-                document.getElementById('blog_text_hidden_edit').value = encodedHtml;
-            });
+        });
+        
+        if (b && (await pertemuan_i).data.data.blog_text) {
+            try {
+                const decodedHtml = decodeURIComponent((await pertemuan_i).data.data.blog_text);
+                quillEditor.root.innerHTML = decodedHtml;
+            } catch (e) {
+                quillEditor.root.innerHTML = (await pertemuan_i).data.data.blog_text;
+            }
         }
-    });
+        
+        quillEditor.on('text-change', function() {
+            const html = quillEditor.root.innerHTML;
+            const encodedHtml = encodeURIComponent(html);
+            document.getElementById('blog_text_hidden_edit').value = encodedHtml;
+        });
+    }
 }">
     <h1 class="text-3xl">Edit Pertemuan Kelas</h1>
     <div x-data="{pertemuanForm : {}}">
