@@ -1,112 +1,168 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" x-data="searchResults()">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hasil Pencarian - NgajiOnline</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    
-    <link rel="stylesheet" href="../css/searchresults.css">
-    
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hasil Pencarian - NgajiOnline</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../css/searchresults.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body x-data="{ isFilterSidebarOpen: false }" x-on:keydown.escape.window="isFilterSidebarOpen = false" :class="{ 'overflow-hidden': isFilterSidebarOpen }">
+<body x-init="init()">
 
-    <div x-show="isFilterSidebarOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click="isFilterSidebarOpen = false" class="sidebar-backdrop" style="display: none;"></div>
-    <aside x-show="isFilterSidebarOpen" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="transform translate-x-full" x-transition:enter-end="transform translate-x-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="transform translate-x-0" x-transition:leave-end="transform translate-x-full" class="filter-sidebar" style="display: none;">
-        <div class="sidebar-header"><h3 class="sidebar-title">Filter & Urutkan</h3><button @click="isFilterSidebarOpen = false" class="close-sidebar-btn">&times;</button></div>
-        <div class="sidebar-content">
-            <div class="filter-group"><h4 class="filter-group-title">Kategori</h4><div class="filter-options"><label class="custom-checkbox"><input type="checkbox" checked><span>Semua</span></label><label class="custom-checkbox"><input type="checkbox"><span>Kajian</span></label><label class="custom-checkbox"><input type="checkbox"><span>Kelas</span></label><label class="custom-checkbox"><input type="checkbox"><span>Donasi</span></label></div></div>
-            <div class="filter-group"><h4 class="filter-group-title">Urutkan Berdasarkan</h4><div class="filter-options"><label class="custom-radio"><input type="radio" name="sort" value="relevan" checked><span>Paling Relevan</span></label><label class="custom-radio"><input type="radio" name="sort" value="terbaru"><span>Terbaru</span></label><label class="custom-radio"><input type="radio" name="sort" value="populer"><span>Paling Populer</span></label></div></div>
-        </div>
-        <div class="sidebar-footer"><button class="apply-filter-btn" @click="isFilterSidebarOpen = false">Terapkan Filter</button></div>
-    </aside>
+<header class="search-header-sticky">
+  <a href="searchpage.html" class="back-button" aria-label="Kembali ke Pencarian">
+    <i class="fas fa-arrow-left"></i>
+  </a>
+  <form @submit.prevent="doSearch" class="search-form">
+    <i class="fas fa-search search-icon"></i>
+    <input type="search" x-model="query" placeholder="Cari kajian, donasi, kelas..." required>
+  </form>
+</header>
 
-    <header class="search-header-sticky">
-        <a href="searchpage.html" class="back-button" aria-label="Kembali ke Pencarian">
-            <i class="fas fa-arrow-left"></i>
-        </a>
-        <form action="search-results.html" method="GET" class="search-form">
-            <i class="fas fa-search search-icon"></i>
-            <input type="search" name="q" id="search-input-results" placeholder="Cari kajian, donasi, kelas..." required>
-        </form>
-    </header>
+<main class="search-page-content">
+  <div class="search-container">
+    <div id="results-content">
+      <div class="results-header">
+        <h2 class="section-title" x-text="title"></h2>
+        <button @click="isFilterSidebarOpen = true" class="open-filter-btn">
+          <i class="fas fa-filter"></i>
+          <span>Filter & Urutkan</span>
+        </button>
+      </div>
+      <div class="results-list">
+        <!-- Loader -->
+        <template x-if="loading">
+          <div class="loader"></div>
+        </template>
 
-    <main class="search-page-content">
-        <div class="search-container">
-            <div id="results-content">
-                <div class="results-header">
-                    <h2 class="section-title" id="results-title">Memuat hasil...</h2>
-                    <button @click="isFilterSidebarOpen = true" class="open-filter-btn">
-                        <i class="fas fa-filter"></i>
-                        <span>Filter & Urutkan</span>
-                    </button>
-                </div>
-                <div class="results-list" id="results-list">
-                    <div class="loader"></div>
-                </div>
+        <!-- Kosong -->
+        <template x-if="!loading && results.length === 0">
+          <p class="info-text">Tidak ada hasil ditemukan.</p>
+        </template>
+
+        <!-- Hasil - Template yang dinamis berdasarkan jenis konten -->
+        <template x-for="item in results" :key="item.id + '-' + item.type">
+          <a :href="getItemUrl(item)" class="result-item">
+            <div class="item-details">
+              <h3 x-text="getItemTitle(item)"></h3>
+              <p x-text="getItemDescription(item)"></p>
             </div>
-        </div>
-    </main>
+            <span class="item-badge" 
+                  :class="{
+                    'badge-kelas': item.type === 'kelas', 
+                    'badge-kajian': item.type === 'kajian',
+                    'badge-donasi': item.type === 'donasi'
+                  }" 
+                  x-text="getBadgeText(item.type)">
+            </span>
+          </a>
+        </template>
+      </div>
+    </div>
+  </div>
+</main>
 
-    <script>
-        const searchInputResults = document.getElementById('search-input-results');
-        const resultsTitle = document.getElementById('results-title');
-        const resultsList = document.getElementById('results-list');
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const query = urlParams.get('q');
-            if (query) {
-                searchInputResults.value = query;
-                resultsTitle.textContent = `Menampilkan hasil untuk "${query}"`;
-                fetchResults(query);
-            } else {
-                resultsTitle.textContent = 'Silakan lakukan pencarian';
-                resultsList.innerHTML = '<p class="info-text">Masukkan kata kunci untuk memulai.</p>';
-            }
-        });
-        async function fetchResults(query) {
-            try {
-                // UNTUK TEMAN ANDA: Ganti URL ini dengan API endpoint yang benar
-                // const response = await fetch(`/api/search?q=${query}`);
-                // const results = await response.json();
+<script>
+function searchResults() {
+  return {
+    query: '',
+    title: 'Memuat hasil...',
+    results: [],
+    loading: true,
+    init() {
+      const urlParams = new URLSearchParams(window.location.search);
+      this.query = urlParams.get('q') || '';
+      if (this.query) {
+        this.title = `Menampilkan hasil untuk "${this.query}"`;
+        this.fetchResults();
+      } else {
+        this.loading = false;
+        this.title = 'Silakan lakukan pencarian';
+      }
+    },
+    async fetchResults() {
+      this.loading = true;
+      try {
+        // Fetch tiga endpoint sekaligus
+        const [kelasRes, kajianRes, donasiRes] = await Promise.all([
+          fetch(`http://localhost:5501/api/kelas/cari?q=${encodeURIComponent(this.query)}`),
+          fetch(`http://localhost:5501/api/kajian/cari?q=${encodeURIComponent(this.query)}`),
+          fetch(`http://localhost:5501/api/donasi/cari?q=${encodeURIComponent(this.query)}`)
+        ]);
 
-                // Simulasi data dari backend (HAPUS NANTI)
-                const fakeResults = [
-                    { tipe: 'kajian', judul: `Kajian Lengkap tentang "${query}"`, deskripsi: 'Ustadz Fulan', gambar: 'https://via.placeholder.com/150/007bff/ffffff?text=Kajian', link: '#' },
-                    { tipe: 'donasi', judul: `Program Donasi untuk "${query}"`, deskripsi: 'Lembaga Amal', gambar: 'https://via.placeholder.com/150/28a745/ffffff?text=Donasi', link: '#' },
-                    { tipe: 'kelas', judul: `Kelas Intensif "${query}"`, deskripsi: 'NgajiOnline Academy', gambar: 'https://via.placeholder.com/150/ffc107/000000?text=Kelas', link: '#' }
-                ];
-                
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Simulasi delay jaringan
-                displayResults(fakeResults);
+        const kelasData = kelasRes.ok ? await kelasRes.json() : [];
+        const kajianData = kajianRes.ok ? await kajianRes.json() : [];
+        const donasiData = donasiRes.ok ? await donasiRes.json() : [];
 
-            } catch (error) {
-                console.error('Error:', error);
-                resultsList.innerHTML = '<p class="error-text">Terjadi kesalahan. Coba lagi nanti.</p>';
-            }
-        }
-        function displayResults(results) {
-            resultsList.innerHTML = '';
-            if (results.length === 0) {
-                resultsList.innerHTML = '<p class="info-text">Tidak ada hasil ditemukan.</p>';
-                return;
-            }
-            results.forEach(item => {
-                let cardHTML = `<a href="${item.link}" class="result-item">
-                                    <img src="${item.gambar}" alt="${item.judul}">
-                                    <div class="item-details">
-                                        <h3>${item.judul}</h3>
-                                        <p>${item.deskripsi}</p>
-                                    </div>
-                                    <span class="item-badge badge-${item.tipe}">${item.tipe}</span>
-                                </a>`;
-                resultsList.innerHTML += cardHTML;
-            });
-        }
-    </script>
+        const kelas = Array.isArray(kelasData) ? kelasData : kelasData.data || [];
+        const kajian = Array.isArray(kajianData) ? kajianData : kajianData.data || [];
+        const donasi = Array.isArray(donasiData) ? donasiData : donasiData.data || [];
+
+        // Tambahin label type biar bisa dibedain
+        this.results = [
+          ...kelas.map(k => ({ ...k, type: 'kelas' })),
+          ...kajian.map(j => ({ ...j, type: 'kajian' })),
+          ...donasi.map(d => ({ ...d, type: 'donasi' }))
+        ];
+      } catch (err) {
+        console.error(err);
+        this.results = [];
+      } finally {
+        this.loading = false;
+      }
+    },
+    doSearch() {
+      if (this.query) {
+        window.location.href = `search-results.html?q=${encodeURIComponent(this.query)}`;
+      }
+    },
+    // Fungsi untuk mendapatkan URL yang sesuai berdasarkan jenis konten
+    getItemUrl(item) {
+      if (item.type === 'kelas') {
+        return `/kelas/${item.slug}`;
+      } else if (item.type === 'kajian') {
+        return `/kajian/${item.slug}`;
+      } else if (item.type === 'donasi') {
+        return `/donasi/${item.slug}`;
+      }
+      return '#'; // Fallback URL
+    },
+    // Fungsi untuk mendapatkan judul item
+    getItemTitle(item) {
+      if (item.type === 'kelas') {
+        return item.nama_kelas || 'Kelas Tanpa Judul';
+      } else if (item.type === 'kajian') {
+        return item.judul || 'Kajian Tanpa Judul';
+      } else if (item.type === 'donasi') {
+        return item.judul_donasi || item.nama_program || 'Donasi Tanpa Judul';
+      }
+      return 'Tanpa Judul';
+    },
+    // Fungsi untuk mendapatkan deskripsi item
+    getItemDescription(item) {
+      if (item.type === 'kelas') {
+        return item.deskripsi || 'Tidak ada deskripsi';
+      } else if (item.type === 'kajian') {
+        return item.deskripsi || item.pembicara || 'Tidak ada deskripsi';
+      } else if (item.type === 'donasi') {
+        return item.deskripsi || item.tujuan || 'Tidak ada deskripsi';
+      }
+      return 'Tidak ada deskripsi';
+    },
+    // Fungsi untuk mendapatkan teks badge
+    getBadgeText(type) {
+      const badgeTexts = {
+        'kelas': 'Kelas',
+        'kajian': 'Kajian', 
+        'donasi': 'Donasi'
+      };
+      return badgeTexts[type] || type;
+    }
+  }
+}
+</script>
+
 </body>
 </html>
