@@ -43,15 +43,15 @@
             </div>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="/mentor/kelas" class="sidebar-link">
+            <li><a href="/mentor/manage/kelas" class="sidebar-link">
                 <i class="fas fa-chalkboard-teacher mr-3"></i>
                 Kelas
             </a></li>
-            <li><a href="/admin/manage/sedekah" class="sidebar-link">
+            <li><a href="/mentor/manage/pertemuan" class="sidebar-link">
                 <i class="fas fa-hand-holding-heart mr-3"></i>
                 Petermuan Kelas
             </a></li>
-            <li><a href="/admin/manage/mentor" class="sidebar-link">
+            <li><a href="/mentor/manage/profile" class="sidebar-link">
                 <i class="fas fa-user-tie mr-3"></i>
                 Profile Anda
             </a></li>

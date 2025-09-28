@@ -33,6 +33,9 @@ let
     pattern("/manage/{source}", render_manage_index, @[HttpGet]),
     pattern("/manage/{model}/{id}", triyono, @[HttpGet])
   ]
+  mentorPatterns* = @[
+    pattern("/manage/{source}", render_manage_index_mentor, @[HttpGet])
+  ]
   createPatterns* = @[
     pattern("/donasi", createDonasi, @[HttpGet]),
     pattern("/kajian", createKajian, @[HttpGet]),
