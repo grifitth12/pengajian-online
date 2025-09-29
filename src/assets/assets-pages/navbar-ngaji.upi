@@ -321,44 +321,109 @@ body.notification-active {
             <a href="#" class="nav-link">Contact</a>
         </nav>
 
-        <div class="notification-panel" id="notificationPanel">
+<div class="notification-panel" id="notificationPanel"
+     x-data="{
+        notifications: [],
+        loading: true,
+        error: null,
+        endpoint: '/api/notifications/my',
+        init() {
+            axios.get(this.endpoint)
+                .then(res => {
+                    this.notifications = Array.isArray(res.data?.data) ? res.data.data : [];
+                })
+                .catch(err => {
+                    console.error('Gagal memuat notifikasi', err);
+                    this.error = 'Gagal memuat notifikasi';
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+        relativeTime(iso) {
+            try {
+                const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+                if (diff < 60) return `${diff} detik yang lalu`;
+                const mins = Math.floor(diff / 60);
+                if (mins < 60) return `${mins} menit yang lalu`;
+                const hours = Math.floor(mins / 60);
+                if (hours < 24) return `${hours} jam yang lalu`;
+                const days = Math.floor(hours / 24);
+                return `${days} hari yang lalu`;
+            } catch (e) {
+                return '';
+            }
+        },
+        markAsRead(id) {
+            const n = this.notifications.find(x => x.id === id);
+            if (n) n.is_read = true;
+        },
+        deleteNotification(id) {
+            this.notifications = this.notifications.filter(x => x.id !== id);
+        },
+        markAllAsRead() {
+            this.notifications.forEach(n => n.is_read = true);
+        }
+     }"
+     x-init="init()"
+     :class="{ 'is-empty': !loading && notifications.length === 0 }"
+>
     <div class="notification-header">
         <h2>Notifikasi</h2>
     </div>
-    
-    <ul class="notification-list" id="notificationList">
-        <li class="notification-item unread">
-            <div class="notification-content">
-                <p><strong>Donasi berhasil!</strong> Pembayaran Anda untuk kampanye "Bantu Sekolah" telah diterima.</p>
-                <div class="notification-time">5 menit yang lalu</div>
-            </div>
-            <button class="notification-delete-btn" aria-label="Hapus notifikasi">&times;</button>
-        </li>
+
+    <!-- Loading state -->
+    <ul class="notification-list" id="notificationList" x-show="loading" style="display: none;">
         <li class="notification-item">
             <div class="notification-content">
-                <p><strong>Kajian Fiqih</strong> akan dimulai dalam 1 jam. Jangan sampai ketinggalan!</p>
-                <div class="notification-time">55 menit yang lalu</div>
+                <p><strong>Memuat notifikasi…</strong></p>
+                <div class="notification-time">Tunggu sebentar</div>
             </div>
-            <button class="notification-delete-btn" aria-label="Hapus notifikasi">&times;</button>
-        </li>
-        <li class="notification-item">
-            <div class="notification-content">
-                <p><strong>Ust.Andi</strong> baru saja mengirim link zoom kelas. Lihat profilnya.</p>
-                <div class="notification-time">3 jam yang lalu</div>
-            </div>
-            <button class="notification-delete-btn" aria-label="Hapus notifikasi">&times;</button>
         </li>
     </ul>
 
-    <div class="notification-empty-state">
+    <!-- Error state -->
+    <div class="notification-empty-state" x-show="!loading && error" style="display: none;">
+        <i class="fas fa-bell-slash"></i>
+        <p x-text="error"></p>
+    </div>
+
+    <!-- Notification list (dynamis) -->
+    <ul class="notification-list" id="notificationList" x-show="!loading && notifications.length > 0" style="display: none;">
+        <template x-for="note in notifications" :key="note.id">
+            <li
+                class="notification-item"
+                :class="{ 'unread': !note.is_read }"
+            >
+                <div class="notification-content" @click="markAsRead(note.id)">
+                    <p>
+                        <strong x-text="note.title ? note.title : (note.type ? note.type : 'Notifikasi')"></strong> <br>
+                        <span x-html="note.message ? (' ' + note.message) : ''"></span>
+                    </p>
+                    <div class="notification-time" x-text="relativeTime(note.created_at)"></div>
+                </div>
+
+                <!-- tombol hapus -->
+                <button
+                    class="notification-delete-btn"
+                    aria-label="Hapus notifikasi"
+                    @click.stop="deleteNotification(note.id)"
+                >&times;</button>
+            </li>
+        </template>
+    </ul>
+
+    <!-- Empty state -->
+    <div class="notification-empty-state" x-show="!loading && notifications.length === 0 && !error" style="display: none;">
         <i class="fas fa-bell-slash"></i>
         <p>Tidak ada notifikasi baru</p>
     </div>
 
     <div class="notification-footer">
-        <button id="markAllAsReadBtn">Tandai semua sudah dibaca</button>
+        <button id="markAllAsReadBtn" @click="markAllAsRead()">Tandai semua sudah dibaca</button>
     </div>
 </div>
+
 </header>
 <script>
  document.addEventListener('DOMContentLoaded', function () {
@@ -366,7 +431,6 @@ body.notification-active {
     const notificationPanel = document.getElementById('notificationPanel');
     const notificationList = document.getElementById('notificationList');
     const body = document.body;
-    // 1. Ambil referensi tombol baru
     const markAllAsReadBtn = document.getElementById('markAllAsReadBtn');
 
     function openPanel() {
@@ -387,14 +451,11 @@ body.notification-active {
         }
     }
     
-    // Fungsi untuk memeriksa notifikasi yang belum dibaca
     function checkUnreadState() {
         const unreadItems = notificationList.querySelectorAll('.notification-item.unread');
-        // Nonaktifkan tombol jika tidak ada notifikasi yang belum dibaca
         markAllAsReadBtn.disabled = unreadItems.length === 0;
     }
 
-    // Toggle panel saat tombol lonceng diklik
     bellButton.addEventListener('click', function (event) {
         event.stopPropagation();
         const isActive = notificationPanel.classList.contains('active');
@@ -403,11 +464,9 @@ body.notification-active {
         } else {
             openPanel();
         }
-        // Periksa status tombol saat panel dibuka
         checkUnreadState();
     });
 
-    // Menutup panel saat klik di luar
     document.addEventListener('click', function (event) {
         const isActive = notificationPanel.classList.contains('active');
         if (isActive && !notificationPanel.contains(event.target) && !bellButton.contains(event.target)) {
@@ -426,27 +485,22 @@ body.notification-active {
                 setTimeout(() => {
                     itemToDelete.remove();
                     checkEmptyState();
-                    checkUnreadState(); // Periksa kembali setelah item dihapus
+                    checkUnreadState();
                 }, 300);
             }
         }
     });
 
-    // === LOGIKA BARU: TANDAI SEMUA DIBACA ===
     markAllAsReadBtn.addEventListener('click', function() {
-        // 1. Cari semua item yang belum dibaca
         const unreadItems = notificationList.querySelectorAll('.notification-item.unread');
         
-        // 2. Hapus kelas .unread dari setiap item
         unreadItems.forEach(item => {
             item.classList.remove('unread');
         });
 
-        // 3. Nonaktifkan tombol setelah diklik
         checkUnreadState();
     });
 
-    // Panggil fungsi ini saat pertama kali halaman dimuat
     checkEmptyState();
     checkUnreadState();
 });  
