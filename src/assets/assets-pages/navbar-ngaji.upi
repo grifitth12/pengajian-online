@@ -298,8 +298,8 @@ body.notification-active {
             <a href="/profile" x-show="auth" button class="profile-btn" id="profileBtn">
                 <img src="/src/assets/images/WhatsApp Image 2025-08-05 at 14.26.06.jpeg" alt="Profile" class="profile-img" id="profileImg">
             </a>
-            <div class="btn-group" x-show="!auth">
-                <a href="/src/pages/login.html" class="btn btn-primary">Login</a>
+            <div class="btn-group" @click="login" x-show="!auth">
+                <a class="btn btn-primary">Login</a>
             </div>
         </nav>
         <button id="hamburger" class="hamburger" aria-label="Toggle menu" aria-controls="mobile-menu" aria-expanded="false">
