@@ -38,6 +38,8 @@
     }
 
     async function update(params, id_donasi) {
+        let blog_content = document.getElementById("description_text_content").value
+        params.deskripsi_lengkap = blog_content ? blog_content : null         
         // If a temp thumbnail exists, commit it first
         if (window.tempThumbnail) {
             let committedFile = await commitTemp(window.tempThumbnail)
@@ -71,18 +73,11 @@
                         <label for="judul" class="block text-sm font-medium text-gray-700 mb-1">Judul donasi</label>
                         <input type="text" x-model="DonasiForm.nama_program" id="judul" x-text="(await donasi).nama_program" :value="(await donasi).nama_program" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
                     </div>
-                    <!-- Deskripsi -->
-                    <div>
-                        <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-                        <textarea id="deskripsi" x-model="donasi.deskripsi" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" x-text="(await donasi).deskripsi"></textarea>
-                    </div>
-                    <!-- target-donasi -->
-                    <div>
-                        <label for="target-donasi" class="block text-sm font-medium text-gray-700 mb-1">Target Donasi</label>
-                        <input type="number" x-model="DonasiForm.target_donasi" id="target-donasi" :value="(await donasi).target_donasi" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
-                    </div>
-                    <!-- status -->    
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="target-donasi" class="block text-sm font-medium text-gray-700 mb-1">Target Donasi</label>
+                            <input type="number" x-model="DonasiForm.target_donasi" id="target-donasi" :value="(await donasi).target_donasi" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
+                        </div>                        
                         <div>
                             <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
                             <select id="status" x-model="DonasiForm.status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
@@ -92,6 +87,16 @@
                             </select>
                         </div>
                     </div>       
+                    <!-- Deskripsi -->
+                    <div>
+                        <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+                        <textarea id="deskripsi" x-model="donasi.deskripsi" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" x-text="(await donasi).deskripsi"></textarea>
+                    </div>
+                    <div>
+                        <label for="simsalabim" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Lengkap</label>
+                        <div id="text_editor" class="border border-gray-300" style="height: 200px;"></div>
+                        <input type="hidden" id="description_text_content" x-model="DonasiForm.deskripsi_lengkap">
+                    </div>    
                 </div>
 
                 <!-- Right Column -->
@@ -147,3 +152,30 @@
         </div>
     </main>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        quillEditor = new Quill('#text_editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['link'],
+                    ['clean']
+                ]
+            }
+        });
+        const data = JSON.parse(document.querySelector("script[data-upi]").textContent).result.data[0];
+        if (data.deskripsi_lengkap) {
+            const decodedHtml = decodeURIComponent(data.deskripsi_lengkap);
+            quillEditor.root.innerHTML = decodedHtml;
+        }
+    
+        quillEditor.on('text-change', function() {
+            const html = quillEditor.root.innerHTML;
+            const encodedHtml = encodeURIComponent(html);
+            document.getElementById('description_text_content').value = encodedHtml;
+        });
+    })
+</script>
