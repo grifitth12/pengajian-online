@@ -19,7 +19,23 @@
                     </div>
                 </div>
             </div>
-
+            <div class="stat-card group" x-data="{kajian: axios.get('/api/kajian/stats')}">
+                <div class="flex items-center">
+                    <div class="stat-icon yellow">
+                        <i class="fas fa-book-open text-white text-xl"></i>
+                    </div>
+                    <div class="stat-info">
+                        <p class="text-gray-600 font-medium">Total Kajian</p>
+                        <h3 class="text-3xl font-bold text-gray-900 mb-1"x-text="(await kajian).data.data.total_kajian">-</h3>
+                    </div>
+                </div>
+                <div class="mt-4 bg-yellow-50 rounded-xl p-3">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-yellow-600 font-medium">Kajian Aktif</span>
+                        <span class="text-yellow-800 font-bold" x-text="(await kajian).data.data.total_kajian_aktif">-</span>
+                    </div>
+                </div>
+            </div>
             <!-- Donasi -->
             <div
                 class="stat-card group" 
@@ -57,7 +73,7 @@
             </div>
         </div>
 
-        <div class="dash-card">
+        <div class="dash-card hidden">
             <!-- Kajian -->
             <div class="stat-card group" x-data="{kajian: axios.get('/api/kajian/stats')}">
                 <div class="flex items-center">
@@ -78,7 +94,7 @@
             </div>
 
             <!-- Pengguna -->
-            <div class="stat-card group">
+            <div class="stat-card group hidden">
                 <div class="flex items-center">
                     <div class="stat-icon purple">
                         <i class="fas fa-users text-white text-xl"></i>
@@ -104,7 +120,7 @@
 
     <!-- Quick Actions -->
     <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-green-500 hover:border-opacity-30">
+        <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl hidden transition-all duration-300 border border-gray-100 hover:border-green-500 hover:border-opacity-30">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-semibold text-gray-900">Aktivitas Terbaru</h3>
                 <i class="fas fa-clock text-gray-400"></i>
@@ -145,8 +161,8 @@
                 </a>
             </div>
         </div>
-        <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-green-500 hover:border-opacity-30">
-            <div class="flex items-center justify-between mb-4">
+        <div class="bg-white hidden p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-green-500 hover:border-opacity-30">
+            <div class="flex items-center justify-between mb-4" hidden>
                 <h3 class="text-lg font-semibold text-gray-900">Statistik Hari Ini</h3>
                 <i class="fas fa-chart-line text-gray-400"></i>
             </div>

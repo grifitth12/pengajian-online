@@ -51,12 +51,12 @@
         </div>
 
         <div class="stat-card">
-            <span class="stat-number" x-text="cetak_rupiah((await donasi).data.data.total_donasi_terkumpul)"></span>
+            <span class="stat-number" x-text="cetak_rupiah((await donasi).data.data.total_donasi_terkumpul)">-</span>
             <p class="stat-label">Total Donasi Terkumpul</p>
         </div>
 
         <div class="stat-card">
-            <span class="stat-number" x-text="(await donasi).data.data.total_donatur"></span>
+            <span class="stat-number" x-text="(await donasi).data.data.total_donatur">-</span>
             <p class="stat-label">Total Donatur</p>
         </div>
     </div>

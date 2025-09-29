@@ -44,7 +44,11 @@
         <div class="mt-3">
             <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
             <textarea required :value="(await pertemuan_i).data.data.deskripsi" id="deskripsi" x-model="pertemuanForm.deskripsi" rows="5" class="w-full px-4 h-16 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500"></textarea>
-        </div>   
+        </div>
+        <div class="mt-3">
+            <label for="rangkuman" class="block text-sm font-medium text-gray-700 mb-1">Rangkuman</label>
+            <textarea required :value="(await pertemuan_i).data.data.rangkuman" id="rangkuman" x-model="pertemuanForm.rangkuman" rows="5" class="w-full px-4 h-16 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500"></textarea>
+        </div>           
         <div class="mt-4" x-show="b">
             <label for="blog_text" class="block text-sm font-medium text-gray-700 mb-1">Blog Text</label>
             <div id="blog_text_editor_edit" class="border border-gray-300 rounded-lg" style="height: 200px;"></div>
