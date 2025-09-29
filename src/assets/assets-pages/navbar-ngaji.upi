@@ -359,10 +359,11 @@ body.notification-active {
             if (n) n.is_read = true;
         },
         deleteNotification(id) {
-            this.notifications = this.notifications.filter(x => x.id !== id);
+            this.notifications = this.notifications.filter(x => x.id_notifications !== id);
+            axios.put('/api/notifications/read/' + id)
         },
         markAllAsRead() {
-            this.notifications.forEach(n => n.is_read = true);
+            this.notifications.forEach(n => deleteNotification(n.id_notifications));
         }
      }"
      x-init="init()"
@@ -407,7 +408,7 @@ body.notification-active {
                 <button
                     class="notification-delete-btn"
                     aria-label="Hapus notifikasi"
-                    @click.stop="deleteNotification(note.id)"
+                    @click.stop="deleteNotification(note.id_notifications)"
                 >&times;</button>
             </li>
         </template>
@@ -419,7 +420,7 @@ body.notification-active {
         <p>Tidak ada notifikasi baru</p>
     </div>
 
-    <div class="notification-footer">
+    <div class="notification-footer hidden">
         <button id="markAllAsReadBtn" @click="markAllAsRead()">Tandai semua sudah dibaca</button>
     </div>
 </div>
