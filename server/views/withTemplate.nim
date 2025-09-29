@@ -23,7 +23,7 @@ proc loadMentorTemplate*(
         templ = readAll newFileStream("src/templates/mentorPanel.upi", fmRead)
         htmll = readAll newFileStream(html_file, fmRead)
         dataa = %*{"result" : data}
-        page = templ % ["adminContent", htmll] % ["dataUpi", $dataa]
+        page = templ % ["mentorContent", htmll] % ["dataUpi", $dataa]
 
     return page
 
