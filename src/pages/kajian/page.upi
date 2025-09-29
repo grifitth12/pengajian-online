@@ -64,7 +64,7 @@
                     <div class="relative w-full max-w-md">
                         <div class="absolute -inset-4 bg-emerald-200 rounded-2xl opacity-50 blur-lg"></div>
                         <div class="relative bg-white rounded-xl shadow-2xl overflow-hidden">
-                            <img src="{{thumbnail_url}}" alt="Thumbnail Kajian" class="w-full h-64 object-cover">
+                            <img alt="Thumbnail Kajian" class="w-full h-64 object-cover" src="/static/{{thumbnail_url}}">
                             <div class="p-6">
                                 <div class="flex items-center mb-4">
                                     <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mr-4">
