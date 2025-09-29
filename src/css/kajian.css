@@ -1,0 +1,330 @@
+/* ====== Design Tokens ====== */
+:root {
+    --bg: #ffffff;
+    --fg: #0f172a;
+    /* slate-900 */
+    --muted: #64748b;
+    /* slate-500 */
+    --brand: #059669;
+    /* emerald-600 */
+    --brand-700: #047857;
+    --surface: rgba(255, 255, 255, 0.95);
+    --ring: rgba(5, 150, 105, .35);
+    --card: #ffffff;
+    --shadow: 0 10px 20px -10px rgba(2, 6, 23, .25);
+    --radius: 16px;
+}
+
+/* Auto Dark Mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0b1220;
+        --fg: #e5e7eb;
+        --muted: #94a3b8;
+        --brand: #10b981;
+        --brand-700: #059669;
+        --surface: rgba(17, 24, 39, .6);
+        --card: #0f172a;
+        --shadow: 0 14px 30px -12px rgba(0, 0, 0, .55);
+    }
+}
+
+/* Smooth edges & default body */
+* {
+    box-sizing: border-box
+}
+
+html {
+    scroll-behavior: smooth
+}
+
+body {
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    color: var(--fg);
+    background: var(--bg);
+}
+
+/* ====== Reusable Helpers ====== */
+.container {
+    max-width: 1120px;
+    margin-inline: auto
+}
+
+.shadow-soft {
+    box-shadow: var(--shadow)
+}
+
+.rounded-2xl {
+    border-radius: calc(var(--radius) + 8px)
+}
+
+.rounded-xl {
+    border-radius: var(--radius)
+}
+
+.elevate {
+    transition: transform .35s cubic-bezier(.22, 1, .36, 1), box-shadow .35s
+}
+
+.elevate:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 28px 40px -28px rgba(2, 6, 23, .45)
+}
+
+.focus-ring:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 12px
+}
+
+/* ====== Your original classes – enhanced ====== */
+.gradient-bg {
+    background: linear-gradient(135deg, var(--brand) 0%, #10b981 100%);
+    color: #fff;
+}
+
+/* Navbar blur with subtle border + shadow */
+.navbar-blur {
+    -webkit-backdrop-filter: saturate(140%) blur(12px);
+    backdrop-filter: saturate(140%) blur(12px);
+    background: color-mix(in oklab, var(--surface) 90%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--fg) 12%, transparent);
+    box-shadow: 0 8px 24px -24px rgba(0, 0, 0, .35);
+}
+
+/* Mobile menu slide-in */
+.mobile-menu {
+    transform: translateX(100%);
+    transition: transform .35s cubic-bezier(.22, 1, .36, 1);
+}
+
+.mobile-menu.active {
+    transform: translateX(0)
+}
+
+/* Subtle dotted hero pattern */
+.hero-pattern {
+    --dot: color-mix(in srgb, var(--fg) 8%, transparent);
+    background-image: radial-gradient(circle at 25px 25px, var(--dot) 2px, transparent 2px);
+    background-size: 50px 50px;
+}
+
+/* Glass card with border & shadow */
+.glass-card {
+    background: var(--surface);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid color-mix(in oklab, var(--fg) 10%, transparent);
+    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+}
+
+/* Card hover (replaces your .card-hover) */
+.card-hover {
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition: transform .35s cubic-bezier(.22, 1, .36, 1), box-shadow .35s;
+}
+
+.card-hover:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 30px 50px -30px rgba(2, 6, 23, .55);
+}
+
+/* Article cover image with graceful loading */
+article .relative {
+    position: relative
+}
+
+article img {
+    inline-size: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+    opacity: 0;
+    transform: scale(1.02);
+    filter: saturate(1.05) contrast(1.02);
+    transition: opacity .5s ease, transform .6s ease;
+}
+
+article img[src] {
+    opacity: 1;
+    transform: scale(1)
+}
+
+/* Badge style (category / topic) */
+.badge,
+.badge-emerald {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-weight: 600;
+    font-size: .72rem;
+    letter-spacing: .2px;
+    padding: .35rem .7rem;
+    border-radius: 999px;
+    background: var(--brand);
+    color: #fff;
+    box-shadow: 0 6px 16px -12px var(--brand);
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    line-height: 1;
+    padding: .75rem 1.1rem;
+    transition: all .25s ease;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: var(--brand);
+    color: #fff
+}
+
+.btn-primary:hover {
+    background: var(--brand-700)
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--brand);
+    border-color: var(--brand)
+}
+
+.btn-outline:hover {
+    background: var(--brand);
+    color: #fff
+}
+
+/* “Loading” skeleton + shimmer */
+.upi-loading {
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: .55
+    }
+
+    50% {
+        opacity: 1
+    }
+}
+
+.skeleton {
+    background: linear-gradient(90deg, rgba(148, 163, 184, .18), rgba(148, 163, 184, .28), rgba(148, 163, 184, .18));
+    background-size: 200% 100%;
+    animation: shimmer 1.4s linear infinite;
+    border-radius: 12px;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0
+    }
+
+    100% {
+        background-position: -200% 0
+    }
+}
+
+/* Line clamp for descriptions */
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Subtle icon color unify */
+i {
+    color: var(--brand);
+}
+
+/* Fancy separators for meta blocks */
+.meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: .8rem;
+    color: var(--muted);
+}
+
+.meta>span {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    position: relative
+}
+
+.meta>span+span::before {
+    content: "";
+    inline-size: 4px;
+    block-size: 4px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--fg) 25%, transparent);
+    margin-inline-end: .25rem;
+}
+
+/* Card content spacing */
+.card-body {
+    padding: 1.25rem 1.25rem 1.5rem
+}
+
+/* Responsive grid polish (ensures nice gaps on big screens) */
+@media (min-width: 768px) {
+    .grid-responsive {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 2rem
+    }
+}
+
+@media (min-width: 1200px) {
+    .grid-responsive {
+        grid-template-columns: repeat(3, minmax(0, 1fr))
+    }
+}
+
+/* Nice scrollbar (only on desktops) */
+@media (hover:hover) {
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: color-mix(in oklab, var(--fg) 20%, transparent);
+        border-radius: 10px
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: color-mix(in oklab, var(--fg) 35%, transparent)
+    }
+}
+
+/* Reduce motion preference */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important
+    }
+}
+
+/* Utility: soft container padding for your page margin-top=100px case */
+main {
+    padding-inline: clamp(1rem, 3vw, 2rem)
+}
