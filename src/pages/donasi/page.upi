@@ -42,6 +42,7 @@
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
+    <div id="loading" class="flex" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; align-items: center; justify-content: center; z-index: 9999;"><div style="border: 4px solid #f3f3f3; border-top: 4px solid #2e8b57; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;"></div><style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style></div>
     <main x-data="{donasi:fetch_donasi(), rijal:{}}">
     <!-- Hero Section -->
     <section class="relative bg-white overflow-hidden">
@@ -68,23 +69,28 @@
 
     <!-- Donation Progress -->
     <section x-init="rijal = kadapi((await donasi).data.id_program_donasi)" class="bg-emerald-50 py-12">
-        <div x-transition x-show="(await rijal).status == 200" class="container mx-auto px-4">
+        <div x-transition class="container mx-auto px-4">
             <div class="bg-white rounded-xl shadow-sm p-6 md:p-8 max-w-4xl mx-auto">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-gray-800">Progress Donasi</h2>
                     <span class="text-emerald-600 font-bold">Aktif</span>
                 </div>
-                <div class="mb-6">
+                <div class="mb-6" x-transition x-show="(await rijal).status == 200">
                     <div class="flex justify-between mb-2">
                         <span class="text-gray-600">Terkumpul</span>
                         <span x-text="(await rijal).data.terkumpul" class="font-semibold text-emerald-600"></span>
                     </div>
                     <div class="progress-bar">
-                        <div x-bind:style="'width:' + hitung_persen((await rijal).data.terkumpul, (await donasi).data.target_donasi) + '%;'" class="progress-fill" style="width: 64%"></div>
+                        <div
+                            x-bind:style="'width:' + hitung_persen((await rijal).data.terkumpul, (await donasi).data.target_donasi) + '%;'"
+                            class="progress-fill"
+                            x-init="console.log(hitung_persen((await rijal).data.terkumpul, (await donasi).data.target_donasi))"
+                        >
+                        </div>
                     </div>
                     <div class="flex justify-between mt-2">
                         <span class="text-gray-600">Target: <span x-text="cetak_rupiah((await donasi).data.target_donasi)"></span></span>
-                        <span x-text="hitung_persen((await rijal).data.terkumpul, (await donasi).data.target_donasi)" class="text-gray-600"></span>
+                        <span x-text="hitung_persen((await rijal).data.terkumpul, (await donasi).data.target_donasi) + '%'" class="text-gray-600"></span>
                     </div>
                 </div>
                 
@@ -107,32 +113,16 @@
     </section>
 
     <!-- Description Section -->
-    <section class="py-12 bg-white">
+    <section class="py-12 bg-white" x-show="(await donasi).data.deskripsi_lengkap">
         <div class="container mx-auto px-4 max-w-4xl">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Tentang Program Ini</h2>
-            <div class="prose max-w-none text-gray-600">
-                <p x-text="(await rijal).data.deskripsi_lengkap">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perferendis dolor hic numquam distinctio qui doloremque dicta quidem odio dolorem id. Ab beatae ullam obcaecati laboriosam voluptatibus culpa itaque adipisci. At!</p>
-                
-                <p class="mt-4">Dana yang terkumpul akan digunakan untuk:</p>
-                <ul class="list-disc pl-5 mt-2 space-y-2">
-                    <li>Pembelian paket sembako untuk keluarga kurang mampu</li>
-                    <li>Bantuan biaya pengobatan bagi warga yang sakit</li>
-                    <li>Pendidikan anak-anak dari keluarga prasejahtera</li>
-                    <li>Program pemberdayaan ekonomi kecil</li>
-                </ul>
-                
-                <p class="mt-4">Setiap rupiah yang Anda donasikan akan memberikan dampak besar bagi kehidupan mereka. Kami berkomitmen untuk menggunakan dana secara transparan dan tepat sasaran.</p>
-                
-                <div class="bg-emerald-50 p-4 rounded-lg mt-6 border border-emerald-100">
-                    <h3 class="font-semibold text-emerald-800 mb-2">Update Terbaru</h3>
-                    <p class="text-gray-700">19 Agustus 2025 - Program telah berjalan selama 2 minggu dan telah membantu 15 keluarga di daerah Padang. Terima kasih atas dukungan semua donatur!</p>
-                </div>
+            <div class="prose max-w-none text-gray-600" x-html="decodeURIComponent((await donasi).data.deskripsi_lengkap)">
             </div>
         </div>
     </section>
 
     <!-- Testimonials -->
-    <section class="py-12 bg-gray-50">
+    <section class="py-12 bg-gray-50 hidden">
         <div class="container mx-auto px-4 max-w-4xl">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Kata Mereka</h2>
             <div class="grid md:grid-cols-2 gap-6">

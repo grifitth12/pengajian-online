@@ -13,11 +13,11 @@
     async function create(params) {
         try {
             // 1. Insert donation
+            let blog_content = document.getElementById("description_text_content").value
+            params.deskripsi_lengkap = blog_content ? blog_content : null            
             let response = await axios.post("/api/donasi/insert", params)
             let row = response.data.data[0]
             let id_program_donasi = row?.id_program_donasi
-            console.log(response.data)
-            console.log(row)
             if (!id_program_donasi) {
                 alert("Failed to create donasi, backend didn’t return ID!")
                 return
@@ -83,6 +83,7 @@
     async function close_popup() {
         document.getElementById("popup").classList.add("hidden")
     }
+
 </script>
 <!-- Main Content -->
 <div id="upi-1" id="upi-1" upi-title="Create Donasi" class="content flex-1 overflow-auto">
@@ -93,7 +94,7 @@
                 <div class="flex justify-between items-center">
                     <h2 class="text-xl font-semibold text-gray-800">Create Donasi</h2>
                     <button @click="create(DonasiForm)" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center">
-                        <i class="fas fa-save mr-2"></i> Save Changes
+                        <i class="fas fa-save mr-2"></i> Create
                     </button>
                 </div>
             </div>
@@ -106,18 +107,11 @@
                         <label for="judul" class="block text-sm font-medium text-gray-700 mb-1">Judul donasi</label>
                         <input type="text" x-model="DonasiForm.nama_program" id="judul" :value="DonasiForm.nama_program" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
                     </div>
-                    <!-- Deskripsi -->
-                    <div>
-                        <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-                        <textarea id="deskripsi" x-model="DonasiForm.deskripsi" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" x-text="DonasiForm.deskripsi"></textarea>
-                    </div>    
-                    <!-- target-donasi -->
-                    <div>
-                        <label for="target-donasi" class="block text-sm font-medium text-gray-700 mb-1">Target Donasi</label>
-                        <input type="number" x-model="DonasiForm.target_donasi" id="target-donasi" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
-                    </div>
-                    <!-- status -->    
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="target-donasi" class="block text-sm font-medium text-gray-700 mb-1">Target Donasi</label>
+                            <input type="number" x-model="DonasiForm.target_donasi" id="target-donasi" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
+                        </div>                        
                         <div>
                             <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
                             <select id="status" x-model="DonasiForm.status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
@@ -126,7 +120,17 @@
                                 <option value="selesai">Selesai</option>
                             </select>
                         </div>
-                    </div>          
+                    </div>                      
+                    <!-- Deskripsi -->
+                    <div>
+                        <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+                        <textarea id="deskripsi" x-model="DonasiForm.deskripsi" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" x-text="DonasiForm.deskripsi"></textarea>
+                    </div>    
+                    <div>
+                        <label for="simsalabim" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Lengkap</label>
+                        <div id="text_editor" class="border border-gray-300" style="height: 200px;"></div>
+                        <input type="hidden" id="description_text_content" x-model="DonasiForm.deskripsi_lengkap">
+                    </div>        
                 </div>
 
 
@@ -148,22 +152,31 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- qrCode-->
-                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Qr code</label>
-                        <div class="mt-1 flex flex-col items-center">
-                            <img id="qrCode" src="http://127.0.0.1:8080/src/assets/images/banner.png" alt="qrCodeView" class="qrCodeView w-full mb-2 rounded-lg border border-gray-300">
-                            <div x-model="donasi.gambar" class="flex space-x-2">
-                                <input type="file" id="qrCodeUpload" class="hidden" accept="image/*">
-                                <button onclick="document.getElementById('qrCodeUpload').click()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
-                                    <i class="fas fa-upload mr-1"></i> Upload
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </main>
 </div>
+<script>
+    if (typeof Quill !== 'undefined') {
+        quillEditor = new Quill('#text_editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['link'],
+                    ['clean']
+                ]
+            }
+        });
+        
+        // Update hidden input when editor content changes
+        quillEditor.on('text-change', function() {
+            const html = quillEditor.root.innerHTML;
+            const encodedHtml = encodeURIComponent(html);
+            document.getElementById('description_text_content').value = encodedHtml;
+        });
+    }    
+</script>

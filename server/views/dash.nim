@@ -1,12 +1,13 @@
 import
     prologue,
-    withTemplate
+    withTemplate,
+    streams
 
 proc index*(ctx: Context) {.async.} =
     resp generalTemplate("src/pages/index.upi", "Platform Belajar Ngaji Terpercaya")
 
 proc profile*(ctx: Context) {.async.} =
-    await ctx.staticFileResponse("profile.html", "src/pages/profile")
+    resp readAll newFileStream("src/pages/profile/profile.upi")        
 
 proc daftar_mentor*(ctx: Context) {.async.} =
     await ctx.staticFileResponse("daftar_mentor.html", "src")

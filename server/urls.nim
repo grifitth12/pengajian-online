@@ -30,15 +30,15 @@ let
   ]
   adminPatterns* = @[
     pattern("/", adminIndex, @[HttpGet]),
-    pattern("/manage/{source}", render_manage_index, @[HttpGet])
+    pattern("/manage/{source}", render_manage_index, @[HttpGet]),
+    pattern("/manage/{model}/{id}", triyono, @[HttpGet])
   ]
-  managePatterns* = @[
-    pattern("/kelas/{id_kelas}", manageKelas, @[HttpGet]),
-    pattern("/sedekah/{slug}", manageSedekah, @[HttpGet]),
-    pattern("/mentor/{slug}", manageMentor, @[HttpGet]),
-    pattern("/kajian/{slug}", manageKajian, @[HttpGet])
+  mentorPatterns* = @[
+    pattern("/", mentorIndex, @[HttpGet]),
+    pattern("/manage/{source}", render_manage_index_mentor, @[HttpGet])
   ]
   createPatterns* = @[
     pattern("/donasi", createDonasi, @[HttpGet]),
     pattern("/kajian", createKajian, @[HttpGet]),
+    pattern("/kelas", createkelas, @[HttpGet])
   ]

@@ -3,7 +3,8 @@ import
   prologue/middlewares/staticfile
 
 import 
-  urls
+  urls,
+  middleware
 
 let
   env = loadPrologueEnv(".env")
@@ -16,11 +17,13 @@ let
 var app = newApp(settings = settings)
 
 app.use(staticFileMiddleware("/src"))
+app.use(forAdmin())
+
 app.addRoute(urls.indexPatterns, "/")
 app.addRoute(urls.kelasPatterns, "/kelas")
+app.addRoute(urls.adminPatterns, "/admin")
+app.addRoute(urls.mentorPatterns, "/mentor")
 app.addRoute(urls.kajianPatterns, "/kajian")
 app.addRoute(urls.donasiPatterns, "/donasi")
-app.addRoute(urls.adminPatterns, "/admin")
-app.addRoute(urls.managePatterns, "/manage")
 app.addRoute(urls.createPatterns, "/create")
 app.run()

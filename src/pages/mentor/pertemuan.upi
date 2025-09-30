@@ -3,7 +3,7 @@
         return (
             await axios.get(
                 query ?
-                "/api/kelas/cari?full=true&q=" + query :
+                "/api/kelas/cari?q=" + query :
                 "/api/kelas/carisemua", {
                     withCredentials: true 
                 }
@@ -24,7 +24,10 @@
                 { is_accepted: false }
             )
         }
-        location.reload()
+
+        if (rijal.status == 204) {
+            location.reload() 
+        }
     }
 </script>
 
@@ -58,8 +61,7 @@
                         <th>Select</th>
                         <th>Nama Kelas</th>
                         <th>Mentor</th>
-                        <th>Murid Terdaftar</th>
-                        <th>Pertemuan</th>
+                        <th>Platform</th>
                         <th>Status Acc</th>
                         <th>Status</th>
                     </tr>
@@ -74,13 +76,12 @@
                                        class="w-4 h-4 text-green-600">
                             </td>
                             <td>
-                                <a :href="'kelas/' + kelas.id_kelas" 
+                                <a :href="'/manage/kelas/' + kelas.id_kelas" 
                                    x-text="kelas.judul"
                                    class="text-green-600 hover:text-green-800 font-medium"></a>
                             </td>  
                             <td x-text="kelas.pengguna.nama_lengkap" class="text-gray-700"></td>
-                            <td x-text="kelas.log_kelas[0].count || '-'" class="text-gray-700"></td>
-                            <td x-text="kelas.pertemuan_kelas[0].count || '-'" class="text-gray-700"></td>
+                            <td x-text="kelas.platform || '-'" class="text-gray-700"></td>
                             <td>
                                 <span
                                     :class="kelas.is_accepted ? 'status-badge status-active' : 'status-badge bg-red-100 text-red-800'"

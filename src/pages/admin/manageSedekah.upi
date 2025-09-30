@@ -80,7 +80,7 @@
                                        class="w-4 h-4 text-green-600">
                             </td>
                             <td>
-                                <a :href="'/manage/sedekah/' + sedekah.id_program_donasi" 
+                                <a :href="'sedekah/' + sedekah.id_program_donasi" 
                                    x-text="sedekah.nama_program"
                                    class="text-green-600 hover:text-green-800 font-medium"></a>
                             </td>
