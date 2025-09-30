@@ -98,87 +98,37 @@
       <h2 class="text-lg font-semibold text-primary-800">Kelas Aktif</h2>
       <button class="flex items-center space-x-1 text-primary-600 hover:text-primary-800">
         <i data-feather="plus" class="w-4 h-4"></i>
-        <span>Tambah Kelas</span>
+        <span @click="window.location.href = '/create/kelas'">Tambah Kelas</span>
       </button>
     </div>
-    <div class="divide-y divide-secondary-100">
+    <div class="divide-y divide-secondary-100" x-data="{kelas: axios.get('/api/kelas/carisemua')}">
       <!-- Class Item -->
-      <div class="p-6 hover:bg-primary-50 transition-colors">
-        <div class="flex justify-between items-start">
-          <div>
-            <h3 class="text-lg font-semibold text-primary-700">Kelas A - Dasar Tajwid</h3>
-            <p class="text-sm text-secondary-500">Senin & Kamis, 08:00 - 09:30</p>
-            <div class="mt-2 flex space-x-2">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
-                15 Murid
-              </span>
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                Aktif
-              </span>
+      <template x-for="kls in (await kelas).data.data">
+        <div class="p-6 hover:bg-primary-50 transition-colors">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="text-lg font-semibold text-primary-700" x-text="kls.judul"></h3>
+              <p class="text-sm text-secondary-500">Senin & Kamis, 08:00 - 09:30</p>
+              <div class="mt-2 flex space-x-2">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+                  15 Murid
+                </span>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  Aktif
+                </span>
+              </div>
+            </div>
+            <div class="flex space-x-2">
+              <button class="p-2 rounded-full hover:bg-primary-100 text-primary-600">
+                <i data-feather="edit" class="w-4 h-4"></i>
+              </button>
+              <button class="p-2 rounded-full hover:bg-primary-100 text-primary-600">
+                <i data-feather="more-vertical" class="w-4 h-4"></i>
+              </button>
             </div>
           </div>
-          <div class="flex space-x-2">
-            <button class="p-2 rounded-full hover:bg-primary-100 text-primary-600">
-              <i data-feather="edit" class="w-4 h-4"></i>
-            </button>
-            <button class="p-2 rounded-full hover:bg-primary-100 text-primary-600">
-              <i data-feather="more-vertical" class="w-4 h-4"></i>
-            </button>
-          </div>
         </div>
-      </div>
-      
-      <!-- Class Item -->
-      <div class="p-6 hover:bg-primary-50 transition-colors">
-        <div class="flex justify-between items-start">
-          <div>
-            <h3 class="text-lg font-semibold text-primary-700">Kelas B - Fiqih</h3>
-            <p class="text-sm text-secondary-500">Selasa & Jumat, 10:00 - 11:30</p>
-            <div class="mt-2 flex space-x-2">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
-                12 Murid
-              </span>
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                Aktif
-              </span>
-            </div>
-          </div>
-          <div class="flex space-x-2">
-            <button class="p-2 rounded-full hover:bg-primary-100 text-primary-600">
-              <i data-feather="edit" class="w-4 h-4"></i>
-            </button>
-            <button class="p-2 rounded-full hover:bg-primary-100 text-primary-600">
-              <i data-feather="more-vertical" class="w-4 h-4"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Class Item -->
-      <div class="p-6 hover:bg-primary-50 transition-colors">
-        <div class="flex justify-between items-start">
-          <div>
-            <h3 class="text-lg font-semibold text-primary-700">Kelas C - Tahfidz</h3>
-            <p class="text-sm text-secondary-500">Rabu & Sabtu, 13:00 - 14:30</p>
-            <div class="mt-2 flex space-x-2">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
-                8 Murid
-              </span>
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                Aktif
-              </span>
-            </div>
-          </div>
-          <div class="flex space-x-2">
-            <button class="p-2 rounded-full hover:bg-primary-100 text-primary-600">
-              <i data-feather="edit" class="w-4 h-4"></i>
-            </button>
-            <button class="p-2 rounded-full hover:bg-primary-100 text-primary-600">
-              <i data-feather="more-vertical" class="w-4 h-4"></i>
-            </button>
-          </div>
-        </div>
-      </div>
+      </template>
     </div>
   </div>
 
