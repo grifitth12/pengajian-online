@@ -3,6 +3,9 @@ import
     strutils,
     json
 
+proc noTemplate*(html_file: string) : string =
+    return readAll newFileStream(html_file, fmRead)
+
 proc loadAdminTemplate*(
     html_file: string,
     data: auto = ""
@@ -23,7 +26,7 @@ proc loadMentorTemplate*(
         templ = readAll newFileStream("src/templates/mentorPanel.upi", fmRead)
         htmll = readAll newFileStream(html_file, fmRead)
         dataa = %*{"result" : data}
-        page = templ % ["adminContent", htmll] % ["dataUpi", $dataa]
+        page = templ % ["mentorContent", htmll] % ["dataUpi", $dataa]
 
     return page
 

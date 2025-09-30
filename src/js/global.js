@@ -1,3 +1,12 @@
+function login() {
+    axios.get("/api/login?provider=google").then(
+        response => {
+            window.localStorage.setItem("continue_to", window.location.href)
+            window.location.href = response.data.redirect_url
+        }
+    )
+}
+
 function cetak_tenggal(tanggal) {
     const d = new Date(tanggal);
 

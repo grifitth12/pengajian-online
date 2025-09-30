@@ -71,7 +71,7 @@
                 </div>
 
                 <div id="Blog" class="hidden rounded-lg overflow-hidden p-6 mb-6 shadow">
-                    <p class="text-black" x-text="(await pertemuan).data.blog_text"></p>
+                    <p class="text-black" x-html="decodeURIComponent((await pertemuan).data.blog_text)"></p>
                 </div>
                 
                 <div id="External" class="hidden prose max-w-none mb-6">

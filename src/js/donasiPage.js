@@ -1,3 +1,14 @@
+async function markui(id_donasi) {
+      const form = document.getElementById("donasi_form")
+      const data = new FormData(form)
+      await axios({
+        method: "post",
+        url: "/api/donasi/donasi/" + id_donasi,
+        data: data,
+      })
+      alert("kayanya udah")    
+}
+
 async function fetch_data_donasi(slug) {
     slug = slug || window.location.href.split("/").at(-1)
     const data = await axios.get('/api/donasi/' + slug)
@@ -5,7 +16,7 @@ async function fetch_data_donasi(slug) {
 }
     
     async function kadapi(id_donasi) {
-        let url = "/api/donasi/" + id_donasi + "/inspect"
+        let url = "/api/donasi/inspect/" + id_donasi
             try {
                 const response = await axios.get(url);
                 return response.data
@@ -20,6 +31,7 @@ async function fetch_donasi() {
     let url = "/api/donasi/" + slug
     try {
         const response = await axios.get(url);
+        document.getElementById("loading").classList.add("hidden")
         return response.data
     } catch (error) {
         if (error.response) {
@@ -50,14 +62,4 @@ async function fetch_donasi() {
                 // Add active class to clicked card
                 card.classList.add('border-emerald-500', 'bg-emerald-50');
             });
-        });
-
-        // Simulate donation progress animation
-        window.addEventListener('load', () => {
-            const progressFill = document.querySelector('.progress-fill');
-            progressFill.style.width = '0%';
-            
-            setTimeout(() => {
-                progressFill.style.width = '64%';
-            }, 300);
         });
