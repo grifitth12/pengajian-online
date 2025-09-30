@@ -58,7 +58,7 @@
             async fetchUser(){
                 try {
                     this.loading = true;
-                    let res = await axios.get("http://localhost:5501/api/profile");
+                    let res = await axios.get("/api/profile");
                     let data = res.data;
 
                     this.user = {
@@ -106,7 +106,7 @@
 
             async saveProfile() {
                 try {
-                    await axios.post("http://localhost:5501/api/profile", {
+                    await axios.post("/api/profile", {
                         nama_lengkap: this.user.nama_lengkap.trim(),
                         bio: this.user.bio,
                         kontak: this.user.kontak
@@ -154,7 +154,7 @@
         <div class="mobile-sidebar" :class="{'active': mobileNavOpen}" @click.self="closeMobileNav()">
             <a href="#" class="nav-item" :class="{'active': activeTab === 'profile'}" @click.prevent="activeTab = 'profile'; closeMobileNav()">Edit Profil</a>
             <a href="#" class="nav-item" :class="{'active': activeTab === 'mentor'}" @click.prevent="activeTab = 'mentor'; closeMobileNav()">Mentor</a>
-            <a href="#" class="nav-item" :class="{'active': activeTab === 'activity'}" @click.prevent="activeTab = 'activity'; closeMobileNav()">Activity Log</a>
+            <a href="#" class="nav-item" :cla ss="{'active': activeTab === 'activity'}" @click.prevent="activeTab = 'activity'; closeMobileNav()">Activity Log</a>
         </div>
 
         <!-- Main Content -->

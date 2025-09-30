@@ -2,11 +2,23 @@
     async function get_data_kajian(query) {
         return (
             await axios.get(
+                query ?
+                "/api/kajian/cari?full=true&q=" + query :
                 "/api/kajian/carisemua", {
                     withCredentials: true 
                 }
             )
         ).data
+    } 
+    async function delete_kajian(id_kajian) {
+        let response
+        try {
+            response = await axios.delete(
+                "/api/kajian/delete/" + id_kajian, {withCredentials: true})
+        } catch (err) {
+            response = err.response
+        }
+        window.location.reload()
     }
 </script>
 
@@ -16,12 +28,11 @@
             <h3>Manage Kajian</h3>
             <div class="action-buttons">
                 <button
-                    class="btn"
-                    :class="data_kajian && data_kajian.split(',')[1] == 'true' ? 'btn-danger' : 'btn-success'"
-                    x-text="data_kajian && data_kajian.split(',')[1] == 'true' ? 'Reject' : 'Accept'"
-                    @click="accept(data_kajian.split(','))"
+                    class="btn btn-danger"
+                    x-text="'Delete'"
+                    @click="delete_kajian(data_kajian)"
                     x-show="data_kajian">
-                </button>
+                </button>                     
                 <button class="btn btn-success">
                     <i class="fas fa-plus mr-2"></i>
                     <a href="/create/kajian" class="text-white">Tambah Kajian</a>
@@ -58,18 +69,18 @@
                             <td>
                                 <input type="radio" 
                                        x-model="data_kajian" 
-                                       :value="[kajian.id_kajian]"
+                                       :value="kajian.id_kajian"
                                        class="w-4 h-4 text-green-600">
                             </td>
                             <td>
-                                <a :href="'/manage/kajian/' + kajian.id_kajian" 
+                                <a :href="'kajian/' + kajian.id_kajian" 
                                    x-text="kajian.judul"
                                    class="text-green-600 hover:text-green-800 font-medium"></a>
                             </td>  
                             <td x-text="kajian.pemateri" class="text-gray-700"></td>
                             <td x-text="kajian.deskripsi" class="text-gray-700 max-w-xs truncate"></td>
-                            <td x-text="kajian.tanggal || '-'" class="text-gray-700"></td>  
-                            <td x-text="kajian.waktu_mulai || '-'" class="text-gray-700"></td>   
+                            <td x-text="cetak_tenggal(kajian.tanggal) || '-'" class="text-gray-700"></td>  
+                            <td x-text="cetak_tenggal(kajian.waktu_mulai) || '-'" class="text-gray-700"></td>   
                             <td x-text="kajian.lokasi || '-'" class="text-gray-700"></td>
                             <td x-text="kajian.alamat" class="text-gray-700 max-w-xs truncate"></td>                
                             <td>

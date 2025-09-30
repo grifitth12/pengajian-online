@@ -1,0 +1,525 @@
+<link rel="stylesheet" href="/src/css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+/* Mencegah scroll pada body saat notifikasi mobile aktif */
+body.notification-active {
+    overflow: hidden;
+}
+
+/* Pastikan container header memiliki posisi relatif */
+.header-container {
+    position: relative;
+}
+
+/* Styling Panel Notifikasi Modern & Responsif */
+.notification-panel {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) scale(0.98);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 12px;
+    width: 380px;
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* State Aktif untuk Menampilkan Panel */
+.notification-panel.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+        
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.notification-header h2 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #212529;
+}
+
+.notification-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #adb5bd;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    transition: color 0.2s ease;
+}
+
+.notification-close-btn:hover {
+    color: #495057;
+}
+
+.notification-list {
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem 0;
+    max-height: 400px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+/* Custom Scrollbar */
+.notification-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.notification-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.notification-list::-webkit-scrollbar-thumb {
+    background: #ced4da;
+    border-radius: 3px;
+}
+
+.notification-list::-webkit-scrollbar-thumb:hover {
+    background: #adb5bd;
+}
+
+.notification-item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    /* Padding kanan ditambah agar teks tidak menabrak tombol hapus */
+    padding: 0.75rem 3.5rem 0.75rem 1.25rem; 
+    cursor: pointer;
+    border-bottom: 1px solid #f1f3f5;
+    transition: background-color 0.2s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item:hover {
+    background-color: #f8f9fa;
+}
+        
+.notification-item.unread {
+    background-color: #f1f7ff;
+}
+        
+.notification-icon {
+    font-size: 1rem;
+    color: #339af0;
+    margin-top: 3px;
+    width: 25px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.notification-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #495057;
+}
+
+.notification-content p strong {
+    color: #212529;
+    font-weight: 500;
+}
+
+.notification-time {
+    font-size: 0.75rem;
+    color: #868e96;
+    margin-top: 0.25rem;
+}
+
+/* Tampilan Jika Notifikasi Kosong */
+.notification-empty-state {
+    display: none;
+    text-align: center;
+    padding: 3rem 1.25rem;
+    color: #adb5bd;
+}
+
+.notification-empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #e9ecef;
+}
+
+.notification-panel.is-empty .notification-list,
+.notification-panel.is-empty .notification-footer {
+    display: none;
+}
+
+.notification-panel.is-empty .notification-empty-state {
+    display: block;
+}
+
+.notification-footer {
+    padding: 0.75rem;
+    text-align: center;
+    background-color: #f8f9fa;
+    border-top: 1px solid #f1f3f5;
+}
+
+.notification-footer a {
+    text-decoration: none;
+    color: #339af0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.notification-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Tombol Hapus & Animasi */
+.notification-delete-btn {
+    position: absolute;
+    top: 50%;
+    right: 1.25rem;
+    transform: translateY(-50%);
+    background-color: #e9ecef;
+    border: none;
+    color: #868e96;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 1rem;
+    line-height: 24px;
+    text-align: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.notification-item:hover .notification-delete-btn {
+    opacity: 1;
+}
+
+.notification-delete-btn:hover {
+    background-color: #f03e3e;
+    color: #fff;
+}
+
+.notification-item.deleting {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+/* === TAMBAHKAN DI AKHIR BLOK CSS === */
+
+/* Styling untuk tombol di footer notifikasi */
+.notification-footer button {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit; /* Menggunakan font yang sama dengan body */
+    text-decoration: none;
+    color: #339af0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.notification-footer button:hover {
+    text-decoration: underline;
+}
+
+/* Style saat tombol dinonaktifkan */
+.notification-footer button:disabled {
+    color: #adb5bd;
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
+/* === Gaya Responsif untuk Mobile & Tablet === */
+@media (max-width: 768px) {
+    .notification-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        margin-top: 0;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        transform: translateY(-100%);
+    }
+
+    .notification-panel.active {
+        transform: translateY(0);
+    }
+
+    .notification-list {
+        max-height: none;
+    }
+}
+    </style>
+</head>
+<body>
+
+<header class="header" id="header">
+    <div class="header-container">
+        <div class="logo">
+            <img src="/src/assets/images/logo.png" alt="DonasiKu Logo">
+        </div>
+        <h1 class="header-title"></h1>
+        <nav class="nav">
+            <button class="bell-btn">
+                <img src="/src/assets/images/bell.png" alt="Notifikasi">
+            </button>
+            <a href="/" class="nav-link">Home</a>
+            <a href="#" class="nav-link">About</a>
+            <a href="/kajian" class="nav-link">Kajian</a>
+            <a href="/kelas" class="nav-link">Kelas</a> 
+            <a href="/src/pages/searchpage.html" class="nav-link" aria-label="Search">
+                <i class="fas fa-search"></i>
+            </a>
+            <a href="/profile" x-show="auth" button class="profile-btn" id="profileBtn">
+                <img src="/src/assets/images/WhatsApp Image 2025-08-05 at 14.26.06.jpeg" alt="Profile" class="profile-img" id="profileImg">
+            </a>
+            <div class="btn-group" @click="login" x-show="!auth">
+                <a class="btn btn-primary">Login</a>
+            </div>
+        </nav>
+        <button id="hamburger" class="hamburger" aria-label="Toggle menu" aria-controls="mobile-menu" aria-expanded="false">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+        </button>
+        <nav id="mobile-menu" class="menu hidden" role="navigation">
+            <div x-show="!auth">
+                <a href="login.html" class="btn btn-primary">Masuk</a>
+                <a href="register.html" class="btn btn-secondary">Daftar</a>
+            </div>
+            <a href="/src/pages/profile/profile.html" x-show="auth" class="nav-link" button class="profile-btn" id="profileBtnMobile">
+               <img src="/src/assets/images/WhatsApp Image 2025-08-05 at 14.26.06.jpeg" alt="Profile" class="profile-img" id="profileImgMobile">Profile
+            </a>
+            <a href="#Home" class="nav-link">Home</a>
+            <a href="/src/pages/about.html" class="nav-link">About</a>
+            <a href="#" class="nav-link">Campaigns</a>
+            <a href="#" class="nav-link">Contact</a>
+        </nav>
+
+<div class="notification-panel" id="notificationPanel"
+     x-data="{
+        notifications: [],
+        loading: true,
+        error: null,
+        endpoint: '/api/notifications/my',
+        init() {
+            axios.get(this.endpoint)
+                .then(res => {
+                    this.notifications = Array.isArray(res.data?.data) ? res.data.data : [];
+                })
+                .catch(err => {
+                    console.error('Gagal memuat notifikasi', err);
+                    this.error = 'Gagal memuat notifikasi';
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+        relativeTime(iso) {
+            try {
+                const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+                if (diff < 60) return `${diff} detik yang lalu`;
+                const mins = Math.floor(diff / 60);
+                if (mins < 60) return `${mins} menit yang lalu`;
+                const hours = Math.floor(mins / 60);
+                if (hours < 24) return `${hours} jam yang lalu`;
+                const days = Math.floor(hours / 24);
+                return `${days} hari yang lalu`;
+            } catch (e) {
+                return '';
+            }
+        },
+        markAsRead(id) {
+            const n = this.notifications.find(x => x.id === id);
+            if (n) n.is_read = true;
+        },
+        deleteNotification(id) {
+            this.notifications = this.notifications.filter(x => x.id_notifications !== id);
+            axios.put('/api/notifications/read/' + id)
+        },
+        markAllAsRead() {
+            this.notifications.forEach(n => deleteNotification(n.id_notifications));
+        }
+     }"
+     x-init="init()"
+     :class="{ 'is-empty': !loading && notifications.length === 0 }"
+>
+    <div class="notification-header">
+        <h2>Notifikasi</h2>
+    </div>
+
+    <!-- Loading state -->
+    <ul class="notification-list" id="notificationList" x-show="loading" style="display: none;">
+        <li class="notification-item">
+            <div class="notification-content">
+                <p><strong>Memuat notifikasi…</strong></p>
+                <div class="notification-time">Tunggu sebentar</div>
+            </div>
+        </li>
+    </ul>
+
+    <!-- Error state -->
+    <div class="notification-empty-state" x-show="!loading && error" style="display: none;">
+        <i class="fas fa-bell-slash"></i>
+        <p x-text="error"></p>
+    </div>
+
+    <!-- Notification list (dynamis) -->
+    <ul class="notification-list" id="notificationList" x-show="!loading && notifications.length > 0" style="display: none;">
+        <template x-for="note in notifications" :key="note.id">
+            <li
+                class="notification-item"
+                :class="{ 'unread': !note.is_read }"
+            >
+                <div class="notification-content" @click="markAsRead(note.id)">
+                    <p>
+                        <strong x-text="note.title ? note.title : (note.type ? note.type : 'Notifikasi')"></strong> <br>
+                        <span x-html="note.message ? (' ' + note.message) : ''"></span>
+                    </p>
+                    <div class="notification-time" x-text="relativeTime(note.created_at)"></div>
+                </div>
+
+                <!-- tombol hapus -->
+                <button
+                    class="notification-delete-btn"
+                    aria-label="Hapus notifikasi"
+                    @click.stop="deleteNotification(note.id_notifications)"
+                >&times;</button>
+            </li>
+        </template>
+    </ul>
+
+    <!-- Empty state -->
+    <div class="notification-empty-state" x-show="!loading && notifications.length === 0 && !error" style="display: none;">
+        <i class="fas fa-bell-slash"></i>
+        <p>Tidak ada notifikasi baru</p>
+    </div>
+
+    <div class="notification-footer hidden">
+        <button id="markAllAsReadBtn" @click="markAllAsRead()">Tandai semua sudah dibaca</button>
+    </div>
+</div>
+
+</header>
+<script>
+ document.addEventListener('DOMContentLoaded', function () {
+    const bellButton = document.querySelector('.bell-btn');
+    const notificationPanel = document.getElementById('notificationPanel');
+    const notificationList = document.getElementById('notificationList');
+    const body = document.body;
+    const markAllAsReadBtn = document.getElementById('markAllAsReadBtn');
+
+    function openPanel() {
+        notificationPanel.classList.add('active');
+        body.classList.add('notification-active');
+    }
+
+    function closePanel() {
+        notificationPanel.classList.remove('active');
+        body.classList.remove('notification-active');
+    }
+
+    function checkEmptyState() {
+        if (notificationList.children.length === 0) {
+            notificationPanel.classList.add('is-empty');
+        } else {
+            notificationPanel.classList.remove('is-empty');
+        }
+    }
+    
+    function checkUnreadState() {
+        const unreadItems = notificationList.querySelectorAll('.notification-item.unread');
+        markAllAsReadBtn.disabled = unreadItems.length === 0;
+    }
+
+    bellButton.addEventListener('click', function (event) {
+        event.stopPropagation();
+        const isActive = notificationPanel.classList.contains('active');
+        if (isActive) {
+            closePanel();
+        } else {
+            openPanel();
+        }
+        checkUnreadState();
+    });
+
+    document.addEventListener('click', function (event) {
+        const isActive = notificationPanel.classList.contains('active');
+        if (isActive && !notificationPanel.contains(event.target) && !bellButton.contains(event.target)) {
+            closePanel();
+        }
+    });
+
+    // Logika hapus notifikasi
+    notificationList.addEventListener('click', function(event) {
+        const deleteButton = event.target.closest('.notification-delete-btn');
+        if (deleteButton) {
+            const itemToDelete = deleteButton.closest('.notification-item');
+            
+            if (itemToDelete) {
+                itemToDelete.classList.add('deleting');
+                setTimeout(() => {
+                    itemToDelete.remove();
+                    checkEmptyState();
+                    checkUnreadState();
+                }, 300);
+            }
+        }
+    });
+
+    markAllAsReadBtn.addEventListener('click', function() {
+        const unreadItems = notificationList.querySelectorAll('.notification-item.unread');
+        
+        unreadItems.forEach(item => {
+            item.classList.remove('unread');
+        });
+
+        checkUnreadState();
+    });
+
+    checkEmptyState();
+    checkUnreadState();
+});  
+  
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+async function coba() {
+    await sleep(1000)
+    const btn = document.getElementById('hamburger');
+    const menu = document.getElementById('mobile-menu');
+
+    btn.addEventListener('click', () => {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!expanded));
+    btn.classList.toggle('active');
+    if (menu) menu.classList.toggle('hidden');
+    });
+}
+coba()
+</script>

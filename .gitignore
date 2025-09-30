@@ -1,2 +1,5 @@
 build
 .env
+build/*.exe
+*.exe
+app.exe

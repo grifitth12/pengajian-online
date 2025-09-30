@@ -2,78 +2,99 @@
     <div class="stats-grid">
         <div class="dash-card">
             <!-- Kelas -->
-            <div class="stat-card group">
+            <div class="stat-card group" x-data="{kelas: axios.get('/api/kelas/stats')}">
                 <div class="flex items-center">
                     <div class="stat-icon blue">
                         <i class="fas fa-chalkboard-teacher text-white text-xl"></i>
                     </div>
                     <div class="stat-info">
                         <p class="text-gray-600 font-medium">Total Kelas</p>
-                        <h3 x-text="stats.kelas || '12'" class="text-3xl font-bold text-gray-900 mb-1"></h3>
-                        <div class="flex items-center text-sm">
-                            <span class="text-green-600 font-medium">+12%</span>
-                            <span class="text-gray-500 ml-1">dari bulan lalu</span>
-                        </div>
+                        <h3 class="text-3xl font-bold text-gray-900 mb-1" x-text="(await kelas).data.data.total_kelas">-</h3>
                     </div>
                 </div>
                 <div class="mt-4 bg-blue-50 rounded-xl p-3">
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-blue-600 font-medium">Kelas Aktif</span>
-                        <span class="text-blue-800 font-bold">8</span>
+                        <span class="text-blue-800 font-bold" x-text="(await kelas).data.data.total_kelas_aktif">-</span>
                     </div>
                 </div>
             </div>
-
-            <!-- Donasi -->
-            <div class="stat-card group">
-                <div class="flex items-center">
-                    <div class="stat-icon green">
-                        <i class="fas fa-hand-holding-heart text-white text-xl"></i>
-                    </div>
-                    <div class="stat-info">
-                        <p class="text-gray-600 font-medium">Total Donasi</p>
-                        <h3 class="text-3xl font-bold text-gray-900 mb-1">Rp 1.000.000</h3>
-                        <div class="flex items-center text-sm">
-                            <span class="text-green-600 font-medium">+25%</span>
-                            <span class="text-gray-500 ml-1">dari bulan lalu</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-4 bg-green-50 rounded-xl p-3">
-                    <div class="flex items-center justify-between text-sm">
-                        <span class="text-green-600 font-medium">Donasi Bulan Ini</span>
-                        <span class="text-green-800 font-bold">Rp 250.000</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="dash-card">
-            <!-- Kajian -->
-            <div class="stat-card group">
+            <div class="stat-card group" x-data="{kajian: axios.get('/api/kajian/stats')}">
                 <div class="flex items-center">
                     <div class="stat-icon yellow">
                         <i class="fas fa-book-open text-white text-xl"></i>
                     </div>
                     <div class="stat-info">
                         <p class="text-gray-600 font-medium">Total Kajian</p>
-                        <h3 class="text-3xl font-bold text-gray-900 mb-1">17</h3>
-                        <div class="flex items-center text-sm">
-                            <span class="text-green-600 font-medium">+3</span>
-                            <span class="text-gray-500 ml-1">kajian baru</span>
-                        </div>
+                        <h3 class="text-3xl font-bold text-gray-900 mb-1"x-text="(await kajian).data.data.total_kajian">-</h3>
                     </div>
                 </div>
                 <div class="mt-4 bg-yellow-50 rounded-xl p-3">
                     <div class="flex items-center justify-between text-sm">
-                        <span class="text-yellow-600 font-medium">Kajian Mendatang</span>
-                        <span class="text-yellow-800 font-bold">5</span>
+                        <span class="text-yellow-600 font-medium">Kajian Aktif</span>
+                        <span class="text-yellow-800 font-bold" x-text="(await kajian).data.data.total_kajian_aktif">-</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Donasi -->
+            <div
+                class="stat-card group" 
+                x-data="{
+                    donasi: null,
+                    rupiah(angka) {
+                    return 'Rp ' + Number(angka).toLocaleString('id-ID');
+                    },
+                    async init() {
+                    let res = await axios.get('/api/donasi/stats');
+                    // simpan langsung data yang di dalam 'data'
+                    this.donasi = res.data.data;
+                    }
+                }"
+            >
+                <div class="flex items-center">
+                    <div class="stat-icon green">
+                        <i class="fas fa-hand-holding-heart text-white text-xl"></i>
+                    </div>
+                    <div class="stat-info">
+                        <p class="text-gray-600 font-medium">Total Donasi</p>
+                        <h3 class="text-3xl font-bold text-gray-900 mb-1" x-text="donasi ? rupiah(donasi.total_donasi_terkumpul) : 'Rp 0'"></h3>
+                        <div class="flex items-center text-sm">
+                            <span class="text-gray-500 ml-1">Total Program Donasi :</span>
+                            <span class="text-green-600 font-medium ml-1" x-text="donasi ? donasi.total_program_donasi : '-'">-</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 bg-green-50 rounded-xl p-3">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-green-600 font-medium">Total Donatur</span>
+                        <span class="text-green-800 font-bold" x-text="donasi ? donasi.total_donatur : '-'">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dash-card hidden">
+            <!-- Kajian -->
+            <div class="stat-card group" x-data="{kajian: axios.get('/api/kajian/stats')}">
+                <div class="flex items-center">
+                    <div class="stat-icon yellow">
+                        <i class="fas fa-book-open text-white text-xl"></i>
+                    </div>
+                    <div class="stat-info">
+                        <p class="text-gray-600 font-medium">Total Kajian</p>
+                        <h3 class="text-3xl font-bold text-gray-900 mb-1"x-text="(await kajian).data.data.total_kajian">-</h3>
+                    </div>
+                </div>
+                <div class="mt-4 bg-yellow-50 rounded-xl p-3">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-yellow-600 font-medium">Kajian Aktif</span>
+                        <span class="text-yellow-800 font-bold" x-text="(await kajian).data.data.total_kajian_aktif">-</span>
                     </div>
                 </div>
             </div>
 
             <!-- Pengguna -->
-            <div class="stat-card group">
+            <div class="stat-card group hidden">
                 <div class="flex items-center">
                     <div class="stat-icon purple">
                         <i class="fas fa-users text-white text-xl"></i>
@@ -99,7 +120,7 @@
 
     <!-- Quick Actions -->
     <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-green-500 hover:border-opacity-30">
+        <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl hidden transition-all duration-300 border border-gray-100 hover:border-green-500 hover:border-opacity-30">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-semibold text-gray-900">Aktivitas Terbaru</h3>
                 <i class="fas fa-clock text-gray-400"></i>
@@ -140,8 +161,8 @@
                 </a>
             </div>
         </div>
-        <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-green-500 hover:border-opacity-30">
-            <div class="flex items-center justify-between mb-4">
+        <div class="bg-white hidden p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-green-500 hover:border-opacity-30">
+            <div class="flex items-center justify-between mb-4" hidden>
                 <h3 class="text-lg font-semibold text-gray-900">Statistik Hari Ini</h3>
                 <i class="fas fa-chart-line text-gray-400"></i>
             </div>

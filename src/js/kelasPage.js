@@ -15,12 +15,15 @@ async function fetch_get_data() {
 }
 
 async function is_user_registred(id_kelas) {
+    let res
     try {
         await axios.get("/api/kelas/" + id_kelas + "/is_user_registred")
-        return true
+        res = true
     } catch(err) {
-        return false
+        res = false
     }
+    document.querySelector("#loading").classList.add("hidden")
+    return res
 }
 
 async function fetch_pertemuan(id_kelas) {
@@ -68,7 +71,9 @@ async function fetch_pertemuan_index(id_pertemuan_kelas) {
         let url = "/api/kelas/pertemuan/" + id_pertemuan_kelas
         let response = (await axios.get(url, { withCredentials: true }))
         document.getElementById(response.data.data.tipe_pertemuan).classList.remove("hidden")
-        
+        if (response.data.data.youtube_iframe_url) {
+            await renderYoutubeIframe(response.data.data.youtube_iframe_url)
+        }
         return response.data
     } catch (error) {
         if (error.response.status == 403) {
@@ -101,6 +106,8 @@ async function tambah_kelas() {
 
 async function create_pertemuan_kelas(pertemuanForm) {
     try {
+        let blog_content = document.getElementById("blog_text_hidden").value
+        pertemuanForm.blog_text = blog_content ? blog_content : null
         await axios.post("/api/kelas/pertemuan/insert/" + id_kelas, pertemuanForm)
         supami("rijal", "data berhasil ditambahkan", "")
     } catch (error) {
@@ -126,6 +133,8 @@ async function edit_pertemuan_kelas_popup(id_pertemuan_kelas) {
 
 async function edit_pertemuan_kelas(id_pertemuan_kelas, pertemuanForm) {
     try {
+        let blog_content = document.getElementById("blog_text_hidden_edit").value
+        pertemuanForm.blog_text = blog_content ? blog_content : null        
         await axios.put("/api/kelas/pertemuan/update/" + id_pertemuan_kelas, pertemuanForm)
         supami("rijal", "data berhasil ditambahkan", "")
     } catch (error) {
@@ -145,5 +154,30 @@ async function delete_pertemuan_kelas(id_kelas, id_pertemuan_kelas) {
                 supami("error", "Gagal Menghapus Pertemuan", "Anda bukan pemiliki dari kelas ini dan tidak memiliki izin untuk menghapus pertemuan.")
             }
         }
+    }
+}
+
+async function getYoutubeId(url) {
+  const regex = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([A-Za-z0-9_-]{11})/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+
+}
+
+async function renderYoutubeIframe(youtubeUrl) {
+    const container = document.getElementById("YouTubeIframe");
+    const videoId = await getYoutubeId(youtubeUrl);
+
+    if (videoId) {
+        container.classList.remove("hidden");
+        container.innerHTML = `
+            <iframe src="https://www.youtube.com/embed/${videoId}" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+            </iframe>
+        `;
+    } else {
+        container.classList.add("hidden");
     }
 }

@@ -1,3 +1,12 @@
+function login() {
+    axios.get("/api/login?provider=google").then(
+        response => {
+            window.localStorage.setItem("continue_to", window.location.href)
+            window.location.href = response.data.redirect_url
+        }
+    )
+}
+
 function cetak_tenggal(tanggal) {
     const d = new Date(tanggal);
 
@@ -50,14 +59,20 @@ async function close_popup() {
     document.getElementById("popup-child").setAttribute("x-init", "html = ''")    
 }
 
-function supami(level, headline, message) {
+function supami(level, headline, message, file_nov = "") {
+    if(!file_nov) {
+        file_nov = level == 'error' ? 'notificationError' : 'notificationSuccess'
+    }    
     
     close_popup().then(() => {
-        let file_nov = level == 'error' ? 'notificationError' : 'notificationSuccess'
         document.getElementById("popup").classList.remove("hidden")
         document.getElementById("popup-child").setAttribute("upi-message-headline", headline)
         document.getElementById("popup-child").setAttribute("upi-message", message)
         document.getElementById("popup-child").setAttribute("x-init", `fetch('/src/pages/popup/${file_nov}.dap').then(r=>r.text()).then(t=>{html=t})`)
     })
         
+}
+
+function sleep(ms) {
+return new Promise(resolve => setTimeout(resolve, ms))
 }

@@ -7,9 +7,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Quill.js for rich text editing -->
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
     <script src="/src/js/global.js"></script>
     <link rel="stylesheet" href="/src/css/super-admin.css">
     <link rel="stylesheet" href="/src/css/animation.css">
@@ -31,7 +28,7 @@
 
     <!-- Popup Modal -->
     <div id="popup" class="fixed flex hidden justify-center items-center" style="height: 100vh; width: 100vw; z-index: 10000;">
-        <div id="popup-child" class="popup p-6 rounded-lg w-auto h-auto" style="z-index: 3; max-width: 90vw; width: 1000px;" x-data="{ html:'' }" x-html="html" x-ref="popup"></div>
+        <div id="popup-child" class="popup p-6 rounded-lg w-auto h-auto" style="z-index: 3; min-width: 300px; max-width: 90vw;" x-data="{ html:'' }" x-html="html" x-ref="popup"></div>
         <div class="w-full fixed h-full bg-gray-500 opacity-50" style="z-index: 2;"></div>
     </div>
 
@@ -39,42 +36,24 @@
     <div class="sidebar" :class="{'sidebar-open': mobileMenuOpen}">
         <div class="sidebar-header">
             <div class="flex items-center justify-between">
-                <span>Admin Kajian</span>
+                <span>Mentor Kajian</span>
                 <button @click="mobileMenuOpen = false" class="lg:hidden text-white hover:text-gray-200">
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="/admin" class="sidebar-link">
-                <i class="fas fa-tachometer-alt mr-3"></i>
-                Dashboard
-            </a></li> 
-            <h1 class="sidebar-section-title">Manage</h1>
-            <li><a href="/admin/manage/kelas" class="sidebar-link">
+            <li><a href="/mentor/manage/kelas" class="sidebar-link">
                 <i class="fas fa-chalkboard-teacher mr-3"></i>
                 Kelas
             </a></li>
-            <li><a href="/admin/manage/kajian" class="sidebar-link">
-                <i class="fas fa-book-open mr-3"></i>
-                Kajian
-            </a></li>
-            <li><a href="/admin/manage/sedekah" class="sidebar-link">
+            <li><a href="/mentor/manage/pertemuan" class="sidebar-link">
                 <i class="fas fa-hand-holding-heart mr-3"></i>
-                Donasi
+                Petermuan Kelas
             </a></li>
-            <li><a href="/admin/manage/mentor" class="sidebar-link">
+            <li><a href="/mentor/manage/profile" class="sidebar-link">
                 <i class="fas fa-user-tie mr-3"></i>
-                Mentor
-            </a></li>
-            <h1 class="sidebar-section-title">Settings</h1>
-            <li><a href="#" class="sidebar-link">
-                <i class="fas fa-handshake mr-3"></i>
-                Afiliasi
-            </a></li>
-            <li><a href="#" class="sidebar-link">
-                <i class="fas fa-chart-line mr-3"></i>
-                Total Donasi
+                Profile Anda
             </a></li>
         </ul>
     </div>
@@ -97,26 +76,11 @@
         
         <!-- Content Area -->
         <div class="content-area">
-            $adminContent
+            $mentorContent
         </div>
     </div>
 
     <script src="/src/js/super-admin.js"></script>
     <script data-upi>$$dataUpi</script>
-    <script>
-        // Initialize mobile menu state
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('adminSystem', () => ({
-                mobileMenuOpen: false,
-                getPageTitle() {
-                    return 'Dashboard Admin';
-                },
-                logout() {
-                    // Logout logic here
-                    console.log('Logging out...');
-                }
-            }));
-        });
-    </script>
 </body>
 </html>
