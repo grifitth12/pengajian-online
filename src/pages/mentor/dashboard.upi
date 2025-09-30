@@ -1,202 +1,594 @@
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          primary: {
-            50: '#f0fdf4',
-            100: '#dcfce7',
-            200: '#bbf7d0',
-            300: '#86efac',
-            400: '#4ade80',
-            500: '#22c55e',
-            600: '#16a34a',
-            700: '#15803d',
-            800: '#166534',
-            900: '#14532d',
-          },
-          secondary: {
-            50: '#f8fafc',
-            100: '#f1f5f9',
-            200: '#e2e8f0',
-            300: '#cbd5e1',
-            400: '#94a3b8',
-            500: '#64748b',
-            600: '#475569',
-            700: '#334155',
-            800: '#1e293b',
-            900: '#0f172a',
-          }
-        },
-        fontFamily: {
-          sans: ['Poppins', 'sans-serif'],
-        },
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Mentor - Belajar Ngaji Online</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      /* Animation Library */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
       }
-    }
-  }
-</script>
-<style>
-  .hover-scale {
-    transition: all 0.3s ease;
-  }
-  .hover-scale:hover {
-    transform: translateY(-4px);
-  }
-  .active-tab {
-    border-bottom: 3px solid #16a34a;
-    font-weight: 600;
-    color: #14532d;
-  }
-</style>
-<main class="container mx-auto px-4 py-8">
-  <!-- Dashboard Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <div class="bg-white rounded-xl shadow-md hover-scale p-6 flex items-center space-x-4">
-      <div class="p-3 rounded-full bg-primary-100 text-primary-600">
-        <i data-feather="users" class="w-6 h-6"></i>
-      </div>
-      <div>
-        <p class="text-sm text-secondary-500">Total Murid</p>
-        <h3 class="text-2xl font-bold text-primary-600">42</h3>
-      </div>
-    </div>
-    
-    <div class="bg-white rounded-xl shadow-md hover-scale p-6 flex items-center space-x-4">
-      <div class="p-3 rounded-full bg-primary-100 text-primary-600">
-        <i data-feather="book" class="w-6 h-6"></i>
-      </div>
-      <div>
-        <p class="text-sm text-secondary-500">Kelas Aktif</p>
-        <h3 class="text-2xl font-bold text-primary-600">3</h3>
-      </div>
-    </div>
-    
-    <div class="bg-white rounded-xl shadow-md hover-scale p-6 flex items-center space-x-4">
-      <div class="p-3 rounded-full bg-primary-100 text-primary-600">
-        <i data-feather="calendar" class="w-6 h-6"></i>
-      </div>
-      <div>
-        <p class="text-sm text-secondary-500">Sesi Hari Ini</p>
-        <h3 class="text-2xl font-bold text-primary-600">2</h3>
-      </div>
-    </div>
-  </div>
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes scaleIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
+      @keyframes slideInDown {
+        from { opacity: 0; transform: translateY(-100%); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes bounceIn {
+        0% { opacity: 0; transform: scale(0.3); }
+        50% { opacity: 1; transform: scale(1.05); }
+        70% { transform: scale(0.9); }
+        100% { opacity: 1; transform: scale(1); }
+      }
+      @keyframes glow {
+        0%, 100% { box-shadow: 0 0 5px rgba(72, 187, 120, 0.5); }
+        50% { box-shadow: 0 0 20px rgba(72, 187, 120, 0.8); }
+      }
+      @keyframes wiggle {
+        0%, 7% { transform: rotateZ(0); }
+        15% { transform: rotateZ(-15deg); }
+        20% { transform: rotateZ(10deg); }
+        25% { transform: rotateZ(-10deg); }
+        30% { transform: rotateZ(6deg); }
+        35% { transform: rotateZ(-4deg); }
+        40%, 100% { transform: rotateZ(0); }
+      }
 
-  <!-- Tabs Navigation -->
-  <div class="border-b border-secondary-200 mb-6">
-    <nav class="flex space-x-8">
-      <button class="py-3 px-1 active-tab">Daftar Kelas</button>
-      <button class="py-3 px-1 text-secondary-500 hover:text-primary-600">Jadwal</button>
-      <button class="py-3 px-1 text-secondary-500 hover:text-primary-600">Murid</button>
-      <button class="py-3 px-1 text-secondary-500 hover:text-primary-600">Materi</button>
-    </nav>
-  </div>
+      .animate-fade-in { animation: fadeIn 0.6s ease-out; }
+      .animate-fade-in-up { animation: fadeInUp 0.6s ease-out; }
+      .animate-fade-in-left { animation: fadeInLeft 0.6s ease-out; }
+      .animate-fade-in-right { animation: fadeInRight 0.6s ease-out; }
+      .animate-scale-in { animation: scaleIn 0.3s ease-out; }
+      .animate-bounce-in { animation: bounceIn 0.6s ease-out; }
+      .animate-slide-in-down { animation: slideInDown 0.4s ease-out; }
+      .animate-pulse { animation: pulse 2s infinite; }
+      .animate-glow { animation: glow 2s ease-in-out infinite; }
+      .animate-wiggle { animation: wiggle 1s ease-in-out; }
 
-  <!-- Class List -->
-  <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
-    <div class="px-6 py-4 border-b border-secondary-200 flex justify-between items-center">
-      <h2 class="text-lg font-semibold text-primary-800">Kelas Aktif</h2>
-      <button class="flex items-center space-x-1 text-primary-600 hover:text-primary-800">
-        <i data-feather="plus" class="w-4 h-4"></i>
-        <span @click="window.location.href = '/create/kelas'">Tambah Kelas</span>
-      </button>
-    </div>
-    <div class="divide-y divide-secondary-100" x-data="{kelas: axios.get('/api/kelas/carisemua')}">
-      <!-- Class Item -->
-      <template x-for="kls in (await kelas).data.data">
-        <div class="p-6 hover:bg-primary-50 transition-colors">
-          <div class="flex justify-between items-start">
+      .hover-lift {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .stagger-animation > * {
+        opacity: 0;
+        animation: fadeInUp 0.6s ease-out forwards;
+      }
+      .stagger-animation > *:nth-child(1) { animation-delay: 0.1s; }
+      .stagger-animation > *:nth-child(2) { animation-delay: 0.2s; }
+      .stagger-animation > *:nth-child(3) { animation-delay: 0.3s; }
+      .stagger-animation > *:nth-child(4) { animation-delay: 0.4s; }
+      .stagger-animation > *:nth-child(5) { animation-delay: 0.5s; }
+      .stagger-animation > *:nth-child(6) { animation-delay: 0.6s; }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
+        min-height: 100vh;
+      }
+
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .gradient-green {
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+      }
+
+      .gradient-blue {
+        background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+      }
+
+      .gradient-orange {
+        background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+      }
+
+      .gradient-teal {
+        background: linear-gradient(135deg, #38b2ac 0%, #319795 100%);
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        border-radius: 10px;
+      }
+    </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: '#f0fdf4',
+                100: '#dcfce7',
+                200: '#bbf7d0',
+                300: '#86efac',
+                400: '#4ade80',
+                500: '#22c55e',
+                600: '#16a34a',
+                700: '#15803d',
+                800: '#166534',
+                900: '#14532d',
+              }
+            },
+            fontFamily: {
+              sans: ['Poppins', 'sans-serif'],
+            },
+          }
+        }
+      }
+    </script>
+</head>
+<body x-data="{ mobileMenuOpen: false, activeTab: 'kelas' }">
+    <!-- Top Navigation -->
+    <nav class="glass-effect shadow-lg sticky top-0 z-50 animate-slide-in-down">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+          <!-- Logo & Brand -->
+          <div class="flex items-center space-x-3 animate-fade-in-left">
+            <div class="w-12 h-12 gradient-green rounded-xl flex items-center justify-center shadow-lg animate-pulse">
+              <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+              </svg>
+            </div>
             <div>
-              <h3 class="text-lg font-semibold text-primary-700" x-text="kls.judul"></h3>
-              <p class="text-sm text-secondary-500">Senin & Kamis, 08:00 - 09:30</p>
-              <div class="mt-2 flex space-x-2">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
-                  15 Murid
-                </span>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                  Aktif
-                </span>
+              <h1 class="text-xl font-bold text-gray-800">Mentor Kajian</h1>
+              <p class="text-xs text-gray-500">Belajar Ngaji Online</p>
+            </div>
+          </div>
+
+          <!-- Desktop Navigation -->
+          <div class="hidden md:flex items-center space-x-2 animate-fade-in">
+            <a href="/mentor/manage/kelas" class="px-4 py-2 rounded-lg text-sm font-semibold text-white gradient-green shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5">
+              <i data-feather="book-open" class="w-4 h-4 inline mr-2"></i>Kelas
+            </a>
+            <a href="/mentor/manage/pertemuan" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-all">
+              <i data-feather="calendar" class="w-4 h-4 inline mr-2"></i>Pertemuan
+            </a>
+            <a href="/mentor/manage/profile" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-all">
+              <i data-feather="user" class="w-4 h-4 inline mr-2"></i>Profile
+            </a>
+            <a href="/mentor/manage/profile" class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-all">
+              <i data-feather="user" class="w-4 h-4 inline mr-2"></i>Profile
+            </a>
+          </div>
+
+          <!-- User Menu & Logout -->
+          <div class="flex items-center space-x-4 animate-fade-in-right">
+            <div class="hidden sm:flex items-center space-x-3 px-4 py-2 rounded-lg glass-effect">
+              <div class="w-10 h-10 gradient-green rounded-full flex items-center justify-center text-white font-bold">
+                M
+              </div>
+              <div class="hidden lg:block">
+                <p class="text-sm font-semibold text-gray-800">Mentor</p>
+                <p class="text-xs text-gray-500">mentor@kajian.com</p>
               </div>
             </div>
-            <div class="flex space-x-2">
-              <button class="p-2 rounded-full hover:bg-primary-100 text-primary-600">
-                <i data-feather="edit" class="w-4 h-4"></i>
-              </button>
-              <button class="p-2 rounded-full hover:bg-primary-100 text-primary-600">
-                <i data-feather="more-vertical" class="w-4 h-4"></i>
-              </button>
-            </div>
+            <button class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg text-sm font-semibold shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5">
+              <i data-feather="log-out" class="w-4 h-4 inline mr-2"></i>
+              <span class="hidden sm:inline">Logout</span>
+            </button>
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 rounded-lg hover:bg-gray-100">
+              <i data-feather="menu" class="w-6 h-6"></i>
+            </button>
           </div>
         </div>
-      </template>
-    </div>
-  </div>
+      </div>
 
-  <!-- Upcoming Sessions -->
-  <div class="bg-white rounded-xl shadow-md overflow-hidden">
-    <div class="px-6 py-4 border-b border-secondary-200">
-      <h2 class="text-lg font-semibold text-primary-800">Sesi Mendatang</h2>
-    </div>
-    <div class="divide-y divide-secondary-100">
-      <!-- Session Item -->
-      <div class="p-6 hover:bg-primary-50 transition-colors">
-        <div class="flex justify-between items-start">
+      <!-- Mobile Menu -->
+      <div x-show="mobileMenuOpen" 
+           x-transition:enter="transition ease-out duration-200"
+           x-transition:enter-start="opacity-0 transform scale-95"
+           x-transition:enter-end="opacity-100 transform scale-100"
+           x-transition:leave="transition ease-in duration-150"
+           x-transition:leave-start="opacity-100 transform scale-100"
+           x-transition:leave-end="opacity-0 transform scale-95"
+           class="md:hidden border-t border-gray-200 py-4 px-4 space-y-2">
+        <a href="/mentor/manage/kelas" class="block px-4 py-3 rounded-lg text-sm font-semibold text-white gradient-green shadow-md">
+          <i data-feather="book-open" class="w-4 h-4 inline mr-2"></i>Kelas
+        </a>
+        <a href="/mentor/manage/pertemuan" class="block px-4 py-3 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-100">
+          <i data-feather="calendar" class="w-4 h-4 inline mr-2"></i>Pertemuan
+        </a>
+        <a href="/mentor/manage/profile" class="block px-4 py-3 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-100">
+          <i data-feather="user" class="w-4 h-4 inline mr-2"></i>Profile
+        </a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Welcome Banner -->
+      <div class="glass-effect rounded-2xl p-6 mb-8 shadow-lg hover-lift animate-fade-in-up" style="background: linear-gradient(135deg, rgba(72, 187, 120, 0.1) 0%, rgba(56, 161, 105, 0.05) 100%);">
+        <div class="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h3 class="text-lg font-semibold text-primary-700">Pertemuan 2: Hukum Bacaan Nun Sukun</h3>
-            <p class="text-sm text-secondary-500">Kelas A - Dasar Tajwid</p>
-            <div class="mt-2 flex items-center space-x-4">
-              <span class="flex items-center text-sm text-secondary-500">
-                <i data-feather="calendar" class="w-4 h-4 mr-1"></i>
-                05 Oktober 2025
-              </span>
-              <span class="flex items-center text-sm text-secondary-500">
-                <i data-feather="clock" class="w-4 h-4 mr-1"></i>
-                08:00 - 09:30
-              </span>
-            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Selamat Datang, Mentor! 👋</h2>
+            <p class="text-gray-600">Kelola kelas dan murid Anda dengan mudah</p>
           </div>
-          <button class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-medium transition-colors">
-            Mulai Sesi
+          <button class="px-6 py-3 gradient-green text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 animate-glow">
+            <i data-feather="plus" class="w-5 h-5 inline mr-2"></i>Tambah Kelas Baru
           </button>
         </div>
       </div>
+
+      <!-- Dashboard Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 stagger-animation">
+        <!-- Total Murid -->
+        <div class="glass-effect rounded-2xl shadow-lg p-6 hover-lift">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-14 h-14 gradient-blue rounded-xl flex items-center justify-center shadow-md">
+              <i data-feather="users" class="w-7 h-7 text-white"></i>
+            </div>
+            <span class="text-xs font-semibold text-blue-600 bg-blue-100 px-3 py-1 rounded-full">+12%</span>
+          </div>
+          <h3 class="text-3xl font-bold text-gray-800 mb-1">42</h3>
+          <p class="text-sm text-gray-500 font-medium">Total Murid</p>
+          <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div class="h-full gradient-blue w-3/4 animate-fade-in-right"></div>
+          </div>
+        </div>
+
+        <!-- Kelas Aktif -->
+        <div class="glass-effect rounded-2xl shadow-lg p-6 hover-lift">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-14 h-14 gradient-green rounded-xl flex items-center justify-center shadow-md">
+              <i data-feather="book" class="w-7 h-7 text-white"></i>
+            </div>
+            <span class="text-xs font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-full">Aktif</span>
+          </div>
+          <h3 class="text-3xl font-bold text-gray-800 mb-1">3</h3>
+          <p class="text-sm text-gray-500 font-medium">Kelas Aktif</p>
+          <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div class="h-full gradient-green w-full animate-fade-in-right"></div>
+          </div>
+        </div>
+
+        <!-- Sesi Hari Ini -->
+        <div class="glass-effect rounded-2xl shadow-lg p-6 hover-lift">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-14 h-14 gradient-orange rounded-xl flex items-center justify-center shadow-md">
+              <i data-feather="calendar" class="w-7 h-7 text-white"></i>
+            </div>
+            <span class="text-xs font-semibold text-orange-600 bg-orange-100 px-3 py-1 rounded-full">Hari Ini</span>
+          </div>
+          <h3 class="text-3xl font-bold text-gray-800 mb-1">2</h3>
+          <p class="text-sm text-gray-500 font-medium">Sesi Hari Ini</p>
+          <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div class="h-full gradient-orange w-2/3 animate-fade-in-right"></div>
+          </div>
+        </div>
+
+        <!-- Total Materi -->
+        <div class="glass-effect rounded-2xl shadow-lg p-6 hover-lift">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-14 h-14 gradient-teal rounded-xl flex items-center justify-center shadow-md">
+              <i data-feather="file-text" class="w-7 h-7 text-white"></i>
+            </div>
+            <span class="text-xs font-semibold text-teal-600 bg-teal-100 px-3 py-1 rounded-full">+5 Baru</span>
+          </div>
+          <h3 class="text-3xl font-bold text-gray-800 mb-1">24</h3>
+          <p class="text-sm text-gray-500 font-medium">Total Materi</p>
+          <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div class="h-full gradient-teal w-5/6 animate-fade-in-right"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs Navigation -->
+      <div class="glass-effect rounded-2xl shadow-lg mb-8 overflow-hidden animate-fade-in-up">
+        <div class="border-b border-gray-200">
+          <nav class="flex space-x-8 px-6">
+            <button @click="activeTab = 'kelas'" 
+                    :class="activeTab === 'kelas' ? 'border-primary-600 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                    class="py-4 px-1 border-b-3 font-semibold text-sm transition-all">
+              <i data-feather="book-open" class="w-4 h-4 inline mr-2"></i>Daftar Kelas
+            </button>
+            <button @click="activeTab = 'jadwal'" 
+                    :class="activeTab === 'jadwal' ? 'border-primary-600 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                    class="py-4 px-1 border-b-3 font-semibold text-sm transition-all">
+              <i data-feather="calendar" class="w-4 h-4 inline mr-2"></i>Jadwal
+            </button>
+            <button @click="activeTab = 'murid'" 
+                    :class="activeTab === 'murid' ? 'border-primary-600 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                    class="py-4 px-1 border-b-3 font-semibold text-sm transition-all">
+              <i data-feather="users" class="w-4 h-4 inline mr-2"></i>Murid
+            </button>
+            <button @click="activeTab = 'materi'" 
+                    :class="activeTab === 'materi' ? 'border-primary-600 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                    class="py-4 px-1 border-b-3 font-semibold text-sm transition-all">
+              <i data-feather="file-text" class="w-4 h-4 inline mr-2"></i>Materi
+            </button>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Class List Section -->
+      <div x-show="activeTab === 'kelas'" class="space-y-6">
+        <!-- Class List Card -->
+        <div class="glass-effect rounded-2xl shadow-lg overflow-hidden animate-fade-in-up">
+          <div class="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
+            <div>
+              <h2 class="text-xl font-bold text-gray-800">Kelas Aktif</h2>
+              <p class="text-sm text-gray-500 mt-1">Kelola semua kelas Anda</p>
+            </div>
+            <button class="px-5 py-2.5 gradient-green text-white rounded-xl text-sm font-semibold shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5">
+              <i data-feather="plus" class="w-4 h-4 inline mr-2"></i>Tambah Kelas
+            </button>
+          </div>
+          
+          <div class="divide-y divide-gray-100">
+            <!-- Class Item 1 -->
+            <div class="p-6 hover:bg-primary-50 transition-all group">
+              <div class="flex justify-between items-start">
+                <div class="flex-1">
+                  <div class="flex items-start space-x-4">
+                    <div class="w-16 h-16 gradient-green rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:animate-wiggle">
+                      A
+                    </div>
+                    <div class="flex-1">
+                      <h3 class="text-lg font-bold text-gray-800 mb-1">Kelas A - Dasar Tajwid</h3>
+                      <p class="text-sm text-gray-500 mb-3">
+                        <i data-feather="clock" class="w-4 h-4 inline mr-1"></i>Senin & Kamis, 08:00 - 09:30
+                      </p>
+                      <div class="flex flex-wrap gap-2">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-primary-100 text-primary-800">
+                          <i data-feather="users" class="w-3 h-3 mr-1"></i>15 Murid
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                          <i data-feather="check-circle" class="w-3 h-3 mr-1"></i>Aktif
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                          <i data-feather="book" class="w-3 h-3 mr-1"></i>8 Pertemuan
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex space-x-2 ml-4">
+                  <button class="p-2.5 rounded-lg hover:bg-primary-100 text-primary-600 transition-all hover:scale-110">
+                    <i data-feather="edit-2" class="w-5 h-5"></i>
+                  </button>
+                  <button class="p-2.5 rounded-lg hover:bg-primary-100 text-primary-600 transition-all hover:scale-110">
+                    <i data-feather="eye" class="w-5 h-5"></i>
+                  </button>
+                  <button class="p-2.5 rounded-lg hover:bg-red-100 text-red-600 transition-all hover:scale-110">
+                    <i data-feather="trash-2" class="w-5 h-5"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Class Item 2 -->
+            <div class="p-6 hover:bg-primary-50 transition-all group">
+              <div class="flex justify-between items-start">
+                <div class="flex-1">
+                  <div class="flex items-start space-x-4">
+                    <div class="w-16 h-16 gradient-blue rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:animate-wiggle">
+                      B
+                    </div>
+                    <div class="flex-1">
+                      <h3 class="text-lg font-bold text-gray-800 mb-1">Kelas B - Tahsin Al-Quran</h3>
+                      <p class="text-sm text-gray-500 mb-3">
+                        <i data-feather="clock" class="w-4 h-4 inline mr-1"></i>Selasa & Jumat, 10:00 - 11:30
+                      </p>
+                      <div class="flex flex-wrap gap-2">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-primary-100 text-primary-800">
+                          <i data-feather="users" class="w-3 h-3 mr-1"></i>12 Murid
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                          <i data-feather="check-circle" class="w-3 h-3 mr-1"></i>Aktif
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                          <i data-feather="book" class="w-3 h-3 mr-1"></i>6 Pertemuan
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex space-x-2 ml-4">
+                  <button class="p-2.5 rounded-lg hover:bg-primary-100 text-primary-600 transition-all hover:scale-110">
+                    <i data-feather="edit-2" class="w-5 h-5"></i>
+                  </button>
+                  <button class="p-2.5 rounded-lg hover:bg-primary-100 text-primary-600 transition-all hover:scale-110">
+                    <i data-feather="eye" class="w-5 h-5"></i>
+                  </button>
+                  <button class="p-2.5 rounded-lg hover:bg-red-100 text-red-600 transition-all hover:scale-110">
+                    <i data-feather="trash-2" class="w-5 h-5"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Class Item 3 -->
+            <div class="p-6 hover:bg-primary-50 transition-all group">
+              <div class="flex justify-between items-start">
+                <div class="flex-1">
+                  <div class="flex items-start space-x-4">
+                    <div class="w-16 h-16 gradient-orange rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:animate-wiggle">
+                      C
+                    </div>
+                    <div class="flex-1">
+                      <h3 class="text-lg font-bold text-gray-800 mb-1">Kelas C - Hafalan Juz 30</h3>
+                      <p class="text-sm text-gray-500 mb-3">
+                        <i data-feather="clock" class="w-4 h-4 inline mr-1"></i>Rabu & Sabtu, 14:00 - 15:30
+                      </p>
+                      <div class="flex flex-wrap gap-2">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-primary-100 text-primary-800">
+                          <i data-feather="users" class="w-3 h-3 mr-1"></i>15 Murid
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                          <i data-feather="check-circle" class="w-3 h-3 mr-1"></i>Aktif
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                          <i data-feather="book" class="w-3 h-3 mr-1"></i>10 Pertemuan
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex space-x-2 ml-4">
+                  <button class="p-2.5 rounded-lg hover:bg-primary-100 text-primary-600 transition-all hover:scale-110">
+                    <i data-feather="edit-2" class="w-5 h-5"></i>
+                  </button>
+                  <button class="p-2.5 rounded-lg hover:bg-primary-100 text-primary-600 transition-all hover:scale-110">
+                    <i data-feather="eye" class="w-5 h-5"></i>
+                  </button>
+                  <button class="p-2.5 rounded-lg hover:bg-red-100 text-red-600 transition-all hover:scale-110">
+                    <i data-feather="trash-2" class="w-5 h-5"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Sessions -->
+        <div class="glass-effect rounded-2xl shadow-lg overflow-hidden animate-fade-in-up">
+          <div class="px-6 py-5 border-b border-gray-200">
+            <h2 class="text-xl font-bold text-gray-800">Sesi Mendatang</h2>
+            <p class="text-sm text-gray-500 mt-1">Jadwal pertemuan yang akan datang</p>
+          </div>
+          
+          <div class="divide-y divide-gray-100">
+            <!-- Session Item 1 -->
+            <div class="p-6 hover:bg-primary-50 transition-all">
+              <div class="flex justify-between items-start flex-wrap gap-4">
+                <div class="flex-1 min-w-[250px]">
+                  <h3 class="text-lg font-bold text-gray-800 mb-2">Pertemuan 2: Hukum Bacaan Nun Sukun</h3>
+                  <p class="text-sm text-gray-600 mb-3">Kelas A - Dasar Tajwid</p>
+                  <div class="flex flex-wrap gap-3">
+                    <span class="flex items-center text-sm text-gray-600">
+                      <i data-feather="calendar" class="w-4 h-4 mr-2 text-primary-600"></i>
+                      05 Oktober 2025
+                    </span>
+                    <span class="flex items-center text-sm text-gray-600">
+                      <i data-feather="clock" class="w-4 h-4 mr-2 text-primary-600"></i>
+                      08:00 - 09:30
+                    </span>
+                    <span class="flex items-center text-sm text-gray-600">
+                      <i data-feather="users" class="w-4 h-4 mr-2 text-primary-600"></i>
+                      15 Murid
+                    </span>
+                  </div>
+                </div>
+                <button class="px-6 py-3 gradient-green text-white rounded-xl text-sm font-semibold shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5 whitespace-nowrap">
+                  <i data-feather="play" class="w-4 h-4 inline mr-2"></i>Mulai Sesi
+                </button>
+              </div>
+            </div>
+
+            <!-- Session Item 2 -->
+            <div class="p-6 hover:bg-primary-50 transition-all">
+              <div class="flex justify-between items-start flex-wrap gap-4">
+                <div class="flex-1 min-w-[250px]">
+                  <h3 class="text-lg font-bold text-gray-800 mb-2">Pertemuan 3: Makhraj Huruf</h3>
+                  <p class="text-sm text-gray-600 mb-3">Kelas A - Dasar Tajwid</p>
+                  <div class="flex flex-wrap gap-3">
+                    <span class="flex items-center text-sm text-gray-600">
+                      <i data-feather="calendar" class="w-4 h-4 mr-2 text-primary-600"></i>
+                      10 Oktober 2025
+                    </span>
+                    <span class="flex items-center text-sm text-gray-600">
+                      <i data-feather="clock" class="w-4 h-4 mr-2 text-primary-600"></i>
+                      08:00 - 09:30
+                    </span>
+                    <span class="flex items-center text-sm text-gray-600">
+                      <i data-feather="users" class="w-4 h-4 mr-2 text-primary-600"></i>
+                      15 Murid
+                    </span>
+                  </div>
+                </div>
+                <button class="px-6 py-3 bg-primary-100 hover:bg-primary-200 text-primary-800 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 whitespace-nowrap">
+                  <i data-feather="edit" class="w-4 h-4 inline mr-2"></i>Rencanakan
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other Tabs Content Placeholder -->
+      <div x-show="activeTab === 'jadwal'" class="glass-effect rounded-2xl shadow-lg p-8 text-center animate-fade-in-up">
+        <i data-feather="calendar" class="w-16 h-16 mx-auto text-gray-400 mb-4"></i>
+        <h3 class="text-xl font-bold text-gray-800 mb-2">Jadwal</h3>
+        <p class="text-gray-600">Konten jadwal akan ditampilkan di sini</p>
+      </div>
+
+      <div x-show="activeTab === 'murid'" class="glass-effect rounded-2xl shadow-lg p-8 text-center animate-fade-in-up">
+        <i data-feather="users" class="w-16 h-16 mx-auto text-gray-400 mb-4"></i>
+        <h3 class="text-xl font-bold text-gray-800 mb-2">Daftar Murid</h3>
+        <p class="text-gray-600">Konten daftar murid akan ditampilkan di sini</p>
+      </div>
+
+      <div x-show="activeTab === 'materi'" class="glass-effect rounded-2xl shadow-lg p-8 text-center animate-fade-in-up">
+        <i data-feather="file-text" class="w-16 h-16 mx-auto text-gray-400 mb-4"></i>
+        <h3 class="text-xl font-bold text-gray-800 mb-2">Materi Pembelajaran</h3>
+        <p class="text-gray-600">Konten materi pembelajaran akan ditampilkan di sini</p>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-effect mt-12 py-6 animate-fade-in-up">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center text-sm text-gray-600">
+          <p>&copy; 2025 Belajar Ngaji Online. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Initialize Feather Icons
+      feather.replace();
       
-      <!-- Session Item -->
-      <div class="p-6 hover:bg-primary-50 transition-colors">
-        <div class="flex justify-between items-start">
-          <div>
-            <h3 class="text-lg font-semibold text-primary-700">Pertemuan 3: Makhraj Huruf</h3>
-            <p class="text-sm text-secondary-500">Kelas A - Dasar Tajwid</p>
-            <div class="mt-2 flex items-center space-x-4">
-              <span class="flex items-center text-sm text-secondary-500">
-                <i data-feather="calendar" class="w-4 h-4 mr-1"></i>
-                10 Oktober 2025
-              </span>
-              <span class="flex items-center text-sm text-secondary-500">
-                <i data-feather="clock" class="w-4 h-4 mr-1"></i>
-                08:00 - 09:30
-              </span>
-            </div>
-          </div>
-          <button class="px-4 py-2 bg-primary-100 hover:bg-primary-200 text-primary-800 rounded-lg text-sm font-medium transition-colors">
-            Rencanakan
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</main>
-<script>
-  feather.replace();
-  
-  // Tab switching functionality
-  const tabs = document.querySelectorAll('nav button');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active-tab'));
-      tabs.forEach(t => t.classList.add('text-secondary-500', 'hover:text-primary-600'));
-      tab.classList.add('active-tab');
-      tab.classList.remove('text-secondary-500', 'hover:text-primary-600');
-    });
-  });
-</script>
+      // Re-initialize icons when Alpine updates the DOM
+      document.addEventListener('alpine:initialized', () => {
+        setTimeout(() => feather.replace(), 100);
+      });
+    </script>
+</body>
+</html>
