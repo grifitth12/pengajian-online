@@ -8,6 +8,9 @@ import
 proc adminIndex*(ctx: Context) {.async.} =
     resp strutils.strip loadAdminTemplate "src/pages/admin/dashboard.upi"
 
+proc mentorIndex*(ctx: Context) {.async.} =
+    resp strutils.strip loadMentorTemplate "src/pages/mentor/dashboard.upi"    
+
 proc render_manage_index*(ctx: Context) {.async.} =
     let
         available_managed = @["kajian", "kelas", "mentor", "sedekah"]
