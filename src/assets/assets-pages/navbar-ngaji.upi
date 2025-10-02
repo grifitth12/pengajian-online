@@ -295,8 +295,14 @@ body.notification-active {
             <a href="/src/pages/searchpage.html" class="nav-link" aria-label="Search">
                 <i class="fas fa-search"></i>
             </a>
-            <a href="/profile" x-show="auth" button class="profile-btn" id="profileBtn">
-                <img src="/src/assets/images/WhatsApp Image 2025-08-05 at 14.26.06.jpeg" alt="Profile" class="profile-img" id="profileImg">
+            <a href="/profile" 
+                x-init="
+                axios.get('/api/profile')
+                .then(res => { profile = res.data.data })
+                .catch(err => console.error('Gagal load profile:', err))"
+                x-data="{ profile: null, baseUrl: '/static/' }"
+                x-show="auth" button class="profile-btn" id="profileBtn">
+                <img :src="profile.foto_url ? baseUrl + profile.foto_url : '/src/assets/images/default.png'"  alt="Profile" class="profile-img" id="profileImg">
             </a>
             <div class="btn-group" @click="login" x-show="!auth">
                 <a class="btn btn-primary">Login</a>
@@ -312,8 +318,14 @@ body.notification-active {
                 <a href="login.html" class="btn btn-primary">Masuk</a>
                 <a href="register.html" class="btn btn-secondary">Daftar</a>
             </div>
-            <a href="/src/pages/profile/profile.html" x-show="auth" class="nav-link" button class="profile-btn" id="profileBtnMobile">
-               <img src="/src/assets/images/WhatsApp Image 2025-08-05 at 14.26.06.jpeg" alt="Profile" class="profile-img" id="profileImgMobile">Profile
+            <a href="/src/pages/profile/profile.html" 
+                x-init="
+                axios.get('/api/profile')
+                .then(res => { profile = res.data.data })
+                .catch(err => console.error('Gagal load profile:', err))"
+                x-data="{ profile: null, baseUrl: '/static/' }"
+                x-show="auth" class="nav-link" button class="profile-btn" id="profileBtnMobile">
+               <img :src="profile.foto_url ? baseUrl + profile.foto_url : '/src/assets/images/default.png'" alt="Profile" class="profile-img" id="profileImgMobile">Profile
             </a>
             <a href="#Home" class="nav-link">Home</a>
             <a href="/src/pages/about.html" class="nav-link">About</a>
