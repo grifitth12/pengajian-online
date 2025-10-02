@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Profile Page</title>
+    <title>Profil & Pengaturan</title>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,7 +13,6 @@
     function appData(){
         return {
             activeTab: 'profile',
-            mobileNavOpen: false,
             user: {
                 nama_lengkap: "",
                 role: "",
@@ -25,34 +24,13 @@
             loading: false,
             error: null,
             success: null,
-            tempProfileImage: null,
             activities: [],
             loadingActivities: true,
             mentor: { field: "", description: "", experience: 0, registered: false },
 
             init() {
                 this.fetchUser();
-
-                if (this.$watch) {
-                    this.$watch('mobileNavOpen', (val) => {
-                        document.body.style.overflow = val ? 'hidden' : '';
-                    });
-
-                    this.$watch('activeTab', (value) => {
-                        if (value === 'activity' && this.activities.length === 0) {
-                            this.fetchActivities();
-                        }
-                    });
-                }
-            },
-
-            closeMobileNav() {
-                this.mobileNavOpen = false;
-                document.body.style.overflow = '';
-            },
-
-            toggleMobileNav() {
-                this.mobileNavOpen = !this.mobileNavOpen;
+                this.fetchActivities();
             },
 
             async fetchUser(){
@@ -70,7 +48,6 @@
                         foto_url: data.foto_url || ""
                     };
 
-                    // mapping log kelas ke activity log
                     if (data.log_kelas && Array.isArray(data.log_kelas)) {
                         this.activities = data.log_kelas.map((item, idx) => ({
                             action: `Mengikuti kelas: ${item.kelas.judul}`,
@@ -93,8 +70,9 @@
                     await new Promise(r => setTimeout(r, 700));
                     if (this.activities.length === 0) {
                         this.activities = [
-                            { action: "update informasi profil", date: "2025-09-18 14:30" },
-                            { action: "Login dari device baru", date: "2025-09-13 09:00" }
+                            { action: "Update informasi profil", date: "2025-01-18 14:30" },
+                            { action: "Login dari device baru", date: "2025-01-13 09:00" },
+                            { action: "Mengikuti kelas Al-Quran", date: "2025-01-10 16:00" }
                         ];
                     }
                 } catch (err) {
@@ -112,10 +90,12 @@
                         kontak: this.user.kontak
                     });
 
-                    alert("Profile updated successfully!");
+                    this.success = "Profile berhasil diperbarui!";
+                    setTimeout(() => this.success = null, 3000);
                 } catch (err) {
                     console.error(err);
-                    alert("Failed to save profile");
+                    this.error = "Gagal menyimpan profile";
+                    setTimeout(() => this.error = null, 3000);
                 }
             }
         };
@@ -124,135 +104,203 @@
 
 <body>
     <div class="container" x-data="appData()" x-init="init()" x-cloak>
-        <!-- left decorative column (desktop only) -->
-        <div class="bg-copy" aria-hidden="true"></div>
-        <div class="bg-gradient" aria-hidden="true">
-            <a href="/src/index.html" class="header">
-                <div class="back-btn"></div>
-                <h1 class="page-title">Profile</h1>
-            </a>
+        <!-- Header Section -->
+        <header class="page-header">
+            <div class="header-content">
+                <a href="/src/index.html" class="back-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                </a>
+                <div class="header-text">
+                    <h1 class="page-title">Profil & Pengaturan</h1>
+                    <p class="page-subtitle">Kelola informasi akun dan keamanan Anda.</p>
+                </div>
+            </div>
+        </header>
 
-            <!-- Desktop Navigation -->
-            <nav class="sidebar" role="navigation" aria-label="Sidebar">
-                <a href="#" class="nav-item" :class="{'active': activeTab === 'profile'}" @click.prevent="activeTab = 'profile'">Edit Profil</a>
-                <a href="#" class="nav-item" :class="{'active': activeTab === 'mentor'}" @click.prevent="activeTab = 'mentor'">Mentor</a>
-                <a href="#" class="nav-item" :class="{'active': activeTab === 'activity'}" @click.prevent="activeTab = 'activity'">Activity Log</a>
-            </nav>
-        </div>
-
-        <!-- Mobile top: hamburger + small header (title + back) -->
-        <div class="mobile-header" aria-hidden="false">
-            <div class="back-btn" style="cursor:pointer" onclick="history.back()"></div>
-            <div class="page-title">Profile</div>
-        </div>
-
-        <div class="mobile-nav-toggle" @click="toggleMobileNav()" :class="{'active': mobileNavOpen}" aria-label="Open navigation">
-            <span></span><span></span><span></span>
-        </div>
-
-        <!-- Mobile Navigation Overlay -->
-        <div class="mobile-sidebar" :class="{'active': mobileNavOpen}" @click.self="closeMobileNav()">
-            <a href="#" class="nav-item" :class="{'active': activeTab === 'profile'}" @click.prevent="activeTab = 'profile'; closeMobileNav()">Edit Profil</a>
-            <a href="#" class="nav-item" :class="{'active': activeTab === 'mentor'}" @click.prevent="activeTab = 'mentor'; closeMobileNav()">Mentor</a>
-            <a href="#" class="nav-item" :cla ss="{'active': activeTab === 'activity'}" @click.prevent="activeTab = 'activity'; closeMobileNav()">Activity Log</a>
-        </div>
+        <!-- Tab Navigation -->
+        <nav class="tab-navigation">
+            <div class="tab-container">
+                <button class="tab-button" 
+                        :class="{'active': activeTab === 'profile'}" 
+                        @click="activeTab = 'profile'">
+                    <div class="tab-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <span>Profil</span>
+                </button>
+                <button class="tab-button" 
+                        :class="{'active': activeTab === 'mentor'}" 
+                        @click="activeTab = 'mentor'">
+                    <div class="tab-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                        </svg>
+                    </div>
+                    <span>Mentor</span>
+                </button>
+                <button class="tab-button" 
+                        :class="{'active': activeTab === 'activity'}" 
+                        @click="activeTab = 'activity'">
+                    <div class="tab-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 3v18h18"/>
+                            <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+                        </svg>
+                    </div>
+                    <span>Activity Log</span>
+                </button>
+            </div>
+        </nav>
 
         <!-- Main Content -->
-        <div class="main-content">
+        <main class="main-content">
             <!-- Profile Section -->
-            <section class="profile-section tab-section" x-show="activeTab === 'profile'"  x-transition>
-                <div class="profiles">
-                    <div class="profile-header" style="width:100%;">
-                        <div style="display:flex; gap:20px; align-items:center; justify-content:center; flex-wrap:wrap;">
-                            <div class="profile-container" id="profileContainer">
-                                <img @click="selectPhoto()"
-                                    class="profile-image"
-                                    :src="user.foto_url || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 150'%3E%3Ccircle cx='75' cy='75' r='75' fill='%23e0e0e0'/%3E%3Cpath d='M75 75c13.8 0 25-11.2 25-25S88.8 25 75 25 50 36.2 50 50s11.2 25 25 25zm0 12.5c-16.7 0-50 8.35-50 25v12.5h100v-12.5c0-16.65-33.3-25-50-25z' fill='%23999'/%3E%3C/svg%3E`"
-                                    alt="Profile Picture">
-                                <div class="overlay">
-                                    <div class="camera-icon">📷</div>
-                                    <div class="change-text">Change Profile<br>Picture</div>
-                                </div>
-                            </div>
-
-                            <div class="profile-info">
-                                <h2 class="user-name" x-text="user.nama_lengkap"></h2>
-                                <p class="user-role" x-text="user.role"></p>
-                                <p class="user-email" x-text="user.email"></p>
-
-                                <!-- replaced anchor with real button that switches tab -->
-                                <button type="button" class="mentor-link" @click="activeTab = 'mentor'">Daftar Sebagai Mentor</button>
-                            </div>
+            <section class="profile-section tab-section" x-show="activeTab === 'profile'" x-transition>
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-image-container">
+                            <img class="profile-image"
+                                :src="user.foto_url || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 150'%3E%3Ccircle cx='75' cy='75' r='75' fill='%23e0e0e0'/%3E%3Cpath d='M75 75c13.8 0 25-11.2 25-25S88.8 25 75 25 50 36.2 50 50s11.2 25 25 25zm0 12.5c-16.7 0-50 8.35-50 25v12.5h100v-12.5c0-16.65-33.3-25-50-25z' fill='%23999'/%3E%3C/svg%3E`"
+                                alt="Profile Picture">
+                            <button class="change-photo-btn" @click="selectPhoto()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                                    <circle cx="12" cy="13" r="4"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="profile-info">
+                            <h2 class="user-name" x-text="user.nama_lengkap || 'Nama Lengkap'"></h2>
+                            <p class="user-role" x-text="user.role || 'User'"></p>
+                            <p class="user-email" x-text="user.email"></p>
                         </div>
                     </div>
 
-                    <form class="form-section" @submit.prevent="saveProfile" style="width:100%; max-width:800px;">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Nama Lengkap</label>
-                                <input type="text" class="form-input" x-model="user.nama_lengkap" required>
+                    <form class="profile-form" @submit.prevent="saveProfile()">
+                        <div class="form-group">
+                            <label class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-input" x-model="user.nama_lengkap" placeholder="Masukkan nama lengkap">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Bio</label>
+                            <textarea class="form-input" x-model="user.bio" placeholder="Ceritakan tentang diri Anda..." rows="4"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Nomor Telepon</label>
+                            <div class="phone-input">
+                                <div class="country-code">+62</div>
+                                <input type="tel" class="form-input" x-model="user.kontak" placeholder="8123456789">
                             </div>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-group full-width">
-                                <label class="form-label">Bio</label>
-                                <textarea style="resize: none;" class="form-input" id="bio" x-model="user.bio" placeholder="Tuliskan bio kamu..."></textarea>
-                            </div>
+                        <div class="form-actions">
+                            <button type="submit" class="save-btn" :disabled="loading">
+                                <span x-show="!loading">Simpan Perubahan</span>
+                                <span x-show="loading">Menyimpan...</span>
+                            </button>
                         </div>
+                    </form>
 
-                        <div class="form-row">
-                            <div class="form-group full-width">
-                                <label class="form-label">Nomor Telepon</label>
-                                <div class="phone-input">
-                                    <div class="country-code">
-                                        <div class="flag-icon"></div>
-                                        <span class="country-code-text">+62</span>
-                                    </div>
-                                    <input class="form-input" type="tel" x-model="user.kontak" placeholder="8123456789">
+                    <!-- Success/Error Messages -->
+                    <div x-show="success" class="alert alert-success" x-text="success"></div>
+                    <div x-show="error" class="alert alert-error" x-text="error"></div>
+                </div>
+            </section>
+
+            <!-- Mentor Section -->
+            <section class="mentor-section tab-section" x-show="activeTab === 'mentor'" x-transition>
+                <div class="mentor-card">
+                    <div class="mentor-header">
+                        <div class="mentor-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                            </svg>
+                        </div>
+                        <div class="mentor-info">
+                            <h2 class="mentor-title">Daftar Sebagai Mentor</h2>
+                            <p class="mentor-subtitle">Bagikan pengetahuan Anda dan bantu sesama dalam belajar</p>
+                        </div>
+                    </div>
+
+                    <div class="mentor-content">
+                        <div class="mentor-benefits">
+                            <div class="benefit-item">
+                                <div class="benefit-icon">📚</div>
+                                <div class="benefit-text">
+                                    <h4>Bagikan Ilmu</h4>
+                                    <p>Ajarkan ilmu yang Anda miliki kepada yang membutuhkan</p>
+                                </div>
+                            </div>
+                            <div class="benefit-item">
+                                <div class="benefit-icon">💰</div>
+                                <div class="benefit-text">
+                                    <h4>Dapatkan Penghasilan</h4>
+                                    <p>Dapatkan penghasilan tambahan dari mengajar</p>
+                                </div>
+                            </div>
+                            <div class="benefit-item">
+                                <div class="benefit-icon">🤝</div>
+                                <div class="benefit-text">
+                                    <h4>Bangun Komunitas</h4>
+                                    <p>Bergabung dengan komunitas mentor yang solid</p>
                                 </div>
                             </div>
                         </div>
 
-                        <button type="button" class="save-btn" @click="saveProfile">Simpan</button>
-                    </form>
-                </div>
-            </section>
-
-            <!-- Mentor Section (SIMPLE) -->
-            <section class="mentor-section tab-section" x-show="activeTab === 'mentor'" x-transition>
-                <div class="mentor-card" role="region" aria-labelledby="mentorTitle">
-                    <h2 id="mentorTitle" class="mentor-title">Anda belum terdaftar sebagai mentor</h2>
-                    <p class="mentor-sub">Daftar sekarang agar siswa dapat menemukan dan memesan sesi dengan Anda.</p>
-
-                    <!-- CTA: change href to your registration path -->
-                    <a href="/mentor/register" class="mentor-cta" @click="/* optional: do extra tracking here */">Daftar Sekarang</a>
+                        <div class="mentor-actions">
+                            <a href="/mentor/register" class="mentor-cta">Daftar Sebagai Mentor</a>
+                            <button class="mentor-info-btn">Pelajari Lebih Lanjut</button>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             <!-- Activity Log Section -->
             <section class="activity-section tab-section" x-show="activeTab === 'activity'" x-transition>
-                <div class="activity-content">
-                    <h2 class="activity-title">Activity Log</h2>
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <h2 class="activity-title">Riwayat Aktivitas</h2>
+                        <p class="activity-subtitle">Semua aktivitas terbaru Anda</p>
+                    </div>
 
-                    <div x-show="loadingActivities" class="loading">Loading activities...</div>
+                    <div class="activity-content">
+                        <div x-show="loadingActivities" class="loading-state">
+                            <div class="loading-spinner"></div>
+                            <p>Memuat aktivitas...</p>
+                        </div>
 
-                    <ul class="activity-list" x-show="!loadingActivities && activities.length > 0">
-                        <template x-for="(activity, index) in activities" :key="index">
-                            <li class="activity-item">
-                                <div class="activity-icon" x-text="activity.action.charAt(0).toUpperCase()"></div>
-                                <div>
-                                    <div class="activity-action" x-text="activity.action"></div>
-                                    <div class="activity-date" x-text="activity.date"></div>
+                        <div x-show="!loadingActivities && activities.length > 0" class="activity-list">
+                            <template x-for="(activity, index) in activities" :key="index">
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <div class="icon-circle" x-text="activity.action.charAt(0).toUpperCase()"></div>
+                                    </div>
+                                    <div class="activity-details">
+                                        <h4 class="activity-action" x-text="activity.action"></h4>
+                                        <p class="activity-date" x-text="activity.date"></p>
+                                    </div>
                                 </div>
-                            </li>
-                        </template>
-                    </ul>
+                            </template>
+                        </div>
 
-                    <div x-show="!loadingActivities && activities.length === 0" class="loading">No activities found.</div>
+                        <div x-show="!loadingActivities && activities.length === 0" class="empty-state">
+                            <div class="empty-icon">📊</div>
+                            <h3>Belum ada aktivitas</h3>
+                            <p>Mulai menggunakan platform untuk melihat aktivitas Anda di sini</p>
+                        </div>
+                    </div>
                 </div>
             </section>
-        </div>
-    </div>   
+        </main>
+    </div>
 </body>
 </html>
