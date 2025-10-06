@@ -104,7 +104,7 @@
 
                         <div class="relative h-52 w-full flex-shrink-0">
                             <img class="w-full h-full object-cover" 
-                                 x-bind:src="kelas.gambar" 
+                                 x-bind:src="'/static/' + kelas.thumbnail_url" 
                                  x-bind:alt="kelas.judul">
                             <span class="absolute top-4 right-4 bg-green-500 text-white text-xs px-3 py-1 rounded-full font-semibold">
                                 ✨ Baru

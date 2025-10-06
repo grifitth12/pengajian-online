@@ -1,136 +1,182 @@
 <script src="/src/js/index.js"></script>
-<link rel="stylesheet" href="/src/css/index.css">
-<main class="main-content">
-    <!-- Banner Section -->
-    <section class="hero relative overflow-hidden bg-gradient-to-br from-emerald-500 via-green-500 to-teal-600 text-white py-16 md:py-24">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
 
-        <!-- Lingkaran animasi di background -->
-        <div class="absolute inset-0 opacity-10">
-            <div class="absolute top-10 left-10 w-32 h-32 bg-white rounded-full animate-pulse"></div>
-            <div class="absolute top-32 right-20 w-24 h-24 bg-white rounded-full animate-bounce delay-300"></div>
-            <div class="absolute bottom-20 left-1/4 w-20 h-20 bg-white rounded-full animate-pulse delay-700"></div>
-            <div class="absolute bottom-32 right-1/3 w-28 h-28 bg-white rounded-full animate-bounce delay-1000"></div>
-        </div>
+body {
+    font-family: 'Inter', sans-serif;
+}
 
-        <!-- Pattern dekoratif -->
-        <div class="absolute inset-0 opacity-5">
-            <svg class="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <pattern id="islamic-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                        <circle cx="10" cy="10" r="2" fill="white" />
-                        <path d="M10,5 L15,10 L10,15 L5,10 Z" fill="white" opacity="0.3" />
-                    </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#islamic-pattern)" />
-            </svg>
-        </div>
+.wave-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+}
 
-        <!-- Konten hero -->
-        <div class="container mx-auto px-4 relative z-10 text-center">
-            <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-8">
-                Selamat Datang di <span class="font-extrabold bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent animate-pulse">Platform Pengajian Online</span>
-            </h1>
-            <p class="text-lg md:text-xl text-green-100 mb-10 max-w-2xl mx-auto leading-relaxed">
-                lorem ipsum color dot amet ngk tau mau nambahin apa aku ngk hapal lorem ipsum
-            </p>
-        </div>
+.wave-container::before,
+.wave-container::after {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  border-radius: 50%; 
+  left: -50%;
+}
 
-        <!-- Wave di bagian bawah -->
-        <div class="absolute bottom-0 left-0 right-0">
-            <svg class="w-full h-16 text-white" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path d="M0,60 C300,120 900,0 1200,60 L1200,120 L0,120 Z" fill="currentColor" class="animate-pulse"></path>
-            </svg>
-        </div>
-    </section>
+.wave-container::before {
+  background-color: rgba(6, 182, 212, 0.2); 
+  bottom: -185%; 
+  animation: none; 
+}
 
-    <!-- Stats -->
-    <div class="stats-section" x-data="{donasi: axios.get('/api/donasi/stats')}">
-        <div class="stat-card">
-            <span class="stat-number" x-text="(await donasi).data.data.total_program_donasi">-</span>
-            <p class="stat-label">Program Donasi</p>
-        </div>
+.wave-container::after {
+  background-color: #f9fafb;
+  bottom: -188%; 
+  animation: none; 
+}
+</style>
+<main class="bg-gray-50">
+    <section class="hero relative overflow-hidden bg-gradient-to-br from-emerald-300 via-green-500 to-teal-600 text-white min-h-screen flex items-center">
+<div class="absolute inset-0 opacity-10">
+        <div class="absolute top-10 left-10 w-32 h-32 bg-white rounded-full animate-pulse"></div>
+        <div class="absolute top-32 right-20 w-24 h-24 bg-white rounded-full animate-bounce delay-300"></div>
+        <div class="absolute bottom-20 left-1/4 w-20 h-20 bg-white rounded-full animate-pulse delay-700"></div>
+        <div class="absolute bottom-32 right-1/3 w-28 h-28 bg-white rounded-full animate-bounce delay-1000"></div>
+    </div>
+    <div class="absolute inset-0 bg-black opacity-10"></div>
 
-        <div class="stat-card">
-            <span class="stat-number" x-text="cetak_rupiah((await donasi).data.data.total_donasi_terkumpul)">-</span>
-            <p class="stat-label">Total Donasi Terkumpul</p>
-        </div>
-
-        <div class="stat-card">
-            <span class="stat-number" x-text="(await donasi).data.data.total_donatur">-</span>
-            <p class="stat-label">Total Donatur</p>
-        </div>
+    <div class="container mx-auto px-6 relative z-10 text-center py-20">
+        
+        <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6 text-shadow-lg">
+            Selamat Datang di <br> 
+            <span class="bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent">
+                Platform Pengajian Online
+            </span>
+        </h1>
+        
+        <p class="text-xl md:text-2xl text-green-100 mb-10 max-w-3xl mx-auto leading-relaxed text-shadow">
+            Temukan kelas mengaji, ikuti kajian inspiratif, dan salurkan donasi terbaik Anda untuk mendukung dakwah. Semua dalam satu platform.
+        </p>
     </div>
 
-    <!-- Features -->
-    <section class="features-section">
-        <div class="features-container">
-            <div class="features-grid">
-                <!-- Kelas Mengaji -->
-                <div class="feature-item">
-                    <a href="/src/pages/kelas/index.upi">
-                        <div class="feature-icon">
-                            <img src="/src/assets/images/buku.png" alt="Kelas Mengaji">
-                        </div>
-                    </a>
-                    <p class="feature-label">Kelas Mengaji</p>
-                </div>
+    <div class="wave-container"></div>
+</section>
 
-                <!-- Kajian -->
-                <div class="feature-item">
-                <a href="/src/pages/kajian/index.upi">
-                    <div class="feature-icon">
-                        <img src="/src/assets/images/logoKajian.png" alt="Kajian">
-                    </div>
-                </a>
-                    <p class="feature-label">Kajian</p>
+    <section class="relative z-20 -mt-20 px-4" x-data="{donasi: axios.get('/api/donasi/stats')}">
+        <div class="max-w-5xl mx-auto bg-white rounded-xl shadow-lg">
+            <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200">
+                <div class="p-6 text-center">
+                    <span class="block text-4xl font-bold text-emerald-600" x-text="(await donasi).data.data.total_program_donasi">-</span>
+                    <p class="mt-1 text-sm font-medium text-gray-500 tracking-wider uppercase">Program Donasi</p>
+                </div>
+                <div class="p-6 text-center">
+                    <span class="block text-4xl font-bold text-emerald-600" x-text="cetak_rupiah((await donasi).data.data.total_donasi_terkumpul)">-</span>
+                    <p class="mt-1 text-sm font-medium text-gray-500 tracking-wider uppercase">Donasi Terkumpul</p>
+                </div>
+                <div class="p-6 text-center">
+                    <span class="block text-4xl font-bold text-emerald-600" x-text="(await donasi).data.data.total_donatur">-</span>
+                    <p class="mt-1 text-sm font-medium text-gray-500 tracking-wider uppercase">Total Donatur</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Campaign Cards -->
-    <section class="campaigns-section" id="Campaigns">
-        <div class="campaigns-container">
-            <div class="campaigns-grid" x-data="
-            {
-                campaigns : axios.get('/api/kelas/discover?limit=3'),
-                donasi: axios.get('/api/donasi/discover?limit=3')
-            }
-            ">
-                <template x-for="campaign in (await campaigns).data.data"> 
-                    <div class="campaign-card">
-                        <div class="campaign-image">
-                        <img :src="(await campaign).thumbnail_url ? '/static/' + (await campaign).thumbnail_url:''">
-                        </div>
-                        <div class="campaign-content">
-                            <h3 class="campaign-title" x-text="campaign.judul"></h3>
-                            <p class="campaign-description" x-text="campaign.deskripsi"></p>
-                            <div class="campaign-footer">
-                                <span class="campaign-progress" x-text="campaign.pengguna.nama_lengkap"></span>
-                                <button class="campaign-btn">
-                                    Ikuti kelas
-                                </button>
-                            </div>
-                        </div>
+
+    <section class="py-20 sm:py-24">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-gray-900 sm:text-5xl">Program Utama Kami</h2>
+            <p class="mt-4 text-lg text-gray-600">Pilih program yang paling sesuai untuk memperdalam ilmu agama Anda.</p>
+            <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-10">
+                <a href="/kelas" class="group block p-8 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                    <div class="flex items-center justify-center h-20 w-20 rounded-full bg-emerald-100 mx-auto group-hover:bg-emerald-200 transition-colors">
+                        <img src="/src/assets/images/buku.png" alt="Kelas Mengaji" class="h-10 w-10">
                     </div>
-                </template>
-                <template x-for="campaign in (await donasi).data.data"> 
-                    <div class="campaign-card">
-                        <div class="campaign-image">
-                        <img :src="(await campaign).gambar ? '/static/' + (await campaign).gambar:''">
-                        </div>
-                        <div class="campaign-content">
-                            <h3 class="campaign-title" x-text="campaign.nama_program"></h3>
-                            <p class="campaign-description" x-text="campaign.deskripsi"></p>
-                            <div class="campaign-footer">
-                                <button class="campaign-btn">
-                                    Donasi
-                                </button>
-                            </div>
-                        </div>
+                    <p class="mt-6 text-xl font-bold text-gray-800">Kelas Mengaji</p>
+                    <p class="mt-2 text-gray-500">Belajar membaca Al-Qur'an dan ilmu tajwid bersama pengajar berpengalaman.</p>
+                </a>
+                <a href="/kajian" class="group block p-8 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                    <div class="flex items-center justify-center h-20 w-20 rounded-full bg-emerald-100 mx-auto group-hover:bg-emerald-200 transition-colors">
+                         <img src="/src/assets/images/logoKajian.png" alt="Kajian" class="h-10 w-10">
                     </div>
-                </template>                    
+                    <p class="mt-6 text-xl font-bold text-gray-800">Kajian Online</p>
+                    <p class="mt-2 text-gray-500">Ikuti kajian tematik untuk menambah wawasan dan keimanan Anda.</p>
+                </a>
             </div>
+        </div>
+    </section>
+
+    <section class="bg-white py-20 sm:py-24" id="Campaigns">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-gray-900 sm:text-5xl">Program Terbaru</h2>
+                <p class="mt-4 text-lg text-gray-600">Jelajahi kelas dan program donasi yang sedang berlangsung.</p>
+            </div>
+            
+            <div class="mt-12 grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3" 
+            x-data="{ 
+                campaigns: axios.get('/api/kelas/discover?limit=3'), 
+                donasi: axios.get('/api/donasi/discover?limit=3'),
+                
+                getImageUrl(path) {
+                    if (!path) return '';
+                    
+                    if (path.startsWith('http')) {
+                        return path;
+                    }
+                    
+                    return window.location.origin + '/public/' + path;
+                }
+            }">
+                    
+            <template x-for="campaign in (await campaigns).data.data" :key="campaign.id_kelas">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                    <div class="flex-shrink-0">
+                        <img class="h-56 w-full object-cover" 
+                            :src="getImageUrl(campaign.thumbnail_url)" 
+                            alt="Gambar Kelas" 
+                            onerror="this.parentElement.style.display='none'">
+                    </div>
+                    
+                    <div class="p-6 flex flex-col flex-grow">
+                        <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-semibold px-3 py-1 rounded-full mb-4 self-start">Kelas</span>
+                        <h3 class="text-lg font-bold text-gray-900 line-clamp-2" x-text="campaign.judul"></h3>
+                        <p class="mt-2 text-gray-600 text-sm flex-grow line-clamp-3" x-text="campaign.deskripsi"></p>
+                        <div class="mt-auto pt-5 border-t border-gray-100 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-5.5-2.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zM10 12a5.99 5.99 0 00-4.793 2.39A6.483 6.483 0 0010 16.5a6.483 6.483 0 004.793-2.11A5.99 5.99 0 0010 12z" clip-rule="evenodd" /></svg>
+                                <span class="text-sm font-medium text-gray-700" x-text="campaign.pengguna.nama_lengkap"></span>
+                            </div>
+                            <a :href="'/kelas/' + campaign.slug" class="px-4 py-2 bg-emerald-500 text-white text-sm font-semibold rounded-lg shadow-sm hover:bg-emerald-600 transition-colors duration-300">
+                                Ikuti Kelas
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <template x-for="campaign in (await donasi).data.data" :key="campaign.id_program_donasi">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                    <div class="flex-shrink-0">
+                        <img class="h-56 w-full object-cover" 
+                            :src="getImageUrl(campaign.gambar)" 
+                            alt="Gambar Donasi"
+                            onerror="this.parentElement.style.display='none'">
+                    </div>
+
+                    <div class="p-6 flex flex-col flex-grow">
+                        <span class="inline-block bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1 rounded-full mb-4 self-start">Donasi</span>
+                        <h3 class="text-lg font-bold text-gray-900 line-clamp-2" x-text="campaign.nama_program"></h3>
+                        <p class="mt-2 text-gray-600 text-sm flex-grow line-clamp-3" x-text="campaign.deskripsi"></p>
+                        <div class="mt-auto pt-5 border-t border-gray-100 flex items-center justify-end">
+                            <a :href="'/donasi/' + campaign.slug" class="w-full text-center px-5 py-2.5 bg-amber-500 text-white font-semibold rounded-lg shadow-sm hover:bg-amber-600 transition-all duration-300">
+                                Donasi
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </template>         
         </div>
     </section>
 </main>
