@@ -10,7 +10,6 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.js" defer></script>
     <style>
         .progress-bar {
             height: 12px;
@@ -97,17 +96,23 @@
                 <div class="flex w-full justify-center text-center">
                     <h1 class="text-6xl text-black">0821 2545 5993</h1>
                 </div>
-                <div class="mt-12">
+                <form id="donasi_form" enctype="multipart/form-data" class="mt-12">
                     <div class="flex gap-8">
-                        <input type="text" placeholder="Nama anda" 
-                               class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-black">
-                        <input type="text" placeholder="Doa anda" 
-                               class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-black">
+                        <input type="text" name="nama" placeholder="Nama anda" 
+                               class="w-full pl-3 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-black">
+                        <input type="text" name="doa" placeholder="Doa anda" 
+                               class="w-full pl-3 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-black">
+                        <input type="number" name="nominal" placeholder="Nominal" 
+                               class="w-full pl-3 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-black">                                                           
                     </div>
-                    <button class="donate-btn w-full mt-4 text-white px-6 py-3 rounded-lg font-semibold">
-                        Upload Bukti Pembayaran
-                    </button>
-                </div>
+                    <div class="flex-row gap-6 mt-6">
+                        <input type="file" name="bukti_donasi" placeholder="Nominal" 
+                                class="w-full pl-3 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-black">                       
+                        <button @click.once="markui((await donasi).data.id_program_donasi)" type="button" class="donate-btn w-full mt-4 text-white px-6 py-3 rounded-lg font-semibold">
+                            Upload Bukti Pembayaran
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </section>

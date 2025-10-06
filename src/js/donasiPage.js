@@ -1,3 +1,14 @@
+async function markui(id_donasi) {
+      const form = document.getElementById("donasi_form")
+      const data = new FormData(form)
+      await axios({
+        method: "post",
+        url: "/api/donasi/donasi/" + id_donasi,
+        data: data,
+      })
+      alert("kayanya udah")    
+}
+
 async function fetch_data_donasi(slug) {
     slug = slug || window.location.href.split("/").at(-1)
     const data = await axios.get('/api/donasi/' + slug)
