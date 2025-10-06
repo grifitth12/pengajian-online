@@ -11,7 +11,7 @@ body {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 150px; /* Atur tinggi gelombang di sini */
+  height: 150px;
   overflow: hidden;
 }
 
@@ -19,22 +19,22 @@ body {
 .wave-container::after {
   content: "";
   position: absolute;
-  width: 200%; /* Dibuat lebih lebar agar lengkungannya landai */
+  width: 200%;
   height: 200%;
-  border-radius: 50%; /* Membuat bentuk lingkaran */
-  left: -50%; /* Menggeser ke kiri agar posisi di tengah */
+  border-radius: 50%; 
+  left: -50%;
 }
 
 .wave-container::before {
-  background-color: rgba(6, 182, 212, 0.2); /* Warna hijau muda, ganti sesuai selera */
-  bottom: -185%; /* Atur posisi vertikal layer ini */
-  animation: none; /* Memastikan tidak ada animasi */
+  background-color: rgba(6, 182, 212, 0.2); 
+  bottom: -185%; 
+  animation: none; 
 }
 
 .wave-container::after {
-  background-color: #f9fafb; /* Warna abu-abu muda (bg-gray-50), ganti ke #FFFFFF jika section bawahnya putih */
-  bottom: -188%; /* Atur posisi vertikal sedikit di bawah layer pertama */
-  animation: none; /* Memastikan tidak ada animasi */
+  background-color: #f9fafb;
+  bottom: -188%; 
+  animation: none; 
 }
 </style>
 <main class="bg-gray-50">
