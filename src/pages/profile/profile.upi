@@ -6,6 +6,7 @@
   <title>Profil & Pengaturan</title>
 
   <!-- AlpineJS + Font Awesome + Font -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -128,7 +129,7 @@
               <input type="text" class="form-input" x-model="user.afiliasi" disabled>
             </div>
 
-            <button type="button" class="save-btn" @click="success='Data berhasil disimpan (belum tersambung API PUT)'">Simpan</button>
+            <button type="button" class="save-btn" @click="axios.put('/api/pengguna/update', user)">Simpan</button>
             <p x-show="success" class="alert alert-success" x-text="success"></p>
             <p x-show="error" class="alert alert-error" x-text="error"></p>
           </form>
