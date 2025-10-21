@@ -585,7 +585,7 @@
       // Initialize Feather Icons
       feather.replace();
       
-      // Re-initialize icons when Alpine updates the DOM
+      // Re-initialize icons when Alpine updates the DOMx`x 
       document.addEventListener('alpine:initialized', () => {
         setTimeout(() => feather.replace(), 100);
       });
