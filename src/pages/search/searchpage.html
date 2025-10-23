@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id" x-data="searchPage()">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pencarian - NgajiOnline</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="/src/css/style-pencarian.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body>
+
+<header class="search-header-sticky">
+  <a href="/" class="back-button" aria-label="Kembali">
+    <i class="fas fa-arrow-left"></i>
+  </a>
+  <form @submit.prevent="doSearch" class="search-form">
+    <i class="fas fa-search search-icon"></i>
+    <input type="search" x-model="query" placeholder="Cari kajian, donasi, kelas..." required>
+  </form>
+</header>
+
+<main class="search-page-content">
+  <div class="search-container">
+    <div class="main-content">
+      <h2 class="section-title">Riwayat Pencarian</h2>
+      <div class="history-list">
+        <template x-if="history.length === 0">
+          <p class="info-text">Belum ada riwayat pencarian.</p>
+        </template>
+        <template x-for="item in history" :key="item">
+          <a href="#" class="history-item" @click.prevent="redirectSearch(item)">
+            <i class="fas fa-history"></i>
+            <span x-text="item"></span>
+            <button class="remove-history" @click.stop="removeHistory(item)">&times;</button>
+          </a>
+        </template>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+function searchPage() {
+  return {
+    query: '',
+    history: JSON.parse(localStorage.getItem('ngajiOnlineSearchHistory')) || [],
+    doSearch() {
+      if (!this.query) return;
+      this.saveHistory(this.query);
+      window.location.href = `/search?q=${encodeURIComponent(this.query)}`;
+    },
+    saveHistory(term) {
+      this.history = this.history.filter(h => h.toLowerCase() !== term.toLowerCase());
+      this.history.unshift(term);
+      if (this.history.length > 5) this.history.pop();
+      localStorage.setItem('ngajiOnlineSearchHistory', JSON.stringify(this.history));
+    },
+    redirectSearch(term) {
+      window.location.href = `/search?q=${encodeURIComponent(term)}`;
+    },
+    removeHistory(term) {
+      this.history = this.history.filter(h => h !== term);
+      localStorage.setItem('ngajiOnlineSearchHistory', JSON.stringify(this.history));
+    }
+  }
+}
+</script>
+
+</body>
+</html>

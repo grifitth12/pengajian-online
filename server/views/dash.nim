@@ -14,3 +14,9 @@ proc daftar_mentor*(ctx: Context) {.async.} =
 
 proc about*(ctx: Context) {.async.} =
     resp generalTemplate("src/pages/about.upi", "Tentang Kami")
+
+proc search*(ctx: Context) {.async.} =
+    var lowr = "search-results.html"
+    if ctx.getQueryParams("q", "Sukamto_X_ANTO") == "Sukamto_X_ANTO" :
+        lowr = "searchpage.html"
+    await ctx.staticFileResponse(lowr, "src/pages/search")

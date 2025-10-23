@@ -5,6 +5,39 @@
     async function fetch_data() {
         return JSON.parse(document.querySelector("script[data-upi]").textContent).result.data[0]
     }
+
+    async function selectPhoto(previewId, target) {
+        let input = document.createElement("input")
+        input.type = "file"
+        input.accept = "image/*"
+
+        input.onchange = async e => {
+            let file = e.target.files[0]
+            if (!file) return
+
+            // preview
+            let reader = new FileReader()
+            reader.onload = ev => document.getElementById(previewId).src = ev.target.result
+            reader.readAsDataURL(file)
+
+            // upload temp
+            let fd = new FormData()
+            fd.append("file", file)
+            fd.append("InternalId", id_kelas)
+            let res = await axios.post("/api/file/temp-thumbnail-upload", fd, {headers:{"Content-Type":"multipart/form-data"}})
+            console.log(res)
+            window[target] = res.data.filename 
+            document.getElementById(previewId).src = "/static/" + res.data.filename
+        }
+
+        input.click()
+    }
+
+    async function commitTemp(tempName) {
+        if (!tempName) return null
+        let res = await axios.post("/api/file/commit-temp-thumbnail", { filename: tempName, InternalId: id_kelas})
+        return res.data.filename
+    } 
 </script>
 <div id="upi-1" upi-title="Edit Kelas" class="content flex-1 overflow-auto">
     <main class="p-6" x-data="{kelas : fetch_data(), kelasForm : {}, pertemuan_i : {}}">
@@ -68,10 +101,10 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Thumbnail</label>
                         <div class="mt-1 flex flex-col items-center">
-                            <img id="thumbnailPreview" src="http://127.0.0.1:8080/src/assets/images/banner.png" alt="Thumbnail Preview" class="thumbnail-preview w-full mb-2 rounded-lg border border-gray-300">
+                            <img id="thumbnailPreview" :src="(await kelas).thumbnail_url ? '/static/' + (await kelas).thumbnail_url : ''" alt="Thumbnail Preview" class="thumbnail-preview w-full mb-2 rounded-lg border border-gray-300">
                             <div x-model="kelasForm.thumbnail_url" class="flex space-x-2">
                                 <input type="file" id="thumbnailUpload" class="hidden" accept="image/*">
-                                <button onclick="document.getElementById('thumbnailUpload').click()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
+                                <button onclick="selectPhoto('thumbnailPreview', 'tempThumbnail')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
                                     <i class="fas fa-upload mr-1"></i> Upload
                                 </button>
                                 <button id="removeThumbnail" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm">
