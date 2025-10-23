@@ -87,9 +87,9 @@ function searchResults() {
       try {
         // Fetch tiga endpoint sekaligus
         const [kelasRes, kajianRes, donasiRes] = await Promise.all([
-          fetch(`http://localhost:5501/api/kelas/cari?q=${encodeURIComponent(this.query)}`),
-          fetch(`http://localhost:5501/api/kajian/cari?q=${encodeURIComponent(this.query)}`),
-          fetch(`http://localhost:5501/api/donasi/cari?q=${encodeURIComponent(this.query)}`)
+          fetch(`/api/kelas/cari?q=${encodeURIComponent(this.query)}`),
+          fetch(`/api/kajian/cari?q=${encodeURIComponent(this.query)}`),
+          fetch(`/api/donasi/cari?q=${encodeURIComponent(this.query)}`)
         ]);
 
         const kelasData = kelasRes.ok ? await kelasRes.json() : [];
@@ -115,7 +115,7 @@ function searchResults() {
     },
     doSearch() {
       if (this.query) {
-        window.location.href = `search-results.html?q=${encodeURIComponent(this.query)}`;
+        window.location.href = `/search?q=${encodeURIComponent(this.query)}`;
       }
     },
     // Fungsi untuk mendapatkan URL yang sesuai berdasarkan jenis konten
@@ -132,7 +132,7 @@ function searchResults() {
     // Fungsi untuk mendapatkan judul item
     getItemTitle(item) {
       if (item.type === 'kelas') {
-        return item.nama_kelas || 'Kelas Tanpa Judul';
+        return item.judul || 'Kelas Tanpa Judul';
       } else if (item.type === 'kajian') {
         return item.judul || 'Kajian Tanpa Judul';
       } else if (item.type === 'donasi') {
