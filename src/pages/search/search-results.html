@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id" x-data="searchResults()">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hasil Pencarian - NgajiOnline</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="/src/css/searchresults.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body x-init="init()">
+
+<header class="search-header-sticky">
+  <a href="searchpage.html" class="back-button" aria-label="Kembali ke Pencarian">
+    <i class="fas fa-arrow-left"></i>
+  </a>
+  <form @submit.prevent="doSearch" class="search-form">
+    <i class="fas fa-search search-icon"></i>
+    <input type="search" x-model="query" placeholder="Cari kajian, donasi, kelas..." required>
+  </form>
+</header>
+
+<main class="search-page-content">
+  <div class="search-container">
+    <div id="results-content">
+      <div class="results-header">
+        <h2 class="section-title" x-text="title"></h2>
+        <button @click="isFilterSidebarOpen = true" class="open-filter-btn">
+          <i class="fas fa-filter"></i>
+          <span>Filter & Urutkan</span>
+        </button>
+      </div>
+      <div class="results-list">
+        <!-- Loader -->
+        <template x-if="loading">
+          <div class="loader"></div>
+        </template>
+
+        <!-- Kosong -->
+        <template x-if="!loading && results.length === 0">
+          <p class="info-text">Tidak ada hasil ditemukan.</p>
+        </template>
+
+        <!-- Hasil - Template yang dinamis berdasarkan jenis konten -->
+        <template x-for="item in results" :key="item.id + '-' + item.type">
+          <a :href="getItemUrl(item)" class="result-item">
+            <div class="item-details">
+              <h3 x-text="getItemTitle(item)"></h3>
+              <p x-text="getItemDescription(item)"></p>
+            </div>
+            <span class="item-badge" 
+                  :class="{
+                    'badge-kelas': item.type === 'kelas', 
+                    'badge-kajian': item.type === 'kajian',
+                    'badge-donasi': item.type === 'donasi'
+                  }" 
+                  x-text="getBadgeText(item.type)">
+            </span>
+          </a>
+        </template>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+function searchResults() {
+  return {
+    query: '',
+    title: 'Memuat hasil...',
+    results: [],
+    loading: true,
+    init() {
+      const urlParams = new URLSearchParams(window.location.search);
+      this.query = urlParams.get('q') || '';
+      if (this.query) {
+        this.title = `Menampilkan hasil untuk "${this.query}"`;
+        this.fetchResults();
+      } else {
+        this.loading = false;
+        this.title = 'Silakan lakukan pencarian';
+      }
+    },
+    async fetchResults() {
+      this.loading = true;
+      try {
+        // Fetch tiga endpoint sekaligus
+        const [kelasRes, kajianRes, donasiRes] = await Promise.all([
+          fetch(`/api/kelas/cari?q=${encodeURIComponent(this.query)}`),
+          fetch(`/api/kajian/cari?q=${encodeURIComponent(this.query)}`),
+          fetch(`/api/donasi/cari?q=${encodeURIComponent(this.query)}`)
+        ]);
+
+        const kelasData = kelasRes.ok ? await kelasRes.json() : [];
+        const kajianData = kajianRes.ok ? await kajianRes.json() : [];
+        const donasiData = donasiRes.ok ? await donasiRes.json() : [];
+
+        const kelas = Array.isArray(kelasData) ? kelasData : kelasData.data || [];
+        const kajian = Array.isArray(kajianData) ? kajianData : kajianData.data || [];
+        const donasi = Array.isArray(donasiData) ? donasiData : donasiData.data || [];
+
+        // Tambahin label type biar bisa dibedain
+        this.results = [
+          ...kelas.map(k => ({ ...k, type: 'kelas' })),
+          ...kajian.map(j => ({ ...j, type: 'kajian' })),
+          ...donasi.map(d => ({ ...d, type: 'donasi' }))
+        ];
+      } catch (err) {
+        console.error(err);
+        this.results = [];
+      } finally {
+        this.loading = false;
+      }
+    },
+    doSearch() {
+      if (this.query) {
+        window.location.href = `/search?q=${encodeURIComponent(this.query)}`;
+      }
+    },
+    // Fungsi untuk mendapatkan URL yang sesuai berdasarkan jenis konten
+    getItemUrl(item) {
+      if (item.type === 'kelas') {
+        return `/kelas/${item.slug}`;
+      } else if (item.type === 'kajian') {
+        return `/kajian/${item.slug}`;
+      } else if (item.type === 'donasi') {
+        return `/donasi/${item.slug}`;
+      }
+      return '#'; // Fallback URL
+    },
+    // Fungsi untuk mendapatkan judul item
+    getItemTitle(item) {
+      if (item.type === 'kelas') {
+        return item.judul || 'Kelas Tanpa Judul';
+      } else if (item.type === 'kajian') {
+        return item.judul || 'Kajian Tanpa Judul';
+      } else if (item.type === 'donasi') {
+        return item.judul_donasi || item.nama_program || 'Donasi Tanpa Judul';
+      }
+      return 'Tanpa Judul';
+    },
+    // Fungsi untuk mendapatkan deskripsi item
+    getItemDescription(item) {
+      if (item.type === 'kelas') {
+        return item.deskripsi || 'Tidak ada deskripsi';
+      } else if (item.type === 'kajian') {
+        return item.deskripsi || item.pembicara || 'Tidak ada deskripsi';
+      } else if (item.type === 'donasi') {
+        return item.deskripsi || item.tujuan || 'Tidak ada deskripsi';
+      }
+      return 'Tidak ada deskripsi';
+    },
+    // Fungsi untuk mendapatkan teks badge
+    getBadgeText(type) {
+      const badgeTexts = {
+        'kelas': 'Kelas',
+        'kajian': 'Kajian', 
+        'donasi': 'Donasi'
+      };
+      return badgeTexts[type] || type;
+    }
+  }
+}
+</script>
+
+</body>
+</html>
