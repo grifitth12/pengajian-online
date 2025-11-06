@@ -11,50 +11,15 @@
         let form_el = document.getElementById("fom")
         let url = "/api/kelas/" + id_kelas.replace("?", "") + "/update"
         let data = new FormData(form_el)
-        alert(data.get("deskripsi"))
         let rijal = axios.put(
-            url, data,
-            headers = {"Content-Type" : "multipart/form-data"}
+            url, data
         )
-        // window.rjl = data
     }
 
-    async function selectPhoto(previewId, target) {
-        let input = document.createElement("input")
-        input.type = "file"
-        input.accept = "image/*"
-
-        input.onchange = async e => {
-            let file = e.target.files[0]
-            if (!file) return
-
-            // preview
-            let reader = new FileReader()
-            reader.onload = ev => document.getElementById(previewId).src = ev.target.result
-            reader.readAsDataURL(file)
-
-            // upload temp
-            let fd = new FormData()
-            fd.append("file", file)
-            fd.append("InternalId", id_kelas)
-            let res = await axios.post("/api/file/temp-thumbnail-upload", fd, {headers:{"Content-Type":"multipart/form-data"}})
-            console.log(res)
-            window[target] = res.data.filename 
-            document.getElementById(previewId).src = "/static/" + res.data.filename
-        }
-
-        input.click()
-    }
-
-    async function commitTemp(tempName) {
-        if (!tempName) return null
-        let res = await axios.post("/api/file/commit-temp-thumbnail", { filename: tempName, InternalId: id_kelas})
-        return res.data.filename
-    } 
 </script>
 <div id="upi-1" upi-title="Edit Kelas" class="content flex-1 overflow-auto">
     <main class="p-6" x-data="{kelas : fetch_data(), kelasForm : {}, pertemuan_i : {}}">
-        <form class="bg-white rounded-lg shadow-md overflow-hidden" id="fom">
+        <form enctype="multipart/form-data" class="bg-white rounded-lg shadow-md overflow-hidden" id="fom">
             <div class="p-6 border-b">
                 <div class="flex flex-wrap justify-between items-center gap-4">
                     <h2 class="text-xl font-semibold text-gray-800">Edit Kelas</h2>
@@ -116,13 +81,7 @@
                         <div class="mt-1 flex flex-col items-center">
                             <img id="thumbnailPreview" :src="(await kelas).thumbnail_url ? '/static/' + (await kelas).thumbnail_url : ''" alt="Thumbnail Preview" class="thumbnail-preview w-full mb-2 rounded-lg border border-gray-300">
                             <div x-model="kelasForm.thumbnail_url" class="flex space-x-2">
-                                <input name="file" type="file" id="thumbnailUpload" class="hidden" accept="image/*">
-                                <button type="button" onclick="selectPhoto('thumbnailPreview', 'tempThumbnail')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
-                                    <i class="fas fa-upload mr-1"></i> Upload
-                                </button>
-                                <button id="removeThumbnail" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm">
-                                    <i class="fas fa-trash mr-1"></i> Remove
-                                </button>
+                                <input name="file" type="file" id="thumbnailUpload" accept="image/*">
                             </div>
                         </div>
                     </div>
