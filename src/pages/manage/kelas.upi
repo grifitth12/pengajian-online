@@ -1,29 +1,22 @@
 <script src="/src/js/global.js"></script>
 <script src="/src/js/kelasPage.js"></script>
-<script>
-    let id_kelas = window.location.href.split("/").at(-1)
-
-    async function fetch_data() {
-        return JSON.parse(document.querySelector("script[data-upi]").textContent).result.data[0]
-    }
-
-    async function update_p(id_kelas) {
-        let form_el = document.getElementById("fom")
-        let url = "/api/kelas/" + id_kelas.replace("?", "") + "/update"
-        let data = new FormData(form_el)
-        let rijal = axios.put(
-            url, data
-        )
-    }
-
-</script>
-<div id="upi-1" upi-title="Edit Kelas" class="content flex-1 overflow-auto">
+<div id="upi-1" upi-title="Edit Kelas" class="content flex-1 overflow-auto" x-data="{
+    id_kelas: window.location.href.split('/').at(-1),
+    fetch_data: async () => JSON.parse(document.querySelector('script[data-upi]').textContent).result.data[0],
+}">
     <main class="p-6" x-data="{kelas : fetch_data(), kelasForm : {}, pertemuan_i : {}}">
-        <form enctype="multipart/form-data" class="bg-white rounded-lg shadow-md overflow-hidden" id="fom">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
             <div class="p-6 border-b">
-                <div class="flex flex-wrap justify-between items-center gap-4">
+                <div class="flex flex-wrap justify-between items-center gap-4" x-data="{
+                    update: async (id_kelas, params) => {
+                        try {
+                            await axios.put('/api/kelas/' + id_kelas + '/update', params)
+                            supami('wow', 'Kelas berhasil diupdate.', '')
+                        } catch (error) { supami('error', 'Gagal Menambahkan Pertemuan', error.message) }
+                    }
+                }">
                     <h2 class="text-xl font-semibold text-gray-800">Edit Kelas</h2>
-                    <button type="button" @click="update_p((await kelas).id_kelas)" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center">
+                    <button type="button" @click="update((await fetch_data()).id_kelas, kelasForm)" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center">
                         <i class="fas fa-save mr-2"></i> Save Changes
                     </button>
                 </div>
@@ -31,6 +24,7 @@
 
             <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="md:col-span-2 space-y-6">
+
                     <div>
                         <label for="judul" class="block text-sm font-medium text-gray-700 mb-1">Judul Kelas</label>
                         <input name="judul" type="text" x-model="kelasForm.judul" id="judul" :value="(await kelas).judul" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
@@ -39,7 +33,6 @@
                         <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
                         <textarea name="deskripsi" id="deskripsi" x-model="kelasForm.deskripsi" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" x-text="(await kelas).deskripsi"></textarea>
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
@@ -50,6 +43,7 @@
                             </select>
                         </div>
                     </div>
+
                     <h1 class="text-2xl mt-4">Pertemuan</h1>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -76,23 +70,73 @@
                 </div>
 
                 <div class="space-y-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Thumbnail</label>
-                        <div class="mt-1 flex flex-col items-center">
-                            <img id="thumbnailPreview" :src="(await kelas).thumbnail_url ? '/static/' + (await kelas).thumbnail_url : ''" alt="Thumbnail Preview" class="thumbnail-preview w-full mb-2 rounded-lg border border-gray-300">
-                            <div x-model="kelasForm.thumbnail_url" class="flex space-x-2">
-                                <input name="file" type="file" id="thumbnailUpload" accept="image/*">
+                    <!-- Form Image -->
+                    <form
+                        id="updateThumbnailForm" 
+                        enctype="multipart/form-data"
+                        x-data="{
+                            preview: JSON.parse(document.querySelector('script[data-upi]').textContent).result.data[0].static_file_address.path,
+                            updatePreview: (e) => {
+                                const file = e.target.files[0];
+                                if (!file) return;
+                                document.getElementById('nyerahGuaJir').src = URL.createObjectURL(file);
+                                document.getElementById('buttonRijal').classList.remove('hidden');
+                            },
+                            updateThumbnail: async (id_kelas, id_file) => {
+                                let form_el = document.getElementById('updateThumbnailForm')
+                                let data = new FormData(form_el)
+                                let url = '/api/kelas/' + id_kelas + '/thumbnail/' + id_file
+                                try {
+                                    await axios.put(url, data)
+                                    supami('Anjay', 'bisacuy awokawokwok', '')
+                                } catch(error) { supami('Yah Gabisa', 'Nice Try ygy', error.message) }
+                            }
+                        }"
+                        class="space-y-4"
+                    >
+                        <label class="block text-sm font-semibold text-gray-800">Thumbnail</label>
+
+                        <div class="flex flex-col items-center p-4 border rounded-xl bg-gray-50">
+                            <img 
+                                :src="JSON.parse(document.querySelector('script[data-upi]').textContent).result.data[0].static_file_address.path" 
+                                alt="Thumbnail Preview" 
+                                class="w-full max-w-md rounded-lg shadow-sm border"
+                                id="nyerahGuaJir">
+
+                            <div class="mt-3 w-full max-w-md">
+                                <input 
+                                    name="thumbnail" 
+                                    type="file" 
+                                    accept="image/*"
+                                    @change="updatePreview"
+                                    class="block w-full text-sm text-gray-700 
+                                        file:mr-4 file:py-2 file:px-4 
+                                        file:rounded-lg file:border-0 
+                                        file:bg-blue-600 file:text-white
+                                        file:cursor-pointer cursor-pointer
+                                        hover:file:bg-blue-700"
+                                >
                             </div>
                         </div>
-                    </div>
 
-                    <div class="border border-gray-200 rounded-lg p-4">
+                        <button
+                            id="buttonRijal"
+                            type="button"
+                            @click="updateThumbnail((await kelas).id_kelas, (await kelas).static_file_address.id_static_file_address)"
+                            class="hidden w-full py-2 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 transition"
+                        >
+                            Save Thumbnail
+                        </button>
+                    </form>
+                    <!-- End Form Image -->
+
+                    <div class="hidden border border-gray-200 rounded-lg p-4">
                         <h3 class="text-sm font-medium text-gray-700 mb-3">Mentor</h3>
                         <div class="flex items-center space-x-3">
-                            <img :src="(await kelas).pengguna.foto_url" alt="Mentor" class="w-10 h-10 rounded-full">
+                            <img :src="(await fetch_data()).pengguna.foto_url" alt="Mentor" class="w-10 h-10 rounded-full">
                             <div>
-                                <p class="text-sm font-medium text-gray-900" x-text="(await kelas).pengguna.nama_lengkap"></p>
-                                <p class="text-xs text-gray-500" x-text="'ID: ' + (await kelas).pengguna.id_pengguna"></p>
+                                <p class="text-sm font-medium text-gray-900" x-text="(await fetch_data()).pengguna.nama_lengkap"></p>
+                                <p class="text-xs text-gray-500" x-text="'ID: ' + (await fetch_data()).pengguna.id_pengguna"></p>
                             </div>
                         </div>
                         <div class="mt-3">
@@ -135,6 +179,6 @@
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
     </main>
 </div>
