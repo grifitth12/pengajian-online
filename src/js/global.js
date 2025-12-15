@@ -7,6 +7,23 @@ function login() {
     )
 }
 
+function hello(dateString) {
+  // Parse ke object Date (bisa tangani format ISO 8601 + timezone)
+  const date = new Date(dateString);
+
+  // Ambil bagian tanggal & waktu (lokal)
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  // Kembalikan format sesuai aturan <input type="datetime-local">
+  // Bisa buang `:${seconds}` kalau tak mau detik
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+}
+
 function cetak_tenggal(tanggal) {
     const d = new Date(tanggal);
 

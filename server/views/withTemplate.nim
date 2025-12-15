@@ -3,6 +3,9 @@ import
     strutils,
     json
 
+proc noTemplate*(html_file: string) : string =
+    return readAll newFileStream(html_file, fmRead)
+
 proc loadAdminTemplate*(
     html_file: string,
     data: auto = ""
