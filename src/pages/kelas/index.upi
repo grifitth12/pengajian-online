@@ -83,7 +83,7 @@
     </section>
 
   <!-- Program -->
-<section class="program mt-6 mb-12 px-4 relative overflow-hidden" x-data="{kelass: get_kelas()}">
+<section class="program mt-6 mb-12 px-4 relative" x-data="{kelass: get_kelas()}">
     <div class="absolute top-0 left-0 w-32 h-32 bg-green-100 rounded-full opacity-20 floating-element -z-10"></div>
     <div class="absolute bottom-0 right-0 w-24 h-24 bg-green-200 rounded-full opacity-30 floating-element -z-10" style="animation-delay: 1s;"></div>
     
