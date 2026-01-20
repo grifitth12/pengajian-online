@@ -114,21 +114,104 @@
                 <!-- Right Column -->
                 <div class="space-y-6">
                     <!-- Thumbnail -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Thumbnail</label>
-                        <div class="mt-1 flex flex-col items-center">
-                            <img id="thumbnailPreview" :src="(await kajian).thumbnail_url ? '/static/' + (await kajian).thumbnail_url : ''" alt="Thumbnail Preview" class="thumbnail-preview w-full mb-2 rounded-lg border border-gray-300">
-                            <div x-model="kajianForm.thumbnail_url" class="flex space-x-2">
-                                <input type="file" id="thumbnailUpload" class="hidden" accept="image/*">
-                                <button onclick="selectPhoto('thumbnailPreview', 'tempThumbnail')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
-                                    <i class="fas fa-upload mr-1"></i> Upload
-                                </button>
-                                <button id="removeThumbnail" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm">
-                                    <i class="fas fa-trash mr-1"></i> Remove
-                                </button>
+                    <form
+                        id="updateThumbnailForm" 
+                        enctype="multipart/form-data"
+                        x-data="{
+                            previewUrl: null,
+                            isChanged: false,
+                            isLoading: false,
+                            kajianData: null,
+
+                            async init() {
+                                // Wait for parent 'kajian' data to resolve
+                                try {
+                                    this.kajianData = await kajian; // Access 'kajian' from parent scope
+                                    if (this.kajianData && this.kajianData.static_file_address) {
+                                        this.previewUrl = this.kajianData.static_file_address.path;
+                                    }
+                                } catch (e) {
+                                    console.error('Failed to load kajian data for thumbnail', e);
+                                }
+                            },
+
+                            previewImage(e) {
+                                const file = e.target.files[0];
+                                if (!file) return;
+                                this.previewUrl = URL.createObjectURL(file);
+                                this.isChanged = true;
+                            },
+
+                            async updateThumbnail() {
+                                if (!this.kajianData) return;
+                                this.isLoading = true;
+
+                                let form_el = document.getElementById('updateThumbnailForm');
+                                let data = new FormData(form_el);
+                                
+                                // Safely get IDs
+                                const id_kajian = this.kajianData.id_kajian;
+                                const id_file = this.kajianData.static_file_address ? this.kajianData.static_file_address.id_static_file_address : 'new';
+                                
+                                // Correct endpoint for Kajian
+                                let url = '/api/kajian/' + id_kajian + '/thumbnail/' + id_file;
+
+                                try {
+                                    await axios.put(url, data);
+                                    supami('Berhasil', 'Thumbnail berhasil diperbarui', '');
+                                    this.isChanged = false;
+                                } catch(error) { 
+                                    supami('Gagal', 'Gagal memperbarui thumbnail', error.response ? error.response.data.message : error.message);
+                                } finally {
+                                    this.isLoading = false;
+                                }
+                            }
+                        }"
+                        class="space-y-4"
+                    >
+                        <label class="block text-sm font-semibold text-gray-800">Thumbnail</label>
+
+                        <div class="flex flex-col items-center p-4 border rounded-xl bg-gray-50">
+                            <!-- Image Preview -->
+                            <template x-if="previewUrl">
+                                <img 
+                                    :src="previewUrl" 
+                                    alt="Thumbnail Preview" 
+                                    class="w-full max-w-md rounded-lg shadow-sm border object-cover"
+                                >
+                            </template>
+                            <template x-if="!previewUrl">
+                                <div class="w-full max-w-md h-48 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
+                                    No Thumbnail Available
+                                </div>
+                            </template>
+
+                            <div class="mt-3 w-full max-w-md">
+                                <input 
+                                    name="thumbnail" 
+                                    type="file" 
+                                    accept="image/*"
+                                    @change="previewImage"
+                                    class="block w-full text-sm text-gray-700 
+                                        file:mr-4 file:py-2 file:px-4 
+                                        file:rounded-lg file:border-0 
+                                        file:bg-blue-600 file:text-white
+                                        file:cursor-pointer cursor-pointer
+                                        hover:file:bg-blue-700"
+                                >
                             </div>
                         </div>
-                    </div>
+
+                        <button
+                            type="button"
+                            x-show="isChanged"
+                            @click="updateThumbnail()"
+                            :disabled="isLoading"
+                            class="w-full py-2 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 transition flex items-center justify-center"
+                        >
+                            <span x-text="isLoading ? 'Saving...' : 'Save Thumbnail'"></span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
