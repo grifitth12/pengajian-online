@@ -51,7 +51,7 @@
             <template x-for="kajian in (await kajianData).data">
                 <article class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden card-hover">
                     <div class="relative">
-                        <img alt="Ustadz giving a lecture in mosque with attendees listening attentively" class="w-full h-64 object-cover" :src="(await kajian).thumbnail_url ? '/static/' + (await kajian).thumbnail_url:''"/>
+                        <img alt="Ustadz giving a lecture in mosque with attendees listening attentively" class="w-full h-64 object-cover" :src="'/api/.f/' + (await kajian).static_file_address.id_static_file_address"/>
                         <div class="absolute top-4 left-4">
                             <span class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold">Tafsir</span>
                         </div>
