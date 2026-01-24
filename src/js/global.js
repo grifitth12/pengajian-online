@@ -7,6 +7,15 @@ function login() {
     )
 }
 
+function getDataUpi(name) {
+    const metaDescription = document.querySelector(`meta[name='upi-${name}']`);
+    if (metaDescription) {
+        const content = metaDescription.content;
+        return content
+    }
+    else { return "" }
+}
+
 function hello(dateString) {
   // Parse ke object Date (bisa tangani format ISO 8601 + timezone)
   const date = new Date(dateString);

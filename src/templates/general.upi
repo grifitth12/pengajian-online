@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="/src/css/index.css">
 <link rel="stylesheet" href="/src/css/footer.css">
+$metadata
 </head>
 <body x-data="{auth:isAuthenticated()}">    
 <link rel="stylesheet" href="/src/css/index.css">

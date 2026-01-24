@@ -89,19 +89,6 @@ async function fetch_pertemuan_index(id_pertemuan_kelas) {
 
 }
 
-async function update(params, id_kelas) {
-    try {
-        if (window.tempThumbnail) {
-            let committedFile = await commitTemp(window.tempThumbnail)
-            if (committedFile) {
-                params.thumbnail_url = committedFile
-            }
-        }
-        await axios.put("/api/kelas/" + id_kelas + "/update", params)
-        supami("wow", "Kelas berhasil diupdate.", "")
-    } catch (error) { supami("error", "Gagal Menambahkan Pertemuan", "Anda bukan pemiliki dari kelas ini dan tidak memiliki izin untuk melakuka update.") }
-}
-
 async function tambah_kelas() {
     let popup = document.getElementById("popup-child")
     document.getElementById("popup").classList.remove("hidden")
@@ -113,10 +100,12 @@ async function tambah_kelas() {
 async function create_pertemuan_kelas(pertemuanForm) {
     try {
         let blog_content = document.getElementById("blog_text_hidden").value
+        let id_kelas = getDataUpi("model-id")
         pertemuanForm.blog_text = blog_content ? blog_content : null
         await axios.post("/api/kelas/pertemuan/insert/" + id_kelas, pertemuanForm)
         supami("rijal", "data berhasil ditambahkan", "")
     } catch (error) {
+        console.log(error)
         if (error.response.status == 403) {
             supami("error", "Gagal Menambahkan Pertemuan", "Anda bukan pemiliki dari kelas ini dan tidak memiliki izin untuk menambahkan pertemuan baru.")
         }

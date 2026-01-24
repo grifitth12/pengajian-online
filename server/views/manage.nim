@@ -9,6 +9,9 @@ import
 
 proc triyono*(ctx: Context) {.async.} =
     var
+        metadata: Metadatas
+    
+    let
         ac = ctx.getCookie("access_token")
         base_m = ctx.getPathParams("model", "triyono")
         model = base_m.replace("sedekah", "donasi")
@@ -26,9 +29,12 @@ proc triyono*(ctx: Context) {.async.} =
             )
         
         if jajat.code == 200 :
+            metadata.add (name: "model-id", content: ctx.getPathParams("id"))
+            metadata.add (name: "model-name", content: model)
+
             let
                 jsonn = parseJson(jajat.body)
-                page = loadAdminTemplate( fmt"src/pages/manage/{base_m}.upi", jsonn )
+                page = loadAdminTemplate(fmt "src/pages/manage/{base_m}.upi", jsonn , metadata=metadata)
 
             resp strip page
 
