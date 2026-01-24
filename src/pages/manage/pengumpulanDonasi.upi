@@ -85,7 +85,7 @@
                             updateThumbnail: async (id_kelas, id_file) => {
                                 let form_el = document.getElementById('updateThumbnailForm')
                                 let data = new FormData(form_el)
-                                let url = '/api/kelas/thumbnail/' + id_file
+                                let url = '/api/kelas/' + id_kelas + '/thumbnail/' + id_file
                                 try {
                                     await axios.put(url, data)
                                     supami('Anjay', 'bisacuy awokawokwok', '')

@@ -150,11 +150,12 @@
                                 let data = new FormData(form_el);
                                 
                                 // Safely get IDs
-                                const id_kajian = this.kajianData.id_kajian;
-                                const id_file = this.kajianData.static_file_address ? this.kajianData.static_file_address.id_static_file_address : 'new';
+                                let felixGay = await fetch_data();
+                                const id_kajian = (felixGay).id_kajian;
+                                const id_file = (felixGay).static_file_address ? (felixGay).static_file_address.id_static_file_address : 'new';
                                 
                                 // Correct endpoint for Kajian
-                                let url = '/api/kajian/' + id_kajian + '/thumbnail/' + id_file;
+                                let url = '/api/kelas/thumbnail/' + id_file;
 
                                 try {
                                     await axios.put(url, data);
@@ -205,7 +206,7 @@
                         <button
                             type="button"
                             x-show="isChanged"
-                            @click="updateThumbnail((await fetch_data()).id_kajian, (await fetch_data()).static_file_address.id_static_file_address)"
+                            @click="updateThumbnail()"
                             class="w-full py-2 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 transition flex items-center justify-center"
                         >
                             <span x-text="isLoading ? 'Saving...' : 'Save Thumbnail'"></span>

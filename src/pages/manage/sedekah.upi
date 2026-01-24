@@ -144,7 +144,7 @@
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-500">URL:</span>
                                 <span class="text-gray-700"><a class="text-blue-600" :href="'/donasi/' + (await donasi).slug">Go To Page</a></span>
-                            </div>                            
+                            </div>
                         </div>
                     </div>
                 </div>
