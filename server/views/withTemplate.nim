@@ -1,20 +1,40 @@
 import
     streams,
     strutils,
-    json
+    json,
+    tables
+
+type
+    Metadata* = tuple[name: string, content: string]
+    Metadatas* = seq[Metadata]
+
+proc compile(metadatas: Metadatas) : string =
+    const mdc = "<meta name=\"upi-$#\" content=\"$#\">"
+    var s: seq[string]
+
+    if metadatas.len > 0:
+        for md in metadatas:
+            s.add mdc % [md.name, md.content]
+
+    return s.join("\n")            
 
 proc noTemplate*(html_file: string) : string =
     return readAll newFileStream(html_file, fmRead)
 
 proc loadAdminTemplate*(
     html_file: string,
-    data: auto = ""
+    data: auto = "";
+    metadata: Metadatas = @[]
 ) : string =
     let
         templ = readAll newFileStream("src/templates/adminPanel.upi", fmRead)
         htmll = readAll newFileStream(html_file, fmRead)
         dataa = %*{"result" : data}
-        page = templ % ["adminContent", htmll] % ["dataUpi", $dataa]
+        page = templ % [
+            "adminContent", htmll,
+            "dataUpi", $dataa,
+            "metaData", metadata.compile()
+        ]
 
     return page
 
@@ -32,7 +52,8 @@ proc loadMentorTemplate*(
 
 proc generalTemplate*(
     html_file: string,
-    title: string = "Platform belajar ngaji online"
+    title: string = "Platform belajar ngaji online",
+    data: Metadatas = @[]
 ) : string = 
     let
         templ = readAll newFileStream("src/templates/general.upi", fmRead)
@@ -42,6 +63,7 @@ proc generalTemplate*(
 
         page = templ % [
             "generalContent", htmll,
+            "metadata", data.compile(),
             "title", title,
             "header", header,
             "footer", footer,

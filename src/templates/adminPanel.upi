@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/src/css/super-admin.css">
     <link rel="stylesheet" href="/src/css/animation.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+$metaData
 </head>
 <body x-data="adminSystem()">
     <!-- Mobile Menu Overlay -->
@@ -102,7 +103,7 @@
     </div>
 
     <script src="/src/js/super-admin.js"></script>
-    <script data-upi>$$dataUpi</script>
+    <script data-upi>$dataUpi</script>
     <script>
         // Initialize mobile menu state
         document.addEventListener('alpine:init', () => {
