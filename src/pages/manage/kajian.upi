@@ -155,14 +155,14 @@
                                 const id_file = (felixGay).static_file_address ? (felixGay).static_file_address.id_static_file_address : 'new';
                                 
                                 // Correct endpoint for Kajian
-                                let url = '/api/kelas/thumbnail/' + id_file;
+                                let url = '/api/kajian/thumbnail/' + id_file;
 
                                 try {
                                     await axios.put(url, data);
                                     supami('Berhasil', 'Thumbnail berhasil diperbarui', '');
                                     this.isChanged = false;
                                 } catch(error) { 
-                                    supami('Gagal', 'Gagal memperbarui thumbnail', error.response ? error.response.data.message : error.message);
+                                    supami('error', 'Gagal memperbarui thumbnail', error.response ? error.response.data.message : error.message);
                                 } finally {
                                     this.isLoading = false;
                                 }

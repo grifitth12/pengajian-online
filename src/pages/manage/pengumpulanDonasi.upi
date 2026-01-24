@@ -1,3 +1,4 @@
+<!-- Usahain jangan dipake dulu inih yak. -->
 <script src="/src/js/global.js"></script>
 <script src="/src/js/kelasPage.js"></script>
 <div id="upi-1" upi-title="Edit Kelas" class="content flex-1 overflow-auto" x-data="{
