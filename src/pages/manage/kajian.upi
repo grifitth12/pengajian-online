@@ -4,32 +4,6 @@
         return JSON.parse(document.querySelector("script[data-upi]").textContent).result.data[0]
     }
 
-    async function selectPhoto(previewId, target) {
-        let input = document.createElement("input")
-        input.type = "file"
-        input.accept = "image/*"
-
-        input.onchange = async e => {
-            let file = e.target.files[0]
-            if (!file) return
-
-            // preview
-            let reader = new FileReader()
-            reader.onload = ev => document.getElementById(previewId).src = ev.target.result
-            reader.readAsDataURL(file)
-
-            // upload temp
-            let fd = new FormData()
-            fd.append("file", file)
-            fd.append("InternalId", id_kajian)
-            let res = await axios.post("/api/file/temp-thumbnail-upload", fd, {headers:{"Content-Type":"multipart/form-data"}})
-            window[target] = res.data.filename 
-            document.getElementById(previewId).src = "/static/" + res.data.filename
-        }
-
-        input.click()
-    }
-
     async function commitTemp(tempName) {
         if (!tempName) return null
         let res = await axios.post("/api/file/commit-temp-thumbnail", { filename: tempName, InternalId: id_kajian})

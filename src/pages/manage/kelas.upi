@@ -83,14 +83,14 @@
                                 document.getElementById('buttonRijal').classList.remove('hidden');
                             },
                             updateThumbnail: async (id_kelas, id_file) => {
-                                <!-- TODO: pake metadata dari getDataUpi() -->
                                 let form_el = document.getElementById('updateThumbnailForm')
                                 let data = new FormData(form_el)
-                                let url = '/api/kelas/thumbnail/' + id_file
+                                let modelName = getDataUpi('model-name')
+                                let url = '/api/' + modelName + '/thumbnail/' + id_file
                                 try {
                                     await axios.put(url, data)
-                                    supami('Anjay', 'bisacuy awokawokwok', '')
-                                } catch(error) { supami('Yah Gabisa', 'Nice Try ygy', error.message) }
+                                    supami('Success!', 'The thumbnail successfully updated', '')
+                                } catch(error) { supami('error', '', error.message) }
                             }
                         }"
                         class="space-y-4"
