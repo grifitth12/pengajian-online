@@ -313,25 +313,6 @@ body.notification-active {
             <span class="line"></span>
             <span class="line"></span>
         </button>
-        <nav id="mobile-menu" class="menu hidden" role="navigation">
-            <div x-show="!auth">
-                <a href="login.html" class="btn btn-primary">Masuk</a>
-                <a href="register.html" class="btn btn-secondary">Daftar</a>
-            </div>
-            <a href="/src/pages/profile/profile.html" 
-                x-init="
-                axios.get('/api/profile')
-                .then(res => { profile = res.data.data })
-                .catch(err => console.error('Gagal load profile:', err))"
-                x-data="{ profile: null, baseUrl: '/static/' }"
-                x-show="auth" class="nav-link" button class="profile-btn" id="profileBtnMobile">
-               <img :src="profile.foto_url ? baseUrl + profile.foto_url : '/src/assets/images/default.png'" alt="Profile" class="profile-img" id="profileImgMobile">Profile
-            </a>
-            <a href="#Home" class="nav-link">Home</a>
-            <a href="/src/pages/about.html" class="nav-link">About</a>
-            <a href="#" class="nav-link">Campaigns</a>
-            <a href="#" class="nav-link">Contact</a>
-        </nav>
 
 <div class="notification-panel" id="notificationPanel"
      x-data="{

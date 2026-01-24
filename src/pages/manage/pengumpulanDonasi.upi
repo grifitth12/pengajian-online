@@ -1,3 +1,4 @@
+<!-- Usahain jangan dipake dulu inih yak. -->
 <script src="/src/js/global.js"></script>
 <script src="/src/js/kelasPage.js"></script>
 <div id="upi-1" upi-title="Edit Kelas" class="content flex-1 overflow-auto" x-data="{
@@ -83,10 +84,9 @@
                                 document.getElementById('buttonRijal').classList.remove('hidden');
                             },
                             updateThumbnail: async (id_kelas, id_file) => {
-                                <!-- TODO: pake metadata dari getDataUpi() -->
                                 let form_el = document.getElementById('updateThumbnailForm')
                                 let data = new FormData(form_el)
-                                let url = '/api/kelas/thumbnail/' + id_file
+                                let url = '/api/kelas/' + id_kelas + '/thumbnail/' + id_file
                                 try {
                                     await axios.put(url, data)
                                     supami('Anjay', 'bisacuy awokawokwok', '')
@@ -120,7 +120,6 @@
                             </div>
                         </div>
 
-                        <!-- TODO: pake metadata dari getDataUpi() -->
                         <button
                             id="buttonRijal"
                             type="button"

@@ -87,8 +87,8 @@
                 </article>
             </template>
         </div>
-        <div class="text-center mt-12">
-            <button @click="window.location.href = '/kelas'" class="border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white font-semibold px-8 py-3 rounded-full transition-all duration-200">
+        <div class="text-center mt-12 pb-4">
+            <button @click="window.location.href = '/kelas'" class="border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white font-semibold px-8 py-3 rounded-full transition-all duration-200 flex items-center justify-center mx-auto">
                 Lihat Kelas
             </button>
         </div>
