@@ -89,7 +89,7 @@
                 name="thumbnail"
                 id="thumbnailUpload"
                 accept="image/*"
-                @change="thumbnailFile = $$event.target.files[0]"
+                @change="thumbnailFile = $event.target.files[0]"
                 class="w-full"
               >
             </div>
