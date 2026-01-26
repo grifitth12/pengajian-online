@@ -103,7 +103,7 @@
             <div x-data="{donasi : fetch_donasi(), sukam : false}" class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden mb-12 course-card transition duration-300">
                 <div class="md:flex">
                     <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" x-bind:src="'/static/' + (await donasi).data.gambar" alt="Quran Course">
+                        <img class="h-full w-full object-cover" x-bind:src="'/api/.f/' + (await donasi).data.gambar" alt="Quran Course">
                     </div>
                     <div class="p-8 md:w-2/3" x-init="sukam = fetch_donasi_inspect((await donasi).data.id_program_donasi)">
                         <div class="flex justify-between items-start mb-4">
