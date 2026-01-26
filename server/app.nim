@@ -17,7 +17,9 @@ let
 var app = newApp(settings = settings)
 
 app.use(staticFileMiddleware("/src"))
-app.use(forAdmin())
+
+app.use(forAdmin "/admin")
+app.use(forMentor "/mentor")
 
 app.addRoute(urls.indexPatterns, "/")
 app.addRoute(urls.kelasPatterns, "/kelas")

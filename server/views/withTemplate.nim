@@ -40,13 +40,18 @@ proc loadAdminTemplate*(
 
 proc loadMentorTemplate*(
     html_file: string,
-    data: auto = ""
+    data: auto = "";
+    metadata: Metadatas = @[]
 ) : string =
     let
         templ = readAll newFileStream("src/templates/mentorPanel.upi", fmRead)
         htmll = readAll newFileStream(html_file, fmRead)
         dataa = %*{"result" : data}
-        page = templ % ["mentorContent", htmll] % ["dataUpi", $dataa]
+        page = templ % [
+            "mentorContent", htmll,
+            "dataUpi", $dataa,
+            "metaData", metadata.compile()
+        ]
 
     return page
 
