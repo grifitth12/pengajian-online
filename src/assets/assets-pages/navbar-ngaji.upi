@@ -251,6 +251,178 @@ body.notification-active {
     text-decoration: none;
 }
 
+/* === MOBILE MENU STYLES === */
+.mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #ffffff;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    overflow-y: auto;
+}
+
+.mobile-menu.active {
+    transform: translateX(0);
+}
+
+.mobile-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+    background-color: #ffffff;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.mobile-menu-logo img {
+    height: 40px;
+}
+
+.mobile-menu-close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #495057;
+    cursor: pointer;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.mobile-menu-close:hover {
+    color: #212529;
+}
+
+.mobile-menu-content {
+    padding: 1.5rem;
+}
+
+.mobile-menu-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.mobile-menu-profile-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #339af0;
+}
+
+.mobile-menu-profile-info h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.1rem;
+    color: #212529;
+}
+
+.mobile-menu-profile-info p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #868e96;
+}
+
+.mobile-menu-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mobile-menu-nav li {
+    margin-bottom: 0.5rem;
+}
+
+.mobile-menu-nav a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    color: #495057;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-size: 1rem;
+}
+
+.mobile-menu-nav a:hover,
+.mobile-menu-nav a:active {
+    background-color: #f1f7ff;
+    color: #339af0;
+}
+
+.mobile-menu-nav a i {
+    width: 24px;
+    font-size: 1.25rem;
+    text-align: center;
+}
+
+.mobile-menu-divider {
+    height: 1px;
+    background-color: #e9ecef;
+    margin: 1.5rem 0;
+}
+
+.mobile-menu-login {
+    padding: 1rem;
+}
+
+.mobile-menu-login .btn {
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: block;
+}
+
+.mobile-menu-login .btn-primary {
+    background-color: #339af0;
+    color: #ffffff;
+    border: none;
+    transition: background-color 0.2s ease;
+}
+
+.mobile-menu-login .btn-primary:hover {
+    background-color: #228be6;
+}
+
+/* Overlay untuk mobile menu */
+.mobile-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-menu-overlay.active {
+    opacity: 1;
+}
+
 /* === Gaya Responsif untuk Mobile & Tablet === */
 @media (max-width: 768px) {
     .notification-panel {
@@ -273,6 +445,12 @@ body.notification-active {
     .notification-list {
         max-height: none;
     }
+
+    /* Show mobile menu elements on mobile */
+    .mobile-menu,
+    .mobile-menu-overlay {
+        display: block;
+    }
 }
     </style>
 </head>
@@ -288,10 +466,10 @@ body.notification-active {
             <button class="bell-btn">
                 <img src="/src/assets/images/bell.png" alt="Notifikasi">
             </button>
-            <a href="/" class="nav-link">Home</a>
-            <a href="#" class="nav-link">About</a>
-            <a href="/kajian" class="nav-link">Kajian</a>
-            <a href="/kelas" class="nav-link">Kelas</a> 
+            <a href="/" class="nav-link font-extrabold leading-tight">Home</a>
+            <a href="#" class="nav-link font-extrabold leading-tight">About</a>
+            <a href="/kajian" class="nav-link font-extrabold leading-tight">Kajian</a>
+            <a href="/kelas" class="nav-link font-extrabold leading-tight">Kelas</a> 
             <a href="/src/pages/searchpage.html" class="nav-link" aria-label="Search">
                 <i class="fas fa-search"></i>
             </a>
@@ -305,7 +483,7 @@ body.notification-active {
                 <img :src="profile.foto_url ? baseUrl + profile.foto_url : '/src/assets/images/default.png'"  alt="Profile" class="profile-img" id="profileImg">
             </a>
             <div class="btn-group" @click="login" x-show="!auth">
-                <a class="btn btn-primary">Login</a>
+                <a class="btn btn-primary font-extrabold">Login</a>
             </div>
         </nav>
         <button id="hamburger" class="hamburger" aria-label="Toggle menu" aria-controls="mobile-menu" aria-expanded="false">
@@ -418,7 +596,96 @@ body.notification-active {
     </div>
 </div>
 
+</div>
 </header>
+
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-header">
+        <div class="mobile-menu-logo">
+            <img src="/src/assets/images/logo.png" alt="DonasiKu Logo">
+        </div>
+        <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <div class="mobile-menu-content">
+        <!-- Profile Section (shown when logged in) -->
+        <div class="mobile-menu-profile" id="mobileProfileSection" 
+             x-data="{ profile: null, baseUrl: '/static/' }"
+             x-init="
+             axios.get('/api/profile')
+             .then(res => { profile = res.data.data })
+             .catch(err => console.error('Gagal load profile:', err))"
+             x-show="auth"
+             style="display: none;">
+            <img :src="profile?.foto_url ? baseUrl + profile.foto_url : '/src/assets/images/default.png'" 
+                 alt="Profile" 
+                 class="mobile-menu-profile-img">
+            <div class="mobile-menu-profile-info">
+                <h3 x-text="profile?.nama || 'User'">User</h3>
+                <p x-text="profile?.email || ''"></p>
+            </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <ul class="mobile-menu-nav">
+            <li>
+                <a href="/">
+                    <i class="fas fa-home"></i>
+                    <span class="font-extrabold">Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="font-extrabold">About</span>
+                </a>
+            </li>
+            <li>
+                <a href="/kajian">
+                    <i class="fas fa-book"></i>
+                    <span class="font-extrabold">Kajian</span>
+                </a>
+            </li>
+            <li>
+                <a href="/kelas">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span class="font-extrabold">Kelas</span>
+                </a>
+            </li>
+            <li>
+                <a href="/src/pages/searchpage.html">
+                    <i class="fas fa-search"></i>
+                    <span class="font-extrabold">Search</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="mobile-menu-divider" x-show="auth"></div>
+
+        <ul class="mobile-menu-nav" x-show="auth" style="display: none;">
+            <li>
+                <a href="/profile">
+                    <i class="fas fa-user"></i>
+                    <span class="font-extrabold">Profile</span>
+                </a>
+            </li>
+        </ul>
+
+        <!-- Login Button (shown when not logged in) -->
+        <div class="mobile-menu-login" x-show="!auth" @click="login">
+            <a class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+        </div>
+    </div>
+</div>
+
 <script>
  document.addEventListener('DOMContentLoaded', function () {
     const bellButton = document.querySelector('.bell-btn');
@@ -426,6 +693,12 @@ body.notification-active {
     const notificationList = document.getElementById('notificationList');
     const body = document.body;
     const markAllAsReadBtn = document.getElementById('markAllAsReadBtn');
+
+    // Mobile menu elements
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    const mobileMenuClose = document.getElementById('mobileMenuClose');
 
     function openPanel() {
         notificationPanel.classList.add('active');
@@ -495,24 +768,52 @@ body.notification-active {
         checkUnreadState();
     });
 
+    // Mobile menu functions
+    function openMobileMenu() {
+        mobileMenu.classList.add('active');
+        mobileMenuOverlay.classList.add('active');
+        body.style.overflow = 'hidden';
+        hamburger.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeMobileMenu() {
+        mobileMenu.classList.remove('active');
+        mobileMenuOverlay.classList.remove('active');
+        body.style.overflow = '';
+        hamburger.setAttribute('aria-expanded', 'false');
+    }
+
+    // Mobile menu event listeners
+    hamburger.addEventListener('click', function() {
+        const isExpanded = hamburger.getAttribute('aria-expanded') === 'true';
+        if (isExpanded) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+        hamburger.classList.toggle('active');
+    });
+
+    mobileMenuClose.addEventListener('click', function() {
+        closeMobileMenu();
+        hamburger.classList.remove('active');
+    });
+
+    mobileMenuOverlay.addEventListener('click', function() {
+        closeMobileMenu();
+        hamburger.classList.remove('active');
+    });
+
+    // Close mobile menu when clicking on a link
+    const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+    mobileMenuLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            closeMobileMenu();
+            hamburger.classList.remove('active');
+        });
+    });
+
     checkEmptyState();
     checkUnreadState();
 });  
-  
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
-}
-async function coba() {
-    await sleep(1000)
-    const btn = document.getElementById('hamburger');
-    const menu = document.getElementById('mobile-menu');
-
-    btn.addEventListener('click', () => {
-    const expanded = btn.getAttribute('aria-expanded') === 'true';
-    btn.setAttribute('aria-expanded', String(!expanded));
-    btn.classList.toggle('active');
-    if (menu) menu.classList.toggle('hidden');
-    });
-}
-coba()
 </script>
