@@ -1,0 +1,219 @@
+<script>
+    async function get_data_pertemuan(query) {
+        try {
+            const response = await axios.get("/api/kelas/pertemuan/me", {
+                withCredentials: true
+            });
+            
+            if (query && query.trim() !== '') {
+                const filtered = response.data.data.filter(item => 
+                    item.judul.toLowerCase().includes(query.toLowerCase()) ||
+                    item.kelas.judul.toLowerCase().includes(query.toLowerCase()) ||
+                    item.tipe_pertemuan.toLowerCase().includes(query.toLowerCase())
+                );
+                return { data: filtered };
+            }
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching pertemuan:', error);
+            return { data: [] };
+        }
+    }
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('id-ID', { 
+            weekday: 'long',
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+    }
+
+    function getTypeIcon(tipe) {
+        switch(tipe) {
+            case 'YouTubeIframe': return '🎬';
+            case 'External': return '🔗';
+            case 'Zoom': return '📹';
+            case 'GoogleMeet': return '🎥';
+            default: return '📚';
+        }
+    }
+
+    function getTypeBadgeClass(tipe) {
+        switch(tipe) {
+            case 'YouTubeIframe': return 'bg-red-100 text-red-800';
+            case 'External': return 'bg-blue-100 text-blue-800';
+            case 'Zoom': return 'bg-purple-100 text-purple-800';
+            case 'GoogleMeet': return 'bg-teal-100 text-teal-800';
+            default: return 'bg-gray-100 text-gray-800';
+        }
+    }
+</script>
+
+<div id="upi-1" upi-title="Kelola Pertemuan" x-data="{
+    query: '', 
+    data_pertemuan: false,
+    loading: true,
+    pertemuanList: [],
+    async init() {
+        this.loading = true;
+        const result = await get_data_pertemuan('');
+        this.pertemuanList = result.data || [];
+        this.loading = false;
+    },
+    async search() {
+        this.loading = true;
+        const result = await get_data_pertemuan(this.query);
+        this.pertemuanList = result.data || [];
+        this.loading = false;
+    }
+}">
+    <!-- Welcome Banner -->
+    <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl p-6 mb-6 text-white shadow-lg">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+            <div>
+                <h2 class="text-2xl font-bold mb-1">📅 Kelola Pertemuan</h2>
+                <p class="text-green-100 text-sm">Lihat dan kelola semua pertemuan kelas Anda dengan mudah</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="bg-white/20 px-4 py-2 rounded-xl backdrop-blur-sm">
+                    <span class="text-sm font-medium" x-text="pertemuanList.length + ' Pertemuan'">0 Pertemuan</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Card -->
+    <div class="data-table bg-white rounded-2xl shadow-lg overflow-hidden">
+        <!-- Header with Search -->
+        <div class="table-header px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800">Daftar Pertemuan</h3>
+                    <p class="text-sm text-gray-500 mt-1">Klik pada pertemuan untuk melihat detail</p>
+                </div>
+                <div class="action-buttons flex gap-3">
+                    <div class="relative">
+                        <input type="text" 
+                               @keyup.enter="search()" 
+                               @input.debounce.300ms="search()"
+                               x-model="query" 
+                               class="search-input w-full sm:w-72 pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm" 
+                               name="query" 
+                               id="q" 
+                               placeholder="🔍 Cari judul, kelas, atau tipe..." 
+                               autocomplete="off">
+                        <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div x-show="loading" class="p-12 text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4 animate-pulse">
+                <svg class="w-8 h-8 text-green-600 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </div>
+            <p class="text-gray-600 font-medium">Memuat data pertemuan...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div x-show="!loading && pertemuanList.length === 0" class="p-12 text-center">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-full mb-4">
+                <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Belum Ada Pertemuan</h3>
+            <p class="text-gray-500 mb-4">Pertemuan yang Anda buat akan muncul di sini</p>
+            <p class="text-sm text-gray-400">💡 Tip: Buat pertemuan baru dari halaman kelas Anda</p>
+        </div>
+
+        <!-- Pertemuan Cards (Mobile-Friendly) -->
+        <div x-show="!loading && pertemuanList.length > 0" class="divide-y divide-gray-100">
+            <template x-for="(pertemuan, index) in pertemuanList" :key="index">
+                <div class="p-6 hover:bg-green-50 transition-all duration-200 cursor-pointer group">
+                    <div class="flex flex-col sm:flex-row sm:items-start gap-4">
+                        <!-- Icon/Avatar -->
+                        <div class="flex-shrink-0">
+                            <div class="w-14 h-14 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center text-white text-2xl shadow-md group-hover:scale-105 transition-transform">
+                                <span x-text="getTypeIcon(pertemuan.tipe_pertemuan)">📚</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="flex-1 min-w-0">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                                <h4 class="text-lg font-bold text-gray-800 group-hover:text-green-600 transition-colors truncate" x-text="pertemuan.judul">Judul Pertemuan</h4>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold w-fit"
+                                      :class="getTypeBadgeClass(pertemuan.tipe_pertemuan)"
+                                      x-text="pertemuan.tipe_pertemuan">
+                                    Type
+                                </span>
+                            </div>
+                            
+                            <p class="text-gray-600 text-sm mb-3 line-clamp-2" x-text="pertemuan.deskripsi || 'Tidak ada deskripsi'">Deskripsi pertemuan...</p>
+                            
+                            <div class="flex flex-wrap gap-4 text-sm text-gray-500">
+                                <span class="inline-flex items-center">
+                                    <svg class="w-4 h-4 mr-1.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                    </svg>
+                                    <span x-text="pertemuan.kelas.judul">Nama Kelas</span>
+                                </span>
+                                <span class="inline-flex items-center">
+                                    <svg class="w-4 h-4 mr-1.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span x-text="formatDate(pertemuan.created_at)">Tanggal</span>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex sm:flex-col gap-2 mt-3 sm:mt-0">
+                            <a :href="'/kelas/' + pertemuan.kelas.slug" 
+                               class="inline-flex items-center justify-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-lg transition-colors shadow-sm hover:shadow-md">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                Lihat Kelas
+                            </a>
+                            <button class="inline-flex items-center justify-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition-colors"
+                                    @click="data_pertemuan = pertemuan">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Detail
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <!-- Footer Stats -->
+        <div x-show="!loading && pertemuanList.length > 0" class="px-6 py-4 bg-gray-50 border-t border-gray-100">
+            <div class="flex flex-wrap items-center justify-between gap-4 text-sm">
+                <span class="text-gray-500">
+                    Menampilkan <span class="font-semibold text-gray-800" x-text="pertemuanList.length">0</span> pertemuan
+                </span>
+                <div class="flex items-center gap-2 text-gray-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Tip: Gunakan pencarian untuk filter pertemuan</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
