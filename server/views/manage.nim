@@ -91,3 +91,6 @@ proc createKajian*(ctx: Context) {.async.} =
 
 proc createkelas*(ctx: Context) {.async.} = 
     resp loadAdminTemplate "src/pages/create/kelas.upi"
+
+proc createkelasMentor*(ctx: Context) {.async.} =
+    resp loadMentorTemplate "src/pages/create/kelas.upi"    
