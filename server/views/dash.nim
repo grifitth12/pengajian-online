@@ -10,7 +10,7 @@ proc profile*(ctx: Context) {.async.} =
     resp readAll newFileStream("src/pages/profile/profile.upi")        
 
 proc daftar_mentor*(ctx: Context) {.async.} =
-    await ctx.staticFileResponse("daftar_mentor.html", "src/pages")
+    await ctx.staticFileResponse("daftar_mentor.html", "src")
 
 proc about*(ctx: Context) {.async.} =
     resp generalTemplate("src/pages/about.upi", "Tentang Kami")
