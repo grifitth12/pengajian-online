@@ -1,16 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Mentor - Belajar Ngaji Online</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.js" defer></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
       /* Animation Library */
       @keyframes fadeIn {
@@ -138,35 +125,11 @@
         border-radius: 10px;
       }
     </style>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: {
-                50: '#f0fdf4',
-                100: '#dcfce7',
-                200: '#bbf7d0',
-                300: '#86efac',
-                400: '#4ade80',
-                500: '#22c55e',
-                600: '#16a34a',
-                700: '#15803d',
-                800: '#166534',
-                900: '#14532d',
-              }
-            },
-            fontFamily: {
-              sans: ['Poppins', 'sans-serif'],
-            },
-          }
-        }
-      }
-    </script>
-</head>
-<body x-data="{ mobileMenuOpen: false, activeTab: 'kelas' }">
+
+    <script src="https://unpkg.com/feather-icons"></script>
+
     <!-- Top Navigation -->
-    <nav class="glass-effect shadow-lg sticky top-0 z-50 animate-slide-in-down">
+    <nav class="hidden glass-effect shadow-lg sticky top-0 z-50 animate-slide-in-down">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-20">
           <!-- Logo & Brand -->
@@ -257,9 +220,21 @@
       </div>
 
       <!-- Dashboard Stats Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 stagger-animation">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 stagger-animation"
+        x-data="{
+          totalKelas: 0,
+          totalPertemuan: 0,
+          tampilin: false
+        }"
+        x-init="
+          totalKelas = (await axios.get('/api/kelas/carisemua')).data.data.length
+          totalPertemuan = (await axios.get('/api/kelas/pertemuan/me')).data.data.length
+          tampilin = true
+        "
+      
+      >
         <!-- Total Murid -->
-        <div class="glass-effect rounded-2xl shadow-lg p-6 hover-lift">
+        <div class="hidden glass-effect rounded-2xl shadow-lg p-6 hover-lift">
           <div class="flex items-center justify-between mb-4">
             <div class="w-14 h-14 gradient-blue rounded-xl flex items-center justify-center shadow-md">
               <i data-feather="users" class="w-7 h-7 text-white"></i>
@@ -274,15 +249,15 @@
         </div>
 
         <!-- Kelas Aktif -->
-        <div class="glass-effect rounded-2xl shadow-lg p-6 hover-lift">
+        <div x-show="tampilin" x-transition:enter="20" class="glass-effect rounded-2xl shadow-lg p-6 hover-lift">
           <div class="flex items-center justify-between mb-4">
             <div class="w-14 h-14 gradient-green rounded-xl flex items-center justify-center shadow-md">
               <i data-feather="book" class="w-7 h-7 text-white"></i>
             </div>
-            <span class="text-xs font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-full">Aktif</span>
+            <span class="hidden text-xs font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-full">Aktif</span>
           </div>
-          <h3 class="text-3xl font-bold text-gray-800 mb-1">3</h3>
-          <p class="text-sm text-gray-500 font-medium">Kelas Aktif</p>
+          <h3 class="text-3xl font-bold text-gray-800 mb-1" x-text="totalKelas"></h3>
+          <p class="text-sm text-gray-500 font-medium">Kelas</p>
           <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
             <div class="h-full gradient-green w-full animate-fade-in-right"></div>
           </div>
@@ -294,17 +269,17 @@
             <div class="w-14 h-14 gradient-orange rounded-xl flex items-center justify-center shadow-md">
               <i data-feather="calendar" class="w-7 h-7 text-white"></i>
             </div>
-            <span class="text-xs font-semibold text-orange-600 bg-orange-100 px-3 py-1 rounded-full">Hari Ini</span>
+            <span class="text-xs hidden font-semibold text-orange-600 bg-orange-100 px-3 py-1 rounded-full">Hari Ini</span>
           </div>
           <h3 class="text-3xl font-bold text-gray-800 mb-1">2</h3>
-          <p class="text-sm text-gray-500 font-medium">Sesi Hari Ini</p>
+          <p class="text-sm text-gray-500 font-medium">Pertemuan</p>
           <div class="mt-4 h-1 bg-gray-200 rounded-full overflow-hidden">
             <div class="h-full gradient-orange w-2/3 animate-fade-in-right"></div>
           </div>
         </div>
 
         <!-- Total Materi -->
-        <div class="glass-effect rounded-2xl shadow-lg p-6 hover-lift">
+        <div class="hidden glass-effect rounded-2xl shadow-lg p-6 hover-lift">
           <div class="flex items-center justify-between mb-4">
             <div class="w-14 h-14 gradient-teal rounded-xl flex items-center justify-center shadow-md">
               <i data-feather="file-text" class="w-7 h-7 text-white"></i>
@@ -320,7 +295,7 @@
       </div>
 
       <!-- Tabs Navigation -->
-      <div class="glass-effect rounded-2xl shadow-lg mb-8 overflow-hidden animate-fade-in-up">
+      <div class="hidden glass-effect rounded-2xl shadow-lg mb-8 overflow-hidden animate-fade-in-up">
         <div class="border-b border-gray-200">
           <nav class="flex space-x-8 px-6">
             <button @click="activeTab = 'kelas'" 
@@ -574,7 +549,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="glass-effect mt-12 py-6 animate-fade-in-up">
+    <footer class="hidden glass-effect mt-12 py-6 animate-fade-in-up">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center text-sm text-gray-600">
           <p>&copy; 2025 Belajar Ngaji Online. All rights reserved.</p>
@@ -591,5 +566,3 @@
         setTimeout(() => feather.replace(), 100);
       });
     </script>
-</body>
-</html>
