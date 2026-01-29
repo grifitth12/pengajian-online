@@ -1,168 +1,224 @@
+<main class="p-6" x-data="kajianCreateForm()">
+  <form
+    class="bg-white rounded-lg shadow-md overflow-hidden"
+    enctype="multipart/form-data"
+    @submit.prevent="submit"
+  >
+    <!-- HEADER -->
+    <div class="p-6 border-b">
+      <div class="flex justify-between items-center">
+        <h2 class="text-xl font-semibold text-gray-800">Create Kajian</h2>
+
+        <button
+          type="submit"
+          class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center disabled:opacity-60"
+          :disabled="loading"
+        >
+          <i class="fas fa-save mr-2"></i>
+          <span x-text="loading ? 'Saving...' : 'Save Changes'"></span>
+        </button>
+      </div>
+
+      <!-- NOTIF -->
+      <template x-if="message">
+        <div
+          class="mt-4 px-4 py-3 rounded-lg text-sm"
+          :class="success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+          x-text="message"
+        ></div>
+      </template>
+    </div>
+
+    <!-- BODY -->
+    <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- LEFT -->
+      <div class="md:col-span-2 space-y-5">
+        <div>
+          <label class="block text-sm font-medium mb-1">Judul Kajian</label>
+          <input
+            type="text"
+            x-model="form.judul"
+            class="w-full px-4 py-2 border rounded-lg"
+            required
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">Tanggal & Waktu</label>
+          <input
+            type="datetime-local"
+            x-model="form.tanggal"
+            class="w-full px-4 py-2 border rounded-lg"
+            required
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">Deskripsi</label>
+          <textarea
+            x-model="form.deskripsi"
+            rows="3"
+            class="w-full px-4 py-2 border rounded-lg"
+          ></textarea>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">Deskripsi Lengkap</label>
+          <textarea
+            x-model="form.deskripsi_lengkap"
+            rows="5"
+            class="w-full px-4 py-2 border rounded-lg"
+          ></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Pemateri</label>
+            <input
+              type="text"
+              x-model="form.pemateri"
+              class="w-full px-4 py-2 border rounded-lg"
+            >
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">Lokasi</label>
+            <input
+              type="text"
+              x-model="form.lokasi"
+              class="w-full px-4 py-2 border rounded-lg"
+            >
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">Alamat</label>
+            <input
+              type="text"
+              x-model="form.alamat"
+              class="w-full px-4 py-2 border rounded-lg"
+            >
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">Status</label>
+            <select
+              x-model="form.status"
+              class="w-full px-4 py-2 border rounded-lg"
+            >
+              <option value="aktif">Aktif</option>
+              <option value="selesai">Selesai</option>
+              <option value="tutup">Tutup</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="space-y-4">
+        <label class="block text-sm font-medium">Thumbnail</label>
+
+        <img
+          :src="thumbnailPreview || '/images/placeholder.png'"
+          class="w-full h-48 object-cover rounded-lg border"
+        >
+
+        <input
+          type="file"
+          accept="image/*"
+          @change="handleThumbnail"
+          class="w-full"
+        >
+      </div>
+    </div>
+  </form>
+</main>
+
 <script>
-    let now = new Date()
-    let temp_id =
-        now.getFullYear().toString() +
-        String(now.getMonth() + 1).padStart(2, "0") +
-        String(now.getDate()).padStart(2, "0") +
-        String(now.getHours()).padStart(2, "0") +
-        String(now.getMinutes()).padStart(2, "0") +
-        String(now.getSeconds()).padStart(2, "0") +
-        String(now.getMilliseconds()).padStart(3, "0")
-    
-    async function create(params) {
-        try {
-            // 1. Insert donation
-            let response = await axios.post("/api/kajian/insert", params)
-            let row = response.data.data
-            let id_kajian = row?.id_kajian
-            console.log(response.data.data)
-            console.log(row)
-            if (!id_kajian) {
-                alert("Failed to create kajian, backend didn’t return ID!")
-                return
-            }
+function kajianCreateForm() {
+  return {
+    loading: false,
+    success: false,
+    message: '',
 
-            // 2. If thumbnail was uploaded, commit it
-            if (window.tempThumbnail) {
-                let finalFilename = await commitTemp(window.tempThumbnail, id_kajian)
+    thumbnail: null,
+    thumbnailPreview: null,
 
-                // 3. Update donasi record with committed filename
-                await axios.put(`/api/kajian/update/` + id_kajian, {
-                    id_kajian,
-                    thumbnail_url: finalFilename
-                })
-            }
+    form: {
+      judul: '',
+      tanggal: '',
+      deskripsi: '',
+      deskripsi_lengkap: '',
+      pemateri: '',
+      lokasi: '',
+      alamat: '',
+      status: 'aktif'
+    },
 
-            alert("kajian created successfully!")
-        } catch (err) {
-            console.error(err)
-            alert("Error creating kajian")
-        }
-    }
+    handleThumbnail(e) {
+      const file = e.target.files[0]
+      if (!file) return
 
-    async function selectPhoto(previewId, target) {
-        let input = document.createElement("input")
-        input.type = "file"
-        input.accept = "image/*"
+      this.thumbnail = file
+      this.thumbnailPreview = URL.createObjectURL(file)
+    },
 
-        input.onchange = async e => {
-            let file = e.target.files[0]
-            if (!file) return
+    async submit() {
+      this.loading = true
+      this.message = ''
+      this.success = false
 
-            // preview
-            let reader = new FileReader()
-            reader.onload = ev => document.getElementById(previewId).src = ev.target.result
-            reader.readAsDataURL(file)
-
-            // upload temp
-            let fd = new FormData()
-            fd.append("file", file)
-            fd.append("InternalId", temp_id)
-            let res = await axios.post("/api/file/temp-thumbnail-upload", fd, {
-                headers: { "Content-Type": "multipart/form-data" }
-            })
-            window[target] = res.data.filename // store temp filename
-            document.getElementById(previewId).src = "/static/" + res.data.filename
+      try {
+        if (!this.thumbnail) {
+          this.message = 'Thumbnail wajib diupload'
+          this.loading = false
+          return
         }
 
-        input.click()
-    }
+        const fd = new FormData()
 
-    // COMMIT TEMP
-    async function commitTemp(tempName, realId) {
-        if (!tempName) return null
-        let res = await axios.post("/api/file/commit-temp-thumbnail", {
-            filename: tempName,
-            InternalId: realId
+        Object.entries(this.form).forEach(([key, val]) => {
+          fd.append(key, val ?? '')
         })
-        return res.data.filename
-    }
-</script>
-<!-- Main Content -->
-<div id="upi-1" id="upi-1" upi-title="Create Kajian" class="content flex-1 overflow-auto">
-    <!-- Main Content Area -->
-    <main class="p-6" x-data="{kajianForm : {}}">
-        <form enctype="multipart/form-data" @submit.prevent="submitForm" class="bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="p-6 border-b">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-semibold text-gray-800">Create Kajian</h2>
-                    <button @click="create(kajianForm)" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center">
-                        <i class="fas fa-save mr-2"></i> Save Changes
-                    </button>
-                </div>
-            </div>
 
-            <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="md:col-span-2 space-y-6">
-                    <!-- Judul Kelas -->
-                    <div>
-                        <label for="judul" class="block text-sm font-medium text-gray-700 mb-1">Judul Kajian</label>
-                        <input type="text" x-model="kajianForm.judul" id="judul" :value="(await kajian).judul" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
-                    </div>
-                    <div>
-                        <label for="tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal & Waktu</label>
-                        <input type="datetime-local" id="tanggal" class="w-full px-4 py-2" x-model="kajianForm.tanggal" :value="hello((await kajian).tanggal)">
-                    </div>                    
-                    <!-- Deskripsi -->
-                    <div>
-                        <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-                        <input id="deskripsi" x-model="kajianForm.deskripsi" rows="5" :value="(await kajian).deskripsi" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" x-text="(await kajian).deskripsi"></input>
-                    </div>      
-                    <!-- Deskripsi Lengkap -->
-                    <div>
-                        <label for="deskripsi_lengkap" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Lengkap</label>
-                        <textarea id="deskripsi" x-model="kajianForm.deskripsi_lengkap" :value="(await kajian).deskripsi_lengkap" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" x-text="(await kajian).deskripsi_lengkap"></textarea>
-                    </div>  
-                    <!-- Alamat -->
-   
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="Pemateri" class="block text-sm font-medium text-gray-700 mb-1">Pemateri</label>
-                            <input type="text" x-model="kajianForm.pemateri" :value="(await kajian).pemateri" id="Pemateri" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
-                        </div>
-                        <!-- Lokasi -->
-                        <div>
-                            <label for="Lokasi" class="block text-sm font-medium text-gray-700 mb-1">Lokasi</label>
-                            <input type="text" x-model="kajianForm.lokasi" :value="(await kajian).lokasi" id="Pemateri" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
-                        </div>
-                        <div>
-                            <label for="Alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
-                            <input type="text" x-model="kajianForm.alamat" :value="(await kajian).alamat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
-                        </div>
-                        <div>
-                            <label for="Alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
-                            <input type="text" x-model="kajianForm.alamat" :value="(await kajian).alamat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
-                        </div>
-                        <div>
-                            <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                            <select id="status" x-model="kajianForm.status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
-                                <option value="aktif" selected>Aktif</option>
-                                <option value="Tutup">Tutup</option>
-                                <option value="selesai">Selesai</option>
-                            </select>
-                        </div>                        
-                    </div>       
-                </div>
-                <!-- Right Column -->
-                <div class="space-y-6">
-                    <!-- Thumbnail -->
-                    <div>
-                        <labl class="block text-sm font-medium text-gray-700 mb-1">Thumbnail</label>
-                        <div class="mt-1 flex flex-col items-center">
-                            <div class="flex space-x-2 w-full">
-                            <input
-                                type="file"
-                                name="thumbnail"
-                                id="thumbnailUpload"
-                                accept="image/*"
-                                @change="thumbnailFile = $$event.target.files[0]"
-                                class="w-full"
-                            >
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </main>
-</div>
+        fd.append('thumbnail', this.thumbnail)
+
+        const res = await axios.post(
+          '/api/kajian/insert_with_thumbnail',
+          fd,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        )
+
+        this.success = true
+        this.message = res?.data?.message || 'Kajian berhasil dibuat'
+
+        // reset form
+        this.form = {
+          judul: '',
+          tanggal: '',
+          deskripsi: '',
+          deskripsi_lengkap: '',
+          pemateri: '',
+          lokasi: '',
+          alamat: '',
+          status: 'aktif'
+        }
+        this.thumbnail = null
+        this.thumbnailPreview = null
+
+      } catch (err) {
+        this.success = false
+        this.message =
+          err?.response?.data?.message ||
+          err?.message ||
+          'Gagal menyimpan kajian'
+      } finally {
+        this.loading = false
+      }
+    }
+  }
+}
+</script>

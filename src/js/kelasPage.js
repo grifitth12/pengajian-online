@@ -100,10 +100,12 @@ async function tambah_kelas() {
 async function create_pertemuan_kelas(pertemuanForm) {
     try {
         let blog_content = document.getElementById("blog_text_hidden").value
+        let id_kelas = getDataUpi("model-id")
         pertemuanForm.blog_text = blog_content ? blog_content : null
         await axios.post("/api/kelas/pertemuan/insert/" + id_kelas, pertemuanForm)
         supami("rijal", "data berhasil ditambahkan", "")
     } catch (error) {
+        console.log(error)
         if (error.response.status == 403) {
             supami("error", "Gagal Menambahkan Pertemuan", "Anda bukan pemiliki dari kelas ini dan tidak memiliki izin untuk menambahkan pertemuan baru.")
         }

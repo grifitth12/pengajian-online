@@ -4,32 +4,6 @@
         return JSON.parse(document.querySelector("script[data-upi]").textContent).result.data[0]
     }
 
-    async function selectPhoto(previewId, target) {
-        let input = document.createElement("input")
-        input.type = "file"
-        input.accept = "image/*"
-
-        input.onchange = async e => {
-            let file = e.target.files[0]
-            if (!file) return
-
-            // preview
-            let reader = new FileReader()
-            reader.onload = ev => document.getElementById(previewId).src = ev.target.result
-            reader.readAsDataURL(file)
-
-            // upload temp
-            let fd = new FormData()
-            fd.append("file", file)
-            fd.append("InternalId", id_kajian)
-            let res = await axios.post("/api/file/temp-thumbnail-upload", fd, {headers:{"Content-Type":"multipart/form-data"}})
-            window[target] = res.data.filename 
-            document.getElementById(previewId).src = "/static/" + res.data.filename
-        }
-
-        input.click()
-    }
-
     async function commitTemp(tempName) {
         if (!tempName) return null
         let res = await axios.post("/api/file/commit-temp-thumbnail", { filename: tempName, InternalId: id_kajian})
@@ -150,18 +124,19 @@
                                 let data = new FormData(form_el);
                                 
                                 // Safely get IDs
-                                const id_kajian = this.kajianData.id_kajian;
-                                const id_file = this.kajianData.static_file_address ? this.kajianData.static_file_address.id_static_file_address : 'new';
+                                let felixGay = await fetch_data();
+                                const id_kajian = (felixGay).id_kajian;
+                                const id_file = (felixGay).static_file_address ? (felixGay).static_file_address.id_static_file_address : 'new';
                                 
                                 // Correct endpoint for Kajian
-                                let url = '/api/kajian/' + id_kajian + '/thumbnail/' + id_file;
+                                let url = '/api/kajian/thumbnail/' + id_file;
 
                                 try {
                                     await axios.put(url, data);
                                     supami('Berhasil', 'Thumbnail berhasil diperbarui', '');
                                     this.isChanged = false;
                                 } catch(error) { 
-                                    supami('Gagal', 'Gagal memperbarui thumbnail', error.response ? error.response.data.message : error.message);
+                                    supami('error', 'Gagal memperbarui thumbnail', error.response ? error.response.data.message : error.message);
                                 } finally {
                                     this.isLoading = false;
                                 }
@@ -206,7 +181,6 @@
                             type="button"
                             x-show="isChanged"
                             @click="updateThumbnail()"
-                            :disabled="isLoading"
                             class="w-full py-2 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 transition flex items-center justify-center"
                         >
                             <span x-text="isLoading ? 'Saving...' : 'Save Thumbnail'"></span>

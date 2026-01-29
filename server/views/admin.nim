@@ -26,7 +26,7 @@ proc render_manage_index_mentor*(ctx: Context) {.async.} =
         available_managed = @["kelas", "profile", "pertemuan"]
         source = ctx.getPathParams("source", "dashboard")
     if source in available_managed :
-        var file_loc = "src/pages/mentor/" & source & ".upi"
+        var file_loc = "src/pages/admin/manage" & source.title & ".upi"
         resp loadMentorTemplate file_loc
     else :
         resp errorTemplate("404 Not Found", "Page yang kamu cari tidak ditemukan!")    
