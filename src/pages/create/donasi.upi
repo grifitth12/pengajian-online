@@ -1,87 +1,45 @@
 <script>
     let now = new Date()
-    let temp_id =
-        now.getFullYear().toString() +
-        String(now.getMonth() + 1).padStart(2, "0") +
-        String(now.getDate()).padStart(2, "0") +
-        String(now.getHours()).padStart(2, "0") +
-        String(now.getMinutes()).padStart(2, "0") +
-        String(now.getSeconds()).padStart(2, "0") +
-        String(now.getMilliseconds()).padStart(3, "0")
 
-    // CREATE DONASI
-    async function create(params) {
+    async function submitForm(e) {
+        e.preventDefault(); 
+        
         try {
-            // 1. Insert donation
-            let blog_content = document.getElementById("description_text_content").value
-            params.deskripsi_lengkap = blog_content ? blog_content : null            
-            let response = await axios.post("/api/donasi/insert", params)
-            let row = response.data.data[0]
-            let id_program_donasi = row?.id_program_donasi
-            if (!id_program_donasi) {
-                alert("Failed to create donasi, backend didn’t return ID!")
-                return
+            const formData = new FormData(e.target);
+        
+            const response = await axios.post('/api/donasi/insert', formData);
+            
+            if (response.status >= 200 && response.status < 300) {
+                alert("Donasi created successfully!");
+                 
+            } else {
+                alert("Failed to create donasi: " + response.statusText);
             }
-
-            // 2. If thumbnail was uploaded, commit it
-            if (window.tempThumbnail) {
-                let finalFilename = await commitTemp(window.tempThumbnail, id_program_donasi)
-
-                // 3. Update donasi record with committed filename
-                await axios.put(`/api/donasi/update/` + id_program_donasi, {
-                    id_program_donasi,
-                    gambar: finalFilename
-                })
-            }
-
-            alert("Donasi created successfully!")
-        } catch (err) {
-            console.error(err)
-            alert("Error creating donasi")
+        } catch (error) {
+            console.error(error);
+            
+            const errorMsg = error.response?.data?.message || error.response?.data || error.message;
+            alert("Error creating donasi: " + errorMsg);
         }
     }
 
-    // UPLOAD TEMP
-    async function selectPhoto(previewId, target) {
-        let input = document.createElement("input")
-        input.type = "file"
-        input.accept = "image/*"
-
-        input.onchange = async e => {
-            let file = e.target.files[0]
-            if (!file) return
-
-            // preview
-            let reader = new FileReader()
-            reader.onload = ev => document.getElementById(previewId).src = ev.target.result
-            reader.readAsDataURL(file)
-
-            // upload temp
-            let fd = new FormData()
-            fd.append("file", file)
-            fd.append("InternalId", temp_id)
-            let res = await axios.post("/api/file/temp-thumbnail-upload", fd, {
-                headers: { "Content-Type": "multipart/form-data" }
-            })
-            window[target] = res.data.filename // store temp filename
-            document.getElementById(previewId).src = "/static/" + res.data.filename
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('thumbnailPreview').src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
         }
-
-        input.click()
     }
 
-    // COMMIT TEMP
-    async function commitTemp(tempName, realId) {
-        if (!tempName) return null
-        let res = await axios.post("/api/file/commit-temp-thumbnail", {
-            filename: tempName,
-            InternalId: realId
-        })
-        return res.data.filename
+    function triggerUpload() {
+        document.getElementById('thumbnailUpload').click();
     }
 
-    async function close_popup() {
-        document.getElementById("popup").classList.add("hidden")
+    function removeThumbnail() {
+        document.getElementById('thumbnailUpload').value = "";
+        document.getElementById('thumbnailPreview').src = "http://127.0.0.1:8080/src/assets/images/banner.png";
     }
 
 </script>
@@ -89,11 +47,11 @@
 <div id="upi-1" id="upi-1" upi-title="Create Donasi" class="content flex-1 overflow-auto">
     <!-- Main Content Area -->
     <main class="p-6" x-data="{DonasiForm : {}}">
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <form onsubmit="submitForm(event)" class="bg-white rounded-lg shadow-md overflow-hidden">
             <div class="p-6 border-b">
                 <div class="flex justify-between items-center">
                     <h2 class="text-xl font-semibold text-gray-800">Create Donasi</h2>
-                    <button @click="create(DonasiForm)" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center">
+                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center">
                         <i class="fas fa-save mr-2"></i> Create
                     </button>
                 </div>
@@ -105,16 +63,16 @@
                     <!-- Judul Donasi -->
                     <div>
                         <label for="judul" class="block text-sm font-medium text-gray-700 mb-1">Judul donasi</label>
-                        <input type="text" x-model="DonasiForm.nama_program" id="judul" :value="DonasiForm.nama_program" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
+                        <input type="text" name="nama_program" x-model="DonasiForm.nama_program" id="judul" :value="DonasiForm.nama_program" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="target-donasi" class="block text-sm font-medium text-gray-700 mb-1">Target Donasi</label>
-                            <input type="number" x-model="DonasiForm.target_donasi" id="target-donasi" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
+                            <input type="number" name="target_donasi" x-model="DonasiForm.target_donasi" id="target-donasi" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
                         </div>                        
                         <div>
                             <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                            <select id="status" x-model="DonasiForm.status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
+                            <select id="status" name="status" x-model="DonasiForm.status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
                                 <option value="aktif" selected>Aktif</option>
                                 <option value="Tutup">Tutup</option>
                                 <option value="selesai">Selesai</option>
@@ -124,12 +82,12 @@
                     <!-- Deskripsi -->
                     <div>
                         <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-                        <textarea id="deskripsi" x-model="DonasiForm.deskripsi" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" x-text="DonasiForm.deskripsi"></textarea>
+                        <textarea id="deskripsi" name="deskripsi" x-model="DonasiForm.deskripsi" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" x-text="DonasiForm.deskripsi"></textarea>
                     </div>    
                     <div>
                         <label for="simsalabim" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Lengkap</label>
                         <div id="text_editor" class="border border-gray-300" style="height: 200px;"></div>
-                        <input type="hidden" id="description_text_content" x-model="DonasiForm.deskripsi_lengkap">
+                        <input type="hidden" id="description_text_content" name="deskripsi_lengkap" x-model="DonasiForm.deskripsi_lengkap">
                     </div>        
                 </div>
 
@@ -142,11 +100,11 @@
                         <div class="mt-1 flex flex-col items-center">
                             <img id="thumbnailPreview" src="http://127.0.0.1:8080/src/assets/images/banner.png" alt="Thumbnail Preview" class="thumbnail-preview w-full mb-2 rounded-lg border border-gray-300">
                             <div x-model="DonasiForm.thumbnail_url" class="flex space-x-2">
-                                <input type="file" id="thumbnailUpload" class="hidden" accept="image/*">
-                                <button onclick="selectPhoto('thumbnailPreview','tempThumbnail')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
+                                <input type="file" id="thumbnailUpload" name="thumbnail" class="hidden" accept="image/*" onchange="previewImage(this)">
+                                <button type="button" onclick="triggerUpload()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
                                     <i class="fas fa-upload mr-1"></i> Upload
                                 </button>
-                                <button id="removeThumbnail" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm">
+                                <button type="button" onclick="removeThumbnail()" id="removeThumbnail" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm">
                                     <i class="fas fa-trash mr-1"></i> Remove
                                 </button>
                             </div>
@@ -154,7 +112,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </main>
 </div>
 <script>

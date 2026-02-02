@@ -15,7 +15,7 @@ async function fetch_data_donasi(slug) {
     return data.data
 }
     
-    async function kadapi(id_donasi) {
+    async function supami(id_donasi) {
         let url = "/api/donasi/inspect/" + id_donasi
             try {
                 const response = await axios.get(url);
