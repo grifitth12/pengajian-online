@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="/src/css/profile2.css">
 </head>
 
+
 <body>
   <div class="container"
        x-data="{
@@ -53,14 +54,13 @@
 
     <!-- Header -->
     <header class="page-header">
-      <button class="back-btn" @click="window.location.href='/'">
-  <i class='fa-solid fa-arrow-left'></i>
-</button>
+      <button class="back-btn" @click="window.location.href='/'" aria-label="Kembali">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
 
-
-      <div>
+      <div class="header-content">
         <h1 class="page-title">Profil & Pengaturan</h1>
-        <p class="page-subtitle">Kelola informasi akun Anda.</p>
+        <p class="page-subtitle">Kelola informasi akun dan preferensi Anda.</p>
       </div>
     </header>
 
@@ -68,93 +68,123 @@
     <div class="tab-container">
       <button class="tab-button" 
               :class="{'active': activeTab === 'profile'}" 
-              @click="activeTab = 'profile'">Profil</button>
+              @click="activeTab = 'profile'">
+        <i class="fa-regular fa-user mr-2"></i> Profil Saya
+      </button>
       <button class="tab-button"
               :class="{'active': activeTab === 'mentor'}"
-              @click="activeTab = 'mentor'">Mentor</button>
+              @click="activeTab = 'mentor'">
+        <i class="fa-solid fa-chalkboard-user mr-2"></i> Mentor
+      </button>
       <button class="tab-button"
               :class="{'active': activeTab === 'activity'}"
-              @click="activeTab = 'activity'">Aktivitas</button>
+              @click="activeTab = 'activity'">
+        <i class="fa-solid fa-clock-rotate-left mr-2"></i> Aktivitas
+      </button>
     </div>
 
     <!-- Profile -->
     <section x-show="activeTab === 'profile'" x-transition>
       <template x-if="!loading">
         <div class="profile-card">
-          <div class="profile-header" style="position: relative; display: flex; align-items: center; gap: 1rem;">
-            <div style="position: relative; display: inline-block;">
+          
+          <div class="profile-header-section">
+            <div class="profile-image-wrapper">
               <img 
                 :src="fotoPreview || user.foto_url" 
                 alt="Foto Profil" 
                 class="profile-image" 
-                style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid #1f7a4c; object-fit: cover;"
               >
-              <label for="fotoInput"
-                     style="position: absolute; bottom: 0; right: 0; background-color: #1f7a4c; color: white; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
-                <i class='fa-solid fa-pen'></i>
+              <label for="fotoInput" class="edit-avatar-btn" title="Ganti Foto">
+                <i class="fa-solid fa-camera"></i>
               </label>
               <input id="fotoInput" type="file" accept="image/*" @change="gantiFoto" style="display: none;">
             </div>
 
-            <div>
-              <h2 class="user-name" x-text="user.nama_lengkap"></h2>
-              <p class="user-role" x-text="user.role"></p>
-              <p class="user-email" x-text="user.email"></p>
+            <div class="user-info">
+              <span class="user-role-badge" x-text="user.role || 'Pengguna'"></span>
+              <h2 x-text="user.nama_lengkap"></h2>
+              <p class="user-email-text">
+                <i class="fa-regular fa-envelope"></i>
+                <span x-text="user.email"></span>
+              </p>
             </div>
           </div>
 
-          <form class="profile-form">
-            <div class="form-group">
-              <label class="form-label">Nama Lengkap</label>
-              <input type="text" class="form-input" x-model="user.nama_lengkap">
+          <form class="profile-form" @submit.prevent>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Nama Lengkap</label>
+                <input type="text" class="form-input" x-model="user.nama_lengkap">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Nomor Telepon</label>
+                <input type="tel" class="form-input" x-model="user.kontak" placeholder="+62">
+              </div>
+
+              <div class="form-group full-width">
+                <label class="form-label">Bio</label>
+                <textarea rows="4" x-model="user.bio" placeholder="Ceritakan sedikit tentang diri Anda..."></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Jenis Kelamin</label>
+                <input type="text" class="form-input" x-model="user.jenis_kelamin" disabled>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Afiliasi</label>
+                <input type="text" class="form-input" x-model="user.afiliasi" disabled>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Bio</label>
-              <textarea rows="3" x-model="user.bio" placeholder="Tulis bio kamu..."></textarea>
+            <div class="form-actions">
+              <button type="button" class="save-btn" @click="axios.put('/api/pengguna/update', user)">
+                <i class="fa-solid fa-check mr-2"></i> Simpan Perubahan
+              </button>
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Nomor Telepon</label>
-              <input type="tel" class="form-input" x-model="user.kontak" placeholder="+62">
+            <div x-show="success" class="alert alert-success" x-transition>
+              <i class="fa-solid fa-circle-check"></i>
+              <span x-text="success"></span>
             </div>
-
-            <div class="form-group">
-              <label class="form-label">Jenis Kelamin</label>
-              <input type="text" class="form-input" x-model="user.jenis_kelamin" disabled>
+            <div x-show="error" class="alert alert-error" x-transition>
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span x-text="error"></span>
             </div>
-
-            <div class="form-group">
-              <label class="form-label">Afiliasi</label>
-              <input type="text" class="form-input" x-model="user.afiliasi" disabled>
-            </div>
-
-            <button type="button" class="save-btn" @click="axios.put('/api/pengguna/update', user)">Simpan</button>
-            <p x-show="success" class="alert alert-success" x-text="success"></p>
-            <p x-show="error" class="alert alert-error" x-text="error"></p>
           </form>
         </div>
       </template>
 
-      <div x-show="loading" style="text-align:center; padding:2rem;">
-        <p>Sedang memuat data profil...</p>
+      <div x-show="loading" class="loading-state">
+        <i class="fa-solid fa-circle-notch fa-spin loading-spinner"></i>
+        <p class="mt-4">Sedang memuat data...</p>
       </div>
     </section>
 
     <!-- Mentor -->
     <section x-show="activeTab === 'mentor'" x-transition>
-      <div class="profile-card">
+      <div class="profile-card empty-state">
+        <div class="empty-icon-wrapper primary">
+          <i class="fa-solid fa-chalkboard-user"></i>
+        </div>
         <h2>Daftar Sebagai Mentor</h2>
-        <p>Bantu sesama belajar dan bagikan pengalaman kamu.</p>
-        <a href="/daftar-mentor" class="save-btn" style="text-decoration:none; display:inline-block; text-align:center;">Daftar Sekarang</a>
+        <p class="empty-text-body">Bagikan ilmu dan pengalaman Anda kepada komunitas. Jadilah mentor dan bantu orang lain belajar.</p>
+        <a href="/daftar-mentor" class="save-btn link-btn">
+          Daftar Sekarang <i class="fa-solid fa-arrow-right ml-2"></i>
+        </a>
       </div>
     </section>
 
     <!-- Activity -->
     <section x-show="activeTab === 'activity'" x-transition>
-      <div class="profile-card">
+      <div class="profile-card empty-state">
+         <div class="empty-icon-wrapper neutral">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+        </div>
         <h2>Riwayat Aktivitas</h2>
-        <p>Belum ada aktivitas.</p>
+        <p class="text-muted">Belum ada aktivitas terbaru yang tercatat.</p>
       </div>
     </section>
   </div>
