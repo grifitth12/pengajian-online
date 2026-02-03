@@ -55,7 +55,7 @@
         }
     </style>
 </head>
-<body x-data="{auth: false}" class="bg-gray-50">
+<body x-data="{kelas : fetch_get_data()}" class="bg-gray-50">
     <!-- Header Section -->
     <div x-data="{ html:'' }"
        x-init="fetch('/src/assets/assets-pages/navbar-ngaji.upi').then(r=>r.text()).then(t=>html=t)"
