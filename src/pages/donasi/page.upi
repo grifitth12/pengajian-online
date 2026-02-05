@@ -64,7 +64,7 @@ f<!DOCTYPE html>
                     </button>
                 </div>
             </div>
-            <div class="md:w-1/2">
+            <div class="md:w-1/2 flex justify-center">
                 <img x-bind:src="'/api/.f/' + (await donasi).data.id_static_file_address"
                      alt="Donasi di Heni" 
                      class="max-w-full max-h-80 rounded-xl shadow-lg object-contain">
