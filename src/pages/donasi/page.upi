@@ -11,6 +11,10 @@ f<!DOCTYPE html>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
     <style>
+        * {
+            scroll-behavior: smooth;
+        }
+        
         .progress-bar {
             height: 12px;
             border-radius: 6px;
@@ -50,9 +54,11 @@ f<!DOCTYPE html>
                 <h1 x-text="(await donasi).data.nama_program" class="text-4xl md:text-5xl font-bold text-gray-800 mb-6 leading-tight"></h1>
                 <p x-text="(await donasi).data.deskripsi" class="text-lg text-gray-600 mb-8"></p>
                 <div class="flex space-x-4">
-                    <button class="donate-btn text-white px-8 py-3 rounded-full font-semibold">
-                        Donasi Sekarang
-                    </button>
+                    <a href="#progress-donasi">
+                        <button class="donate-btn text-white px-8 py-3 rounded-full font-semibold">
+                            Donasi Sekarang
+                        </button>
+                    </a>
                     <button class="border-2 border-emerald-500 text-emerald-600 px-6 py-3 rounded-full font-semibold hover:bg-emerald-50">
                         <i class="fas fa-share-alt mr-2"></i> Bagikan
                     </button>
@@ -67,7 +73,7 @@ f<!DOCTYPE html>
     </section>
 
     <!-- Donation Progress -->
-    <section x-init="rijal = kadapi((await donasi).data.id_program_donasi)" class="bg-emerald-50 py-12">
+    <section x-init="rijal = kadapi((await donasi).data.id_program_donasi)" class="bg-emerald-50 py-12" id="progress-donasi">
         <div x-transition class="container mx-auto px-4">
             <div class="bg-white rounded-xl shadow-sm p-6 md:p-8 max-w-4xl mx-auto">
                 <div class="flex justify-between items-center mb-4">
@@ -163,14 +169,116 @@ f<!DOCTYPE html>
     <section class="py-12 bg-white">
         <div class="container mx-auto px-4 max-w-4xl">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Pertanyaan Umum</h2>
-            <div class="space-y-4">
+            <div class="space-y-4" x-data="{ active: null }">
+                <!-- FAQ 1 -->
                 <div class="border border-gray-200 rounded-lg overflow-hidden">
-                    <button class="faq-question w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 text-left">
+                    <button 
+                        @click="active = active === 1 ? null : 1"
+                        class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 text-left transition-colors">
                         <span class="font-medium text-gray-800">Bagaimana cara melakukan donasi?</span>
-                        <i class="fas fa-chevron-down text-emerald-600 transition-transform"></i>
+                        <i class="fas fa-chevron-down text-emerald-600 transition-transform duration-300"
+                        :class="{ 'rotate-180': active === 1 }"></i>
                     </button>
-                    <div class="faq-answer hidden p-4 border-t border-gray-200 bg-gray-50 text-gray-600">
+                    <div x-show="active === 1" 
+                        x-collapse
+                        class="p-4 border-t border-gray-200 bg-gray-50 text-gray-600">
                         Anda bisa melakukan donasi dengan mengklik tombol "Donasi Sekarang" di atas dan memilih nominal donasi yang tersedia atau memasukkan nominal sendiri. Setelah itu, Anda akan diarahkan ke halaman pembayaran.
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                    <button 
+                        @click="active = active === 2 ? null : 2"
+                        class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 text-left transition-colors">
+                        <span class="font-medium text-gray-800">Metode pembayaran apa saja yang tersedia?</span>
+                        <i class="fas fa-chevron-down text-emerald-600 transition-transform duration-300"
+                        :class="{ 'rotate-180': active === 2 }"></i>
+                    </button>
+                    <div x-show="active === 2" 
+                        x-collapse
+                        class="p-4 border-t border-gray-200 bg-gray-50 text-gray-600">
+                        Kami menerima berbagai metode pembayaran termasuk transfer bank (BCA, Mandiri, BNI, BRI), e-wallet (GoPay, OVO, Dana, ShopeePay), dan kartu kredit/debit. Semua transaksi diproses dengan aman melalui payment gateway terpercaya.
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                    <button 
+                        @click="active = active === 3 ? null : 3"
+                        class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 text-left transition-colors">
+                        <span class="font-medium text-gray-800">Apakah donasi saya aman dan terpercaya?</span>
+                        <i class="fas fa-chevron-down text-emerald-600 transition-transform duration-300"
+                        :class="{ 'rotate-180': active === 3 }"></i>
+                    </button>
+                    <div x-show="active === 3" 
+                        x-collapse
+                        class="p-4 border-t border-gray-200 bg-gray-50 text-gray-600">
+                        Ya, sangat aman. Platform kami menggunakan enkripsi SSL dan bekerja sama dengan payment gateway berlisensi. Setiap transaksi dicatat dengan transparan dan Anda akan menerima bukti donasi melalui email.
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                    <button 
+                        @click="active = active === 4 ? null : 4"
+                        class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 text-left transition-colors">
+                        <span class="font-medium text-gray-800">Kenapa Felix dan Alvin Gay?</span>
+                        <i class="fas fa-chevron-down text-emerald-600 transition-transform duration-300"
+                        :class="{ 'rotate-180': active === 4 }"></i>
+                    </button>
+                    <div x-show="active === 4" 
+                        x-collapse
+                        class="p-4 border-t border-gray-200 bg-gray-50 text-gray-600">
+                        LKJASDLKJDWJLASOIDWANJSDWAJKHSDJKHASJDHKWAKJSHD WAIUSIUDHWIUAGSDKJAGDWIUASDJKHWA
+                    </div>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                    <button 
+                        @click="active = active === 5 ? null : 5"
+                        class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 text-left transition-colors">
+                        <span class="font-medium text-gray-800">Berapa minimal nominal donasi?</span>
+                        <i class="fas fa-chevron-down text-emerald-600 transition-transform duration-300"
+                        :class="{ 'rotate-180': active === 5 }"></i>
+                    </button>
+                    <div x-show="active === 5" 
+                        x-collapse
+                        class="p-4 border-t border-gray-200 bg-gray-50 text-gray-600">
+                        Tidak ada minimal nominal donasi. Setiap nominal yang Anda berikan, sekecil apapun, sangat berarti bagi kami dan akan disalurkan kepada yang membutuhkan. Anda bisa memilih nominal yang sesuai dengan kemampuan Anda.
+                    </div>
+                </div>
+
+                <!-- FAQ 6 -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                    <button 
+                        @click="active = active === 6 ? null : 6"
+                        class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 text-left transition-colors">
+                        <span class="font-medium text-gray-800">Kemana donasi saya akan disalurkan?</span>
+                        <i class="fas fa-chevron-down text-emerald-600 transition-transform duration-300"
+                        :class="{ 'rotate-180': active === 6 }"></i>
+                    </button>
+                    <div x-show="active === 6" 
+                        x-collapse
+                        class="p-4 border-t border-gray-200 bg-gray-50 text-gray-600">
+                        Donasi Anda akan disalurkan langsung kepada penerima manfaat sesuai dengan program yang Anda pilih. Kami menyalurkan bantuan untuk berbagai program seperti pendidikan, kesehatan, pemberdayaan ekonomi, dan bantuan darurat. Laporan penyaluran dapat Anda lihat di website kami secara berkala.
+                    </div>
+                </div>
+
+                <!-- FAQ 7 -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                    <button 
+                        @click="active = active === 7 ? null : 7"
+                        class="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 text-left transition-colors">
+                        <span class="font-medium text-gray-800">Apakah saya bisa berdonasi secara rutin?</span>
+                        <i class="fas fa-chevron-down text-emerald-600 transition-transform duration-300"
+                        :class="{ 'rotate-180': active === 7 }"></i>
+                    </button>
+                    <div x-show="active === 7" 
+                        x-collapse
+                        class="p-4 border-t border-gray-200 bg-gray-50 text-gray-600">
+                        Ya, Anda bisa menjadi donatur rutin dengan memilih opsi donasi bulanan. Dengan program ini, Anda bisa membantu secara berkelanjutan dan memberikan dampak yang lebih besar. Anda dapat membatalkan atau mengubah nominal kapan saja.
                     </div>
                 </div>
             </div>
@@ -182,9 +290,11 @@ f<!DOCTYPE html>
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-3xl font-bold mb-4">Mari Bantu Warga Padang Bersama-sama</h2>
             <p class="text-lg mb-8 max-w-2xl mx-auto">Setiap donasi Anda akan memberikan harapan baru bagi mereka yang membutuhkan.</p>
-            <button class="bg-white text-emerald-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-all">
-                Donasi Sekarang
-            </button>
+            <a href="#progress-donasi">
+                <button class="bg-white text-emerald-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-all">
+                    Donasi Sekarang
+                </button>
+            </a>
         </div>
     </section>
     </main>

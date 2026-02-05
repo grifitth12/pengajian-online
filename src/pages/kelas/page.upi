@@ -55,7 +55,7 @@
         }
     </style>
 </head>
-<body x-data="{auth: false}" class="bg-gray-50">
+<body x-data="{kelas : fetch_get_data()}" class="bg-gray-50">
     <!-- Header Section -->
     <div x-data="{ html:'' }"
        x-init="fetch('/src/assets/assets-pages/navbar-ngaji.upi').then(r=>r.text()).then(t=>html=t)"
@@ -73,9 +73,11 @@
                     <h2 class="text-4xl md:text-5xl font-bold text-green-800 mb-4">{{getStr data["judul"]}}</h2>
                     <p class="text-lg text-gray-600 mb-6">{{getStr data["deskripsi"]}}</p>
                     <div class="flex space-x-4" x-init="a = await is_user_registred('{{getStr data["id_kelas"]}}')">
-                        <button class="border-2 border-green-600 text-green-600 hover:bg-green-50 px-6 py-3 rounded-lg font-medium transition duration-300">
-                            <i class="fas fa-book-open mr-2"></i> Liat Pertemuan
-                        </button>
+                        <a href="#lihat_pertemuan">
+                            <button class="border-2 border-green-600 text-green-600 hover:bg-green-50 px-6 py-3 rounded-lg font-medium transition duration-300">
+                                <i class="fas fa-book-open mr-2"></i> Liat Pertemuan
+                            </button>
+                        </a>
                         <button x-show="!a" x-transition @click="daftar_kelas('{{getStr data["id_kelas"]}}')" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300">
                             <i class="fas fa-user-graduate mr-2"></i> Daftar
                         </button>
@@ -152,7 +154,7 @@
             </div>
             
             <!-- Meetings Section -->
-            <div class="max-w-4xl mx-auto bg-green-50 rounded-xl p-6">
+            <div class="max-w-4xl mx-auto bg-green-50 rounded-xl p-6" id="lihat_pertemuan">
                 <h3 class="text-xl font-bold text-green-800 mb-4 flex items-center">
                     <i class="fas fa-calendar-check mr-2"></i> Pertemuan
                 </h3>

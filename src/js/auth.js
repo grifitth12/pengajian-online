@@ -22,3 +22,8 @@ function getUserMetadata() {
     const decodedPayload = window.atob(base64);
     return payloadObject = JSON.parse(decodedPayload);
 }
+
+window.authReady = new Promise(async (resolve) => {
+    await checkAuth(); // fungsi cek login lu
+    resolve(true);
+});
