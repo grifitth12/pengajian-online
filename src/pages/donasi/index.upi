@@ -19,79 +19,114 @@
 <section class="max-w-7xl mx-auto px-6 py-16" 
           x-data="{donasi: get_data_donasi()}">
   
-  <div class="text-center mb-16">
-    <h2 class="text-4xl font-bold text-gray-800 mb-4">Program Donasi Aktif</h2>
-    <p class="text-gray-600 text-lg max-w-2xl mx-auto">Pilih program donasi yang ingin Anda dukung dan jadilah bagian dari perubahan positif</p>
+  <div class="text-center mb-16 space-y-3">
+    <p class="text-gray-600 text-base">Berbagi Kebaikan</p>
+    <h2 class="text-5xl font-extrabold text-gray-900 tracking-tight">Program Donasi Aktif</h2>
+    <p class="text-gray-500 text-lg max-w-3xl mx-auto leading-relaxed">Pilih program donasi yang ingin Anda dukung dan jadilah bagian dari perubahan positif</p>
   </div>
   
-  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
     
     <template x-for="item in (await donasi).data">
-      <div class="card-hover glass-effect rounded-3xl overflow-hidden border border-white/20 animate-fade-in-up opacity-0"
+      <div class="group relative bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2 flex flex-col h-full border-2 border-emerald-500"
             :class="'card-' + ((index % 6) + 1)"
-            x-intersect="$el.classList.add('opacity-100')">
+            x-intersect="$el.classList.add('animate-fade-in')">
         
+        <!-- Decorative corner accent -->
+        <div class="absolute top-0 right-0 w-20 h-20 gradient-bg opacity-10 rounded-bl-full"></div>
         
-        <div class="gradient-bg p-6 text-white relative overflow-hidden">
-          <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
-          <div class="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
+        <!-- Header with icon - FIXED HEIGHT -->
+        <div class="gradient-bg relative px-6 pt-8 pb-6 overflow-hidden flex-shrink-0">
+          <div class="absolute inset-0 bg-gradient-to-br from-black/5 to-transparent"></div>
+          <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+          <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-white/5 rounded-full blur-xl"></div>
+          
           <div class="relative z-10">
-            <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-4">
-              <i class="fas fa-heart text-2xl text-white"></i>
+            <div class="inline-flex items-center justify-center w-14 h-14 bg-white/25 backdrop-blur-sm rounded-xl mb-4 group-hover:scale-110 transition-transform duration-300">
+              <i class="fas fa-heart text-2xl text-white drop-shadow-lg"></i>
             </div>
-            <h3 class="text-2xl font-bold mb-2 text-balance" x-text="item.nama_program"></h3>
-            <div class="flex items-center text-white/90">
-              <i class="fas fa-users mr-2"></i>
-              <span class="text-sm font-medium">Program Komunitas</span>
+            <!-- FIXED HEIGHT TITLE CONTAINER -->
+            <div class="h-16 mb-3">
+              <h3 class="text-xl font-bold text-white leading-tight line-clamp-2" x-text="item.nama_program"></h3>
+            </div>
+            <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-lg">
+              <i class="fas fa-users text-white/90 text-xs"></i>
+              <span class="text-xs font-semibold text-white">Program Komunitas</span>
             </div>
           </div>
         </div>
         
-      
-        <div class="p-6">
-          <p class="text-gray-600 text-base leading-relaxed mb-6 line-clamp-3" x-text="item.deskripsi"></p>
-        
-          <div class="flex gap-3">
-            <a :href="'/donasi/' + item.slug" 
-                class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-center hover:scale-105">
-              <i class="fas fa-info-circle mr-2"></i>
-              Detail
+        <!-- Content area - GROWS TO FILL SPACE -->
+        <div class="flex flex-col flex-grow p-6">
+          <!-- FIXED HEIGHT DESCRIPTION -->
+          <div class="h-20 mb-6">
+            <p class="text-gray-600 text-sm leading-relaxed line-clamp-4" x-text="item.deskripsi"></p>
+          </div>
+          
+          <!-- Stats row - PUSHED TO BOTTOM -->
+          <div class="mt-auto">
+            <div class="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100">
+              <div class="flex items-center gap-2 text-gray-500">
+                <div class="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center">
+                  <i class="fas fa-calendar text-xs"></i>
+                </div>
+                <span class="text-xs font-medium">Jan 2024</span>
+              </div>
+              <div class="flex items-center gap-2 text-gray-500">
+                <div class="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center">
+                  <i class="fas fa-users text-xs"></i>
+                </div>
+                <span class="text-xs font-medium">234 donatur</span>
+              </div>
+            </div>
+            
+            <!-- CTA Button -->
+            <a :href="'/donasi/' + item.slug" class="block">
+              <button class="w-full gradient-bg text-white font-bold py-3.5 px-6 rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95 relative overflow-hidden group/btn">
+                <span class="relative z-10 flex items-center justify-center gap-2">
+                  <i class="fas fa-donate"></i>
+                  <span>Donasi Sekarang</span>
+                </span>
+                <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700"></div>
+              </button>
             </a>
-            <button class="flex-1 gradient-bg hover:shadow-lg text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 hover:scale-105 animate-pulse-hover">
-              <i class="fas fa-donate mr-2"></i>
-              Donasi
-            </button>
-          </div>
-        </div>
-        
-        
-        <div class="px-6 pb-6">
-          <div class="flex items-center justify-between text-sm text-gray-500 border-t border-gray-100 pt-4">
-            <div class="flex items-center">
-              <i class="fas fa-calendar mr-2"></i>
-              <span>Aktif sejak Jan 2024</span>
-            </div>
-            <div class="flex items-center">
-              <i class="fas fa-users mr-2"></i>
-              <span>234 donatur</span>
-            </div>
           </div>
         </div>
       </div>
     </template>
   </div>
-
-  
-  <div class="text-center mt-16">
-    <button class="group relative bg-white hover:bg-green-50 border-2 border-green-500 text-green-600 hover:text-green-700 font-bold px-12 py-4 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-xl">
-      <span class="relative z-10 flex items-center">
-        <i class="fas fa-plus mr-3 group-hover:rotate-90 transition-transform duration-300"></i>
-        Lihat Program Lainnya
-      </span>
-      <div class="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-    </button>
-  </div>
 </section>
+
+<style>
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>
 
   <script>
     async function get_data_donasi() {
