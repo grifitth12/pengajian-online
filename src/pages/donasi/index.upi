@@ -28,7 +28,7 @@
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
     
     <template x-for="item in (await donasi).data">
-      <div class="group relative bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2 flex flex-col h-full border-2 border-emerald-500"
+      <div class="group relative bg-white rounded-2xl shadow-[0_12px_24px_-4px_rgba(0,0,0,0.15)] hover:shadow-[0_16px_32px_-6px_rgba(16,185,129,0.35)] transition-all duration-500 overflow-hidden transform hover:-translate-y-2 flex flex-col h-full"
             :class="'card-' + ((index % 6) + 1)"
             x-intersect="$el.classList.add('animate-fade-in')">
         
