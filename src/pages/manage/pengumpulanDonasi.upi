@@ -5,24 +5,107 @@
     accept_donasi: async (id_donatur) => {
         // let response = axios.put('/api/donasi/' + getDataUpi('id_program_donasi') + '/donatur/' + id_donatur + '/accept')
         let url = '/api/donasi/' + getDataUpi('id_program_donasi') + '/donatur/' + id_donatur + '/accept'
-        let response = await axios.put(url)
-
-        console.log(response)
+        try {
+            let response = await axios.put(url)
+            console.log(response)
+            alert('Donasi berhasil diterima!')
+            window.location.reload()
+        } catch (error) {
+            console.error(error)
+            alert('Gagal memproses donasi')
+        }
     }   
 }">
-    <main x-data="{donaturs: fetch_data().result.data}">
-        <template x-for="donatur in donaturs">
+    <div class="p-6 bg-gray-50 min-h-screen">
+        <div class="mb-8 flex items-center justify-between">
             <div>
-                <h1 x-text="donatur.nama"></h1>
-                <h1 x-text="donatur.doa"></h1>
-                <h1 x-text="donatur.is_valid"></h1>
-                <h1 x-text="donatur.nominal"></h1>
-                <h1 x-text="cetak_tenggal(donatur.created_at)"></h1>
-                <a :href="'/api/.f/' + donatur.id_static_file_address" target="_blank">Bukti Donasi</a>
-                <h1 style="color: blue;" @click="accept_donasi(donatur.id_donasi)">Accept</h1>
-                <br>
+                <h2 class="text-3xl font-bold text-gray-800 tracking-tight">Daftar Donatur Masuk</h2>
+                <p class="text-sm text-gray-500 mt-1">Verifikasi dan terima donasi yang masuk</p>
             </div>
-        </template>
-    </main>
+            <div class="bg-white p-2 rounded-lg shadow-sm">
+                <span class="text-gray-500 text-sm font-medium px-2">Total: <span x-text="fetch_data().result.data.length" class="text-gray-800 font-bold"></span></span>
+            </div>
+        </div>
+
+        <main x-data="{donaturs: fetch_data().result.data}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <template x-for="(donatur, index) in donaturs" :key="donatur.id_donasi">
+                <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden flex flex-col relative group"
+                     :style="`animation-delay: ${index * 100}ms`">
+                    
+                    <!-- Decorative Gradient Top -->
+                    <div class="h-2 w-full bg-gradient-to-r"
+                         :class="donatur.is_valid ? 'from-gray-400 to-gray-600' : 'from-green-400 to-green-600'"></div>
+
+                    <div class="p-6 flex-1 flex flex-col">
+                        <!-- Header -->
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg shadow-inner"
+                                     :class="donatur.is_valid ? 'bg-gray-100 text-gray-500' : 'bg-green-50 text-green-600'">
+                                    <span x-text="donatur.nama.charAt(0).toUpperCase()"></span>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800 text-lg leading-tight line-clamp-1" x-text="donatur.nama"></h3>
+                                    <span class="text-xs text-gray-400 flex items-center gap-1">
+                                        <i class="far fa-clock"></i>
+                                        <span x-text="cetak_tenggal(donatur.created_at)"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- Status Badge if Valid -->
+                            <template x-if="donatur.is_valid">
+                                <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full border border-gray-200 font-medium">
+                                    <i class="fas fa-check-circle mr-1"></i>Selesai
+                                </span>
+                            </template>
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="mb-4 text-center py-3 bg-gray-50 rounded-xl border border-gray-100 group-hover:border-green-100 transition-colors">
+                            <span class="block text-xs text-gray-500 uppercase tracking-wider font-semibold">Nominal Donasi</span>
+                            <h4 class="text-2xl font-extrabold tracking-tight"
+                                :class="donatur.is_valid ? 'text-gray-500' : 'text-green-600'" 
+                                x-text="donatur.nominal"></h4>
+                        </div>
+
+                        <!-- Doa/Message -->
+                        <div class="flex-1 mb-6">
+                            <div class="relative pl-4 border-l-2 border-gray-200 bg-gray-50 rounded-r-lg p-3">
+                                <p class="text-sm text-gray-600 italic leading-relaxed line-clamp-3" x-text="donatur.doa || 'Tidak ada doa khusus'"></p>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="mt-auto pt-4 border-t border-gray-100 grid gap-3"
+                             :class="donatur.is_valid ? 'grid-cols-1' : 'grid-cols-2'">
+                            <a :href="'/api/.f/' + donatur.bukti_pembayaran_address" target="_blank" 
+                               class="flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800 transition-colors text-sm font-medium">
+                                <i class="far fa-image"></i>
+                                Bukti
+                            </a>
+                            
+                            <!-- Accept Button (Only shown if NOT valid) -->
+                            <template x-if="!donatur.is_valid">
+                                <button @click="accept_donasi(donatur.id_donasi)"
+                                        class="flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-gradient-to-r from-green-500 to-green-600 text-white hover:shadow-lg hover:from-green-600 hover:to-green-700 transition-all text-sm font-medium transform active:scale-95">
+                                    <i class="fas fa-check"></i>
+                                    Terima
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </main>
+
+        <!-- Empty State -->
+        <div x-show="fetch_data().result.data.length === 0" class="flex flex-col items-center justify-center py-20 text-center">
+            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4 text-gray-300 text-4xl">
+                <i class="fas fa-inbox"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-400">Belum ada donasi baru</h3>
+            <p class="text-gray-400 mt-2">Daftar donasi yang menunggu konfirmasi akan muncul di sini.</p>
+        </div>
+    </div>
 
 </div>
