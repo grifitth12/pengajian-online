@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+f<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div class="md:w-1/2">
-                <img x-bind:src="'/static/' + (await donasi).data.gambar"
+                <img x-bind:src="'/api/.f/' + (await donasi).data.id_static_file_address"
                      alt="Donasi di Heni" 
                      class="w-full h-auto rounded-xl shadow-lg object-cover">
             </div>

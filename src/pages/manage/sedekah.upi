@@ -61,7 +61,8 @@
                     <h2 class="text-xl font-semibold text-gray-800">Edit Donasi</h2>
                     <button @click="update(DonasiForm, (await donasi).id_program_donasi)" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center">
                         <i class="fas fa-save mr-2"></i> Save Changes
-                    </button>
+                    </button>                 
+
                 </div>
             </div>
 
@@ -164,6 +165,11 @@
                                 <span class="text-gray-500">URL:</span>
                                 <span class="text-gray-700"><a class="text-blue-600" :href="'/donasi/' + (await donasi).slug">Go To Page</a></span>
                             </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-500">Donatur:</span>
+                                <span class="text-gray-700"><a class="text-blue-600" :href="'/admin/donatur/' + (await donasi).id_program_donasi">Go To Page</a></span>
+                            </div>                            
+                            
                         </div>
                     </div>
                 </div>
