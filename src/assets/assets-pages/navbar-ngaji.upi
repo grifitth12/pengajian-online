@@ -289,10 +289,10 @@ body.notification-active {
                 <img src="/src/assets/images/bell.png" alt="Notifikasi">
             </button>
             <a href="/" class="nav-link">Home</a>
-            <a href="#" class="nav-link">About</a>
+            <a href="/donasi" class="nav-link">Donasi</a>
             <a href="/kajian" class="nav-link">Kajian</a>
             <a href="/kelas" class="nav-link">Kelas</a> 
-            <a href="/src/pages/searchpage.html" class="nav-link" aria-label="Search">
+            <a href="/search" class="nav-link" aria-label="Search">
                 <i class="fas fa-search"></i>
             </a>
             <a href="/profile" 

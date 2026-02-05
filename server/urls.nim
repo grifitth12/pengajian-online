@@ -31,8 +31,9 @@ let
   ]
   adminPatterns* = @[
     pattern("/", adminIndex, @[HttpGet]),
+    pattern("/donatur/{id_program_donasi}", donaturInspect),
     pattern("/manage/{source}", render_manage_index, @[HttpGet]),
-    pattern("/manage/{model}/{id}", triyono, @[HttpGet])
+    pattern("/manage/{model}/{id}", triyono, @[HttpGet]),
   ]
   mentorPatterns* = @[
     pattern("/", mentorIndex, @[HttpGet]),

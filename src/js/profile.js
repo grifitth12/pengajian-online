@@ -42,7 +42,7 @@ function selectPhoto() {
 
         try {
             let res = await axios.post(
-            "/api/file/upload",
+            "/api/pengguna/upload",
             formData,
             { withCredentials: true }
         );
